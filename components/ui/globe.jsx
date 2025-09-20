@@ -192,7 +192,7 @@ export function World({ data, globeConfig, points }) {
           autoRotate={globeConfig.autoRotate}
           autoRotateSpeed={globeConfig.autoRotateSpeed}
           minDistance={250}
-          maxDistance={25E}
+          maxDistance={250}
         />
       </Canvas>
     </div>
