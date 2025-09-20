@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
@@ -11,6 +11,17 @@ const World = dynamic(() => import("./ui/globe.jsx").then((m) => m.World), {
     </div>
   )
 });
+
+// Fallback component for static export
+const GlobeFallback = () => (
+  <div className="w-full h-96 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+    <div className="text-center text-white">
+      <div className="text-6xl mb-4">🌍</div>
+      <h3 className="text-xl font-bold mb-2">Global Connectivity</h3>
+      <p className="text-sm opacity-90">Ready to connect worldwide</p>
+    </div>
+  </div>
+);
 
 export function ContactGlobe() {
   const globeConfig = {
@@ -99,10 +110,20 @@ export function ContactGlobe() {
     },
   ];
 
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <div className="flex flex-col h-full w-full">
       <div className="w-full flex-1 overflow-visible">
-        <World data={sampleArcs} globeConfig={globeConfig} points={countryPoints} />
+        {isMounted ? (
+          <World data={sampleArcs} globeConfig={globeConfig} points={countryPoints} />
+        ) : (
+          <GlobeFallback />
+        )}
       </div>
     </div>
   );
