@@ -1,29 +1,18 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
+// Dynamic import of globe component with SSR disabled
 const World = dynamic(() => import("./ui/globe.jsx").then((m) => m.World), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-96 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse flex items-center justify-center">
-      <span className="text-gray-500 dark:text-gray-400">Loading Globe...</span>
-    </div>
-  )
 });
 
-// Fallback component for static export
-const GlobeFallback = () => (
-  <div className="w-full h-96 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-    <div className="text-center text-white">
-      <div className="text-6xl mb-4">🌍</div>
-      <h3 className="text-xl font-bold mb-2">Global Connectivity</h3>
-      <p className="text-sm opacity-90">Ready to connect worldwide</p>
-    </div>
-  </div>
-);
-
 export function ContactGlobe() {
+  const containerRef = useRef(null);
+  const [ready, setReady] = useState(false);
+
+  // Globe configuration
   const globeConfig = {
     pointSize: 4,
     globeColor: "#062056",
@@ -46,9 +35,10 @@ export function ContactGlobe() {
     autoRotate: true,
     autoRotateSpeed: 0.5,
   };
+
   const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
-  
-  // 10 major countries pin points
+
+  // Country points
   const countryPoints = [
     { lat: 40.7128, lng: -74.0060, name: "New York, USA" },
     { lat: 51.5074, lng: -0.1278, name: "London, UK" },
@@ -59,72 +49,39 @@ export function ContactGlobe() {
     { lat: -23.5505, lng: -46.6333, name: "São Paulo, Brazil" },
     { lat: 30.0444, lng: 31.2357, name: "Cairo, Egypt" },
     { lat: 1.3521, lng: 103.8198, name: "Singapore" },
-    { lat: 52.5200, lng: 13.4050, name: "Berlin, Germany" }
+    { lat: 52.5200, lng: 13.4050, name: "Berlin, Germany" },
   ];
 
+  // Sample arcs
   const sampleArcs = [
-    {
-      order: 1,
-      startLat: 28.6139,
-      startLng: 77.2090,
-      endLat: 40.7128,
-      endLng: -74.0060,
-      arcAlt: 0.3,
-      color: colors[0],
-    },
-    {
-      order: 2,
-      startLat: 51.5074,
-      startLng: -0.1278,
-      endLat: 35.6762,
-      endLng: 139.6503,
-      arcAlt: 0.2,
-      color: colors[1],
-    },
-    {
-      order: 3,
-      startLat: 1.3521,
-      startLng: 103.8198,
-      endLat: -33.8688,
-      endLng: 151.2093,
-      arcAlt: 0.25,
-      color: colors[2],
-    },
-    {
-      order: 4,
-      startLat: 55.7558,
-      startLng: 37.6176,
-      endLat: -23.5505,
-      endLng: -46.6333,
-      arcAlt: 0.4,
-      color: colors[0],
-    },
-    {
-      order: 5,
-      startLat: 30.0444,
-      startLng: 31.2357,
-      endLat: 52.5200,
-      endLng: 13.4050,
-      arcAlt: 0.15,
-      color: colors[1],
-    },
+    { order: 1, startLat: 28.6139, startLng: 77.2090, endLat: 40.7128, endLng: -74.0060, arcAlt: 0.3, color: colors[0] },
+    { order: 2, startLat: 51.5074, startLng: -0.1278, endLat: 35.6762, endLng: 139.6503, arcAlt: 0.2, color: colors[1] },
+    { order: 3, startLat: 1.3521, startLng: 103.8198, endLat: -33.8688, endLng: 151.2093, arcAlt: 0.25, color: colors[2] },
+    { order: 4, startLat: 55.7558, startLng: 37.6176, endLat: -23.5505, endLng: -46.6333, arcAlt: 0.4, color: colors[0] },
+    { order: 5, startLat: 30.0444, startLng: 31.2357, endLat: 52.5200, endLng: 13.4050, arcAlt: 0.15, color: colors[1] },
   ];
 
-  const [isMounted, setIsMounted] = useState(false);
-
+  // Detect container size and trigger render
   useEffect(() => {
-    setIsMounted(true);
+    if (containerRef.current) {
+      setReady(true);
+
+      // Trigger resize event for globe libraries that rely on it
+      const resizeEvent = new Event("resize");
+      window.dispatchEvent(resizeEvent);
+    }
   }, []);
 
   return (
-    <div className="flex flex-col h-full w-full">
-      <div className="w-full flex-1 overflow-visible">
-        {isMounted ? (
+    <div
+      ref={containerRef}
+      className="flex flex-col h-full w-full overflow-hidden"
+    >
+      <Suspense fallback={<div className="text-center py-10">Loading Globe...</div>}>
+        {ready && (
           <World data={sampleArcs} globeConfig={globeConfig} points={countryPoints} />
-        ) : (
-          <GlobeFallback />
         )}
-      </div>
+      </Suspense>
     </div>
   );
 }

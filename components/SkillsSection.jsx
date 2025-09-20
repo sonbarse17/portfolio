@@ -13,8 +13,7 @@ import { VscAzure } from "react-icons/vsc";
 import dynamic from 'next/dynamic';
 
 const LogoLoop = dynamic(() => import('./ui/logo-loop.jsx'), {
-  ssr: false,
-  loading: () => <div className="h-20 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+  ssr: false
 });
 
 const skillVariants = {
