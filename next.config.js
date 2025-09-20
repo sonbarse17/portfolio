@@ -13,7 +13,7 @@ const nextConfig = {
   poweredByHeader: false,
   output: 'export',
   trailingSlash: true,
-  distDir: 'out',
+  distDir: 'build',
 
   images: {
     unoptimized: true,
