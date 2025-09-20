@@ -5,7 +5,11 @@ import dynamic from "next/dynamic";
 
 const World = dynamic(() => import("./ui/globe.jsx").then((m) => m.World), {
   ssr: false,
-  loading: () => <div className="w-full h-96 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse flex items-center justify-center"><span className="text-gray-500">Loading Globe...</span></div>
+  loading: () => (
+    <div className="w-full h-96 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse flex items-center justify-center">
+      <span className="text-gray-500 dark:text-gray-400">Loading Globe...</span>
+    </div>
+  )
 });
 
 export function ContactGlobe() {
@@ -96,21 +100,8 @@ export function ContactGlobe() {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center py-10 h-auto relative w-full">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="text-center mb-8"
-      >
-        <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-          Let's Connect Globally
-        </h3>
-        <p className="text-base md:text-lg text-gray-600 max-w-md mx-auto">
-          Ready to collaborate on DevOps projects worldwide. Reach out from anywhere!
-        </p>
-      </motion.div>
-      <div className="w-full overflow-visible">
+    <div className="flex flex-col h-full w-full">
+      <div className="w-full flex-1 overflow-visible">
         <World data={sampleArcs} globeConfig={globeConfig} points={countryPoints} />
       </div>
     </div>

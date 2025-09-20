@@ -5,7 +5,7 @@ import LandingPage from '../components/LandingPage.jsx'
 import SkillsSection from '../components/SkillsSection.jsx'
 import ProjectsSection from '../components/ProjectsSection.jsx'
 import TimelineDemo from '../components/TimelineDemo.jsx'
-import ContactSection from '../components/ContactSection.jsx'
+import ContactUs1 from '../components/ContactUs1.jsx'
 import { AppleStyleDock } from '../components/AppleStyleDock.jsx'
 
 export default function Home() {
@@ -90,7 +90,7 @@ export default function Home() {
         <div className="py-8 bg-white dark:bg-black transition-colors duration-300"></div>
         <ErrorBoundary><section id="experience" aria-label="Experience section"><TimelineDemo /></section></ErrorBoundary>
         <div className="py-8 bg-gray-50 dark:bg-black transition-colors duration-300"></div>
-        <ErrorBoundary><section id="contact" aria-label="Contact section"><ContactSection /></section></ErrorBoundary>
+        <ErrorBoundary><section id="contact" aria-label="Contact section"><ContactUs1 /></section></ErrorBoundary>
         <AppleStyleDock />
       </main>
     </>
