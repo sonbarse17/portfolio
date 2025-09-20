@@ -1,19 +1,14 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useMemo } from "react";
+import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
 
-// Dynamic import of globe component with SSR disabled
 const World = dynamic(() => import("./ui/globe.jsx").then((m) => m.World), {
   ssr: false,
 });
 
 export function ContactGlobe() {
-  const containerRef = useRef(null);
-  const [ready, setReady] = useState(false);
-
-  // Globe configuration
-  const globeConfig = {
+  const globeConfig = useMemo(() => ({
     pointSize: 4,
     globeColor: "#062056",
     showAtmosphere: true,
@@ -34,12 +29,12 @@ export function ContactGlobe() {
     initialPosition: { lat: 22.3193, lng: 114.1694 },
     autoRotate: true,
     autoRotateSpeed: 0.5,
-  };
-
-  const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
-
-  // Country points
-  const countryPoints = [
+  }), []);
+  
+  const colors = useMemo(() => ["#06b6d4", "#3b82f6", "#6366f1"], []);
+  
+  // 10 major countries pin points
+  const countryPoints = useMemo(() => [
     { lat: 40.7128, lng: -74.0060, name: "New York, USA" },
     { lat: 51.5074, lng: -0.1278, name: "London, UK" },
     { lat: 35.6762, lng: 139.6503, name: "Tokyo, Japan" },
@@ -49,39 +44,60 @@ export function ContactGlobe() {
     { lat: -23.5505, lng: -46.6333, name: "São Paulo, Brazil" },
     { lat: 30.0444, lng: 31.2357, name: "Cairo, Egypt" },
     { lat: 1.3521, lng: 103.8198, name: "Singapore" },
-    { lat: 52.5200, lng: 13.4050, name: "Berlin, Germany" },
-  ];
+    { lat: 52.5200, lng: 13.4050, name: "Berlin, Germany" }
+  ], []);
 
-  // Sample arcs
-  const sampleArcs = [
-    { order: 1, startLat: 28.6139, startLng: 77.2090, endLat: 40.7128, endLng: -74.0060, arcAlt: 0.3, color: colors[0] },
-    { order: 2, startLat: 51.5074, startLng: -0.1278, endLat: 35.6762, endLng: 139.6503, arcAlt: 0.2, color: colors[1] },
-    { order: 3, startLat: 1.3521, startLng: 103.8198, endLat: -33.8688, endLng: 151.2093, arcAlt: 0.25, color: colors[2] },
-    { order: 4, startLat: 55.7558, startLng: 37.6176, endLat: -23.5505, endLng: -46.6333, arcAlt: 0.4, color: colors[0] },
-    { order: 5, startLat: 30.0444, startLng: 31.2357, endLat: 52.5200, endLng: 13.4050, arcAlt: 0.15, color: colors[1] },
-  ];
-
-  // Detect container size and trigger render
-  useEffect(() => {
-    if (containerRef.current) {
-      setReady(true);
-
-      // Trigger resize event for globe libraries that rely on it
-      const resizeEvent = new Event("resize");
-      window.dispatchEvent(resizeEvent);
-    }
-  }, []);
+  const sampleArcs = useMemo(() => [
+    {
+      order: 1,
+      startLat: 28.6139,
+      startLng: 77.2090,
+      endLat: 40.7128,
+      endLng: -74.0060,
+      arcAlt: 0.3,
+      color: colors[0],
+    },
+    {
+      order: 2,
+      startLat: 51.5074,
+      startLng: -0.1278,
+      endLat: 35.6762,
+      endLng: 139.6503,
+      arcAlt: 0.2,
+      color: colors[1],
+    },
+    {
+      order: 3,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: -33.8688,
+      endLng: 151.2093,
+      arcAlt: 0.25,
+      color: colors[2],
+    },
+    {
+      order: 4,
+      startLat: 55.7558,
+      startLng: 37.6176,
+      endLat: -23.5505,
+      endLng: -46.6333,
+      arcAlt: 0.4,
+      color: colors[0],
+    },
+    {
+      order: 5,
+      startLat: 30.0444,
+      startLng: 31.2357,
+      endLat: 52.5200,
+      endLng: 13.4050,
+      arcAlt: 0.15,
+      color: colors[1],
+    },
+  ], [colors]);
 
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col h-full w-full overflow-hidden"
-    >
-      <Suspense fallback={<div className="text-center py-10">Loading Globe...</div>}>
-        {ready && (
-          <World data={sampleArcs} globeConfig={globeConfig} points={countryPoints} />
-        )}
-      </Suspense>
+    <div className="w-full overflow-visible">
+      <World data={sampleArcs} globeConfig={globeConfig} points={countryPoints} />
     </div>
   );
 }
