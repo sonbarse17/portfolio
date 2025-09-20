@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 const World = dynamic(() => import("./ui/globe.jsx").then((m) => m.World), {
   ssr: false,
+  loading: () => null,
 });
 
 export function ContactGlobe() {
@@ -97,7 +98,9 @@ export function ContactGlobe() {
 
   return (
     <div className="w-full overflow-visible">
-      <World data={sampleArcs} globeConfig={globeConfig} points={countryPoints} />
+      {typeof window !== 'undefined' && (
+        <World data={sampleArcs} globeConfig={globeConfig} points={countryPoints} />
+      )}
     </div>
   );
 }
