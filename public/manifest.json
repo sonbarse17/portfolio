@@ -1,0 +1,24 @@
+{
+  "name": "Sushant Sonbarse - DevOps Engineer Portfolio",
+  "short_name": "Sushant Portfolio",
+  "description": "DevOps Engineer specializing in cloud infrastructure and automation",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    }
+  ],
+  "categories": ["portfolio", "developer", "devops"],
+  "lang": "en-US"
+}
