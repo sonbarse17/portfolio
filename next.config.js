@@ -11,6 +11,9 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
   poweredByHeader: false,
+  output: 'export',
+  trailingSlash: true,
+  distDir: 'out',
 
   images: {
     remotePatterns: [
