@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 const World = dynamic(() => import("./ui/globe.jsx").then((m) => m.World), {
   ssr: false,
+  loading: () => <div className="w-full h-96 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse flex items-center justify-center"><span className="text-gray-500">Loading Globe...</span></div>
 });
 
 export function ContactGlobe() {

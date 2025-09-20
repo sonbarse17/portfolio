@@ -278,11 +278,13 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
             <div className="w-56 h-56 rounded-full overflow-hidden border-2 border-white/30">
               <Image
                 src="/assets/images/profile.jpg"
-                alt="Profile"
+                alt="Sushant Sonbarse Profile Picture"
                 width={220}
                 height={220}
                 className="w-full h-full object-cover"
                 priority
+                sizes="(max-width: 768px) 180px, 220px"
+                quality={85}
               />
             </div>
           )}

@@ -10,7 +10,12 @@ import {
 import { SiAnsible, SiKubernetes, SiTerraform, SiPrometheus, SiGrafana, SiGooglecloud } from "react-icons/si";
 import { VscAzure } from "react-icons/vsc";
 
-import LogoLoop from './ui/logo-loop.jsx';
+import dynamic from 'next/dynamic';
+
+const LogoLoop = dynamic(() => import('./ui/logo-loop.jsx'), {
+  ssr: false,
+  loading: () => <div className="h-20 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+});
 
 const skillVariants = {
   hidden: { y: 50, opacity: 0 },
