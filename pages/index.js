@@ -45,7 +45,6 @@ export default function Home() {
         <meta name="keywords" content="DevOps, Cloud Engineer, AWS, Kubernetes, Docker, Terraform, Jenkins, Site Reliability Engineering, Infrastructure as Code" />
         <meta name="author" content="Sushant Sonbarse" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <html lang="en" />
         <link rel="canonical" href="https://sushantsonbarse.dev" />
         
         {/* Open Graph */}
