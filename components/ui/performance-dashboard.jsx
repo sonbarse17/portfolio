@@ -18,7 +18,7 @@ const PerformanceDashboard = () => {
   }, []);
 
   // Only show in development
-  if (process.env.NODE_ENV !== 'development' || !metrics) {
+  if (process.env.NODE_ENV === 'production' || !metrics) {
     return null;
   }
 
@@ -28,6 +28,7 @@ const PerformanceDashboard = () => {
         onClick={() => setIsVisible(!isVisible)}
         className="bg-blue-600 dark:bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
         aria-label="Toggle performance dashboard"
+        type="button"
       >
         📊
       </button>

@@ -11,8 +11,10 @@ export default function App({ Component, pageProps }) {
     const shouldBeDark = savedTheme ? savedTheme === 'dark' : prefersDark;
     document.documentElement.classList.toggle('dark', shouldBeDark);
     
-    // Initialize performance monitoring
-    performanceMonitor.trackCoreWebVitals();
+    // Initialize performance monitoring only in development
+    if (process.env.NODE_ENV === 'development') {
+      performanceMonitor.trackCoreWebVitals();
+    }
     
     // Track page load time
     const handleLoad = () => {
