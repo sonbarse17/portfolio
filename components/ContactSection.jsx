@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ContactGlobe } from "./ContactGlobe"; // stays separate
+import { ContactGlobe } from "./ContactGlobe";
+import emailjs from '@emailjs/browser';
 
 const ContactSection = () => {
   const [name, setName] = useState("");
@@ -18,18 +19,28 @@ const ContactSection = () => {
     setIsSubmitting(true);
 
     try {
-      // EmailJS / API integration
-      console.log("Form submitted:", { name, email, message });
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const templateParams = {
+        from_name: name,
+        from_email: email,
+        message: message,
+        to_name: 'Sushant Sonbarse'
+      };
+
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      );
 
       setName("");
       setEmail("");
       setMessage("");
       setIsSubmitted(true);
-
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error('EmailJS Error:', error);
+      alert('Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
