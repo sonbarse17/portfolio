@@ -2,8 +2,19 @@ import React, { useState, useEffect } from "react";
 import { FloatingDock } from "./ui/floating-dock";
 import { FaHome, FaProjectDiagram, FaEnvelope, FaGithub, FaLinkedin, FaCogs, FaBriefcase, FaSun, FaMoon } from "react-icons/fa";
 
+
 export function FloatingDockDemo() {
   const [isDark, setIsDark] = useState(false);
+  const smoothScrollTo = (target) => {
+    if (target.startsWith('#')) {
+      const element = document.querySelector(target);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      window.open(target, '_blank');
+    }
+  };
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -33,6 +44,7 @@ export function FloatingDockDemo() {
         <FaHome className="h-full w-full text-gray-600" />
       ),
       href: "#home",
+      onClick: () => smoothScrollTo("#home"),
     },
     {
       title: "Skills",
@@ -40,6 +52,7 @@ export function FloatingDockDemo() {
         <FaCogs className="h-full w-full text-gray-600" />
       ),
       href: "#skills",
+      onClick: () => smoothScrollTo("#skills"),
     },
     {
       title: "Projects",
@@ -47,6 +60,7 @@ export function FloatingDockDemo() {
         <FaProjectDiagram className="h-full w-full text-gray-600" />
       ),
       href: "#projects",
+      onClick: () => smoothScrollTo("#projects"),
     },
     {
       title: "Experience",
@@ -54,6 +68,7 @@ export function FloatingDockDemo() {
         <FaBriefcase className="h-full w-full text-gray-600" />
       ),
       href: "#experience",
+      onClick: () => smoothScrollTo("#experience"),
     },
     {
       title: "Contact",
@@ -61,6 +76,7 @@ export function FloatingDockDemo() {
         <FaEnvelope className="h-full w-full text-gray-600" />
       ),
       href: "#contact",
+      onClick: () => smoothScrollTo("#contact"),
     },
     {
       title: "GitHub",
@@ -68,6 +84,7 @@ export function FloatingDockDemo() {
         <FaGithub className="h-full w-full text-gray-600" />
       ),
       href: "https://github.com/sonbarse17",
+      onClick: () => smoothScrollTo("https://github.com/sonbarse17"),
     },
     {
       title: "LinkedIn",
@@ -75,6 +92,7 @@ export function FloatingDockDemo() {
         <FaLinkedin className="h-full w-full text-gray-600" />
       ),
       href: "https://linkedin.com/in/sushant-sonbarse",
+      onClick: () => smoothScrollTo("https://linkedin.com/in/sushant-sonbarse"),
     },
     {
       title: isDark ? "Light Mode" : "Dark Mode",

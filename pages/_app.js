@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import { useEffect } from 'react'
 import { performanceMonitor } from '../lib/analytics'
 import PerformanceDashboard from '../components/ui/performance-dashboard'
+import Lenis from 'lenis'
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -15,6 +16,24 @@ export default function App({ Component, pageProps }) {
     if (process.env.NODE_ENV === 'development') {
       performanceMonitor.trackCoreWebVitals();
     }
+    
+    // Initialize Lenis smooth scrolling
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
     
     // Track page load time
     const handleLoad = () => {
@@ -51,6 +70,7 @@ export default function App({ Component, pageProps }) {
       window.removeEventListener('load', handleLoad);
       window.removeEventListener('error', handleError);
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      lenis.destroy();
     };
   }, []);
   
