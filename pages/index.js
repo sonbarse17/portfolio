@@ -1,10 +1,12 @@
 import Head from 'next/head'
 import { useEffect } from 'react'
-import ErrorBoundary from '../components/ui/error-boundary.jsx'
+import ErrorBoundary from '../components/ErrorBoundary.jsx'
 import LandingPage from '../components/LandingPage.jsx'
 import SkillsSection from '../components/SkillsSection.jsx'
 import ProjectsSection from '../components/ProjectsSection.jsx'
 import TimelineDemo from '../components/TimelineDemo.jsx'
+
+
 import ContactSection from '../components/ContactSection.jsx'
 import { AppleStyleDock } from '../components/AppleStyleDock.jsx'
 
