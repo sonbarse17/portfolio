@@ -92,8 +92,12 @@ function Globe({ globeConfig, data, points, scale, isPaused, onLocationClick }) 
         .pointAltitude(0)
         .pointRadius(d => d.size)
         .pointsMerge(false)
-        .pointResolution(12)
-        .onPointClick(onLocationClick);
+        .pointResolution(12);
+      
+      // Add click handler separately if available
+      if (globeRef.current.onPointClick) {
+        globeRef.current.onPointClick(onLocationClick);
+      }
     }
 
     // Rings
@@ -119,11 +123,45 @@ function Globe({ globeConfig, data, points, scale, isPaused, onLocationClick }) 
 }
 
 export function World({ data, globeConfig, points }) {
-  const [scale, setScale] = useState(1.5);
+  const [scale, setScale] = useState(1.0);
   const [isPaused, setIsPaused] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [responsiveScale, setResponsiveScale] = useState(1);
   const containerRef = useRef();
   const pauseTimeoutRef = useRef();
+
+  // Responsive scaling based on screen size
+  useEffect(() => {
+    const updateResponsiveScale = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      // Base scale factors for different screen sizes
+      let baseScale;
+      if (width < 480) {
+        baseScale = 0.4; // Mobile phones
+      } else if (width < 768) {
+        baseScale = 0.6; // Tablets portrait
+      } else if (width < 1024) {
+        baseScale = 0.8; // Tablets landscape / small laptops
+      } else if (width < 1440) {
+        baseScale = 1.0; // Desktop
+      } else {
+        baseScale = 1.2; // Large screens
+      }
+      
+      // Adjust for very tall or short screens
+      const aspectRatio = width / height;
+      if (aspectRatio < 0.75) baseScale *= 0.9; // Very tall screens
+      if (aspectRatio > 2) baseScale *= 1.1; // Very wide screens
+      
+      setResponsiveScale(baseScale);
+    };
+
+    updateResponsiveScale();
+    window.addEventListener('resize', updateResponsiveScale);
+    return () => window.removeEventListener('resize', updateResponsiveScale);
+  }, []);
 
   // Optimized zoom
   const handleWheel = useCallback((e) => {
@@ -151,7 +189,7 @@ export function World({ data, globeConfig, points }) {
   const zoomIn = useCallback(() => setScale(prev => Math.min(3, prev + 0.2)), []);
   const zoomOut = useCallback(() => setScale(prev => Math.max(0.5, prev - 0.2)), []);
   const resetView = useCallback(() => {
-    setScale(1.5);
+    setScale(1.0);
     setSelectedLocation(null);
   }, []);
 
@@ -227,20 +265,23 @@ export function World({ data, globeConfig, points }) {
         ref={containerRef}
         style={{ 
           width: "100%", 
-          height: "80vh", 
-          minHeight: "600px", 
+          height: window.innerWidth < 768 ? "60vh" : "80vh", 
+          minHeight: window.innerWidth < 480 ? "400px" : "600px", 
           cursor: "grab",
           overflow: "visible"
         }}
       >
         <Canvas
-          camera={{ position: [0, 0, 250], fov: 60 }}
+          camera={{ 
+            position: [0, 0, window.innerWidth < 768 ? 300 : 250], 
+            fov: window.innerWidth < 480 ? 75 : 60 
+          }}
           style={{ background: "transparent" }}
           performance={{ min: 0.5 }}
-          dpr={[1, 1.2]}
+          dpr={window.innerWidth < 768 ? [0.8, 1] : [1, 1.2]}
           onCreated={({ gl }) => {
             gl.setClearColor(0x000000, 0);
-            gl.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+            gl.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.2 : 1.5));
           }}
         >
           <ambientLight intensity={0.6} />
@@ -251,7 +292,7 @@ export function World({ data, globeConfig, points }) {
             globeConfig={globeConfig} 
             data={data} 
             points={points} 
-            scale={scale}
+            scale={scale * responsiveScale}
             isPaused={isPaused}
             onLocationClick={handleLocationClick}
           />
