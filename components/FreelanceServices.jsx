@@ -85,7 +85,7 @@ const FreelanceServices = () => {
                 {service.description}
               </p>
               <a
-                href={`#contact`}
+                href={`/services/${service.id}`}
                 className="inline-block mt-4 text-indigo-500 dark:text-indigo-400 font-semibold group-hover:underline"
               >
                 Learn More →
