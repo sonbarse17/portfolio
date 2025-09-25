@@ -92,7 +92,7 @@ const SkillsSection = () => {
                         node: <div className="text-4xl">{skill.icon}</div>, 
                         title: skill.name 
                     }))}
-                    speed={30}
+                    speed={60}
                     direction="left"
                     logoHeight={60}
                     gap={60}
