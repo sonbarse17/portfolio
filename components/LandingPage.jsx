@@ -54,6 +54,14 @@ const LandingSection = () => {
           >
             View My Work
           </AnimatedButton>
+          <AnimatedButton 
+            onClick={() => {
+              performanceMonitor.trackInteraction('click', 'services_button');
+              window.location.href = '/freelance';
+            }}
+          >
+            View My Services
+          </AnimatedButton>
         </div>
       </div>
     </section>
