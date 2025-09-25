@@ -8,6 +8,7 @@ import TimelineDemo from '../components/TimelineDemo.jsx'
 
 
 import ContactSection from '../components/ContactSection.jsx'
+import FreelanceSection from '../components/FreelanceSection.jsx'
 import BlogSection from '../components/BlogSection.jsx'
 import { AppleStyleDock } from '../components/AppleStyleDock.jsx'
 
@@ -94,6 +95,8 @@ export default function Home() {
         <ErrorBoundary><section id="experience" aria-label="Experience section"><TimelineDemo /></section></ErrorBoundary>
         <div className="py-8 bg-gray-50 dark:bg-black transition-colors duration-300"></div>
         <ErrorBoundary><section id="contact" aria-label="Contact section"><ContactSection /></section></ErrorBoundary>
+        <div className="py-8 bg-white dark:bg-black transition-colors duration-300"></div>
+        <ErrorBoundary><section id="freelance" aria-label="Freelance section"><FreelanceSection /></section></ErrorBoundary>
         <div className="py-8 bg-white dark:bg-black transition-colors duration-300"></div>
         <ErrorBoundary><section id="blog" aria-label="Blog section"><BlogSection /></section></ErrorBoundary>
         <AppleStyleDock />
