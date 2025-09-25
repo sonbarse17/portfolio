@@ -94,11 +94,11 @@ export default function Home() {
         <div className="py-8 bg-white dark:bg-black transition-colors duration-300"></div>
         <ErrorBoundary><section id="experience" aria-label="Experience section"><TimelineDemo /></section></ErrorBoundary>
         <div className="py-8 bg-gray-50 dark:bg-black transition-colors duration-300"></div>
-        <ErrorBoundary><section id="contact" aria-label="Contact section"><ContactSection /></section></ErrorBoundary>
-        <div className="py-8 bg-white dark:bg-black transition-colors duration-300"></div>
         <ErrorBoundary><section id="freelance" aria-label="Freelance section"><FreelanceSection /></section></ErrorBoundary>
         <div className="py-8 bg-white dark:bg-black transition-colors duration-300"></div>
         <ErrorBoundary><section id="blog" aria-label="Blog section"><BlogSection /></section></ErrorBoundary>
+        <div className="py-8 bg-gray-50 dark:bg-black transition-colors duration-300"></div>
+        <ErrorBoundary><section id="contact" aria-label="Contact section"><ContactSection /></section></ErrorBoundary>
         <AppleStyleDock />
       </main>
     </>
