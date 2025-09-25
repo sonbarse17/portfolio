@@ -20,7 +20,6 @@ export default function Home() {
     "jobTitle": "DevOps Engineer",
     "description": "DevOps Engineer specializing in cloud infrastructure, automation, and site reliability engineering",
     "url": "https://sushantsonbarse.com",
-    "url": "https://sushantsonbarse.cloud",
     "sameAs": [
       "https://github.com/sonbarse17",
       "https://linkedin.com/in/sushant-sonbarse"
@@ -49,21 +48,21 @@ export default function Home() {
         <meta name="keywords" content="DevOps, Cloud Engineer, AWS, Kubernetes, Docker, Terraform, Jenkins, Site Reliability Engineering, Infrastructure as Code" />
         <meta name="author" content="Sushant Sonbarse" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href="https://sushantsonbarse.dev" />
+        <link rel="canonical" href="https://sushantsonbarse.com" />
         
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Sushant Sonbarse - DevOps Engineer" />
         <meta property="og:description" content="DevOps Engineer specializing in cloud infrastructure, automation, and site reliability engineering" />
         <meta property="og:url" content="https://sushantsonbarse.dev" />
-        <meta property="og:image" content="https://sushantsonbarse.dev/assets/images/profile.jpg" />
+        <meta property="og:image" content="https://sushantsonbarse.com/assets/images/profile.jpg" />
         <meta property="og:site_name" content="Sushant Sonbarse Portfolio" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Sushant Sonbarse - DevOps Engineer" />
         <meta name="twitter:description" content="DevOps Engineer specializing in cloud infrastructure and automation" />
-        <meta name="twitter:image" content="https://sushantsonbarse.dev/assets/images/profile.jpg" />
+        <meta name="twitter:image" content="https://sushantsonbarse.com/assets/images/profile.jpg" />
         
         {/* Structured Data */}
         <script
