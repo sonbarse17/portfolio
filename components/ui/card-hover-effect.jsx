@@ -9,8 +9,11 @@ export const HoverEffect = ({ items, className }) => {
       className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-10 ${className || ''}`}
     >
       {items.map((item, idx) => (
-        <div
-          key={item?.link}
+        <a
+          href={item?.liveLink || item?.githubLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          key={item?.title}
           className="relative group block p-2 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
@@ -35,8 +38,31 @@ export const HoverEffect = ({ items, className }) => {
           <Card>
             <CardTitle>{item.title}</CardTitle>
             <CardDescription>{item.description}</CardDescription>
+            <CardResults>{item.results}</CardResults>
+            <CardActions>
+              {item.liveLink && (
+                <a
+                  href={item.liveLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
+                >
+                  Live Demo
+                </a>
+              )}
+              {item.githubLink && (
+                <a
+                  href={item.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
+                >
+                  View on GitHub
+                </a>
+              )}
+            </CardActions>
           </Card>
-        </div>
+        </a>
       ))}
     </div>
   );
@@ -69,5 +95,23 @@ export const CardDescription = ({ className, children }) => {
     >
       {children}
     </p>
+  );
+};
+
+export const CardResults = ({ className, children }) => {
+  return (
+    <p
+      className={`mt-4 text-green-600 dark:text-green-400 text-sm font-semibold ${className || ''}`}
+    >
+      {children}
+    </p>
+  );
+};
+
+export const CardActions = ({ className, children }) => {
+  return (
+    <div className={`mt-8 flex justify-end space-x-4 ${className || ''}`}>
+      {children}
+    </div>
   );
 };
