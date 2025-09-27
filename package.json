@@ -16,6 +16,7 @@
     "analyze": "cross-env ANALYZE=true next build",
     "lighthouse": "lhci autorun",
     "security-audit": "npm audit --audit-level moderate",
+    "sitemap": "next-sitemap",
     "postbuild": "next-sitemap"
   },
   "dependencies": {
