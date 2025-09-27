@@ -2,7 +2,6 @@ import '../styles/globals.css'
 import { useEffect } from 'react'
 import { performanceMonitor } from '../lib/analytics'
 import PerformanceDashboard from '../components/ui/performance-dashboard'
-import Lenis from 'lenis'
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -17,23 +16,26 @@ export default function App({ Component, pageProps }) {
       performanceMonitor.trackCoreWebVitals();
     }
     
-    // Initialize Lenis smooth scrolling
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-    });
+    // Initialize Lenis smooth scrolling (client-only)
+    let lenis;
+    import('lenis').then(({ default: Lenis }) => {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+      });
 
-    function raf(time) {
-      lenis.raf(time);
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
       requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
+    }).catch(console.warn);
     
     // Track page load time
     const handleLoad = () => {
@@ -70,7 +72,7 @@ export default function App({ Component, pageProps }) {
       window.removeEventListener('load', handleLoad);
       window.removeEventListener('error', handleError);
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
-      lenis.destroy();
+      if (lenis) lenis.destroy();
     };
   }, []);
   

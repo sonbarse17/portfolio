@@ -14,6 +14,17 @@ export const FloatingDock = ({ items, desktopClassName, mobileClassName }) => {
 
 const FloatingDockMobile = ({ items, className }) => {
   const [open, setOpen] = useState(false);
+  
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setOpen(!open);
+    }
+    if (e.key === 'Escape') {
+      setOpen(false);
+    }
+  };
+  
   return (
     <div className={cn("relative block md:hidden", className)}>
       <AnimatePresence>
@@ -43,7 +54,8 @@ const FloatingDockMobile = ({ items, className }) => {
                   <button
                     onClick={item.onClick}
                     key={item.title}
-                    className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center"
+                    aria-label={item.title}
+                    className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
                     <div className="h-4 w-4">{item.icon}</div>
                   </button>
@@ -51,7 +63,8 @@ const FloatingDockMobile = ({ items, className }) => {
                   <a
                     href={item.href}
                     key={item.title}
-                    className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center"
+                    aria-label={item.title}
+                    className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
                     <div className="h-4 w-4">{item.icon}</div>
                   </a>
@@ -63,7 +76,10 @@ const FloatingDockMobile = ({ items, className }) => {
       </AnimatePresence>
       <button
         onClick={() => setOpen(!open)}
-        className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center"
+        onKeyDown={handleKeyDown}
+        aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={open}
+        className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
         <svg
           width="24"
@@ -143,9 +159,23 @@ function IconContainer({ mouseX, title, icon, href, onClick }) {
 
   const Component = onClick ? 'button' : 'a';
   const props = onClick ? { onClick } : { href };
+  
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (onClick) {
+        e.preventDefault();
+        onClick();
+      }
+    }
+  };
 
   return (
-    <Component {...props}>
+    <Component 
+      {...props}
+      onKeyDown={handleKeyDown}
+      aria-label={title}
+      className="focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full"
+    >
       <motion.div
         ref={ref}
         style={{ width, height }}

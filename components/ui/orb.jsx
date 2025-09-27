@@ -194,7 +194,9 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
 
     function resize() {
       if (!container) return;
-      const dpr = window.devicePixelRatio || 1;
+      // Reduce DPR on small screens for better performance
+      const baseDpr = window.devicePixelRatio || 1;
+      const dpr = window.innerWidth < 768 ? Math.min(baseDpr, 1.5) : baseDpr;
       const width = container.clientWidth;
       const height = container.clientHeight;
       renderer.setSize(width * dpr, height * dpr);
@@ -210,23 +212,30 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
     let currentRot = 0;
     const rotationSpeed = 0.3;
 
+    // Throttle mouse events for better performance
+    let mouseThrottle = false;
     const handleMouseMove = e => {
-      const rect = container.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const width = rect.width;
-      const height = rect.height;
-      const size = Math.min(width, height);
-      const centerX = width / 2;
-      const centerY = height / 2;
-      const uvX = ((x - centerX) / size) * 2.0;
-      const uvY = ((y - centerY) / size) * 2.0;
+      if (mouseThrottle) return;
+      mouseThrottle = true;
+      requestAnimationFrame(() => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const width = rect.width;
+        const height = rect.height;
+        const size = Math.min(width, height);
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const uvX = ((x - centerX) / size) * 2.0;
+        const uvY = ((y - centerY) / size) * 2.0;
 
-      if (Math.sqrt(uvX * uvX + uvY * uvY) < 0.8) {
-        targetHover = 1;
-      } else {
-        targetHover = 0;
-      }
+        if (Math.sqrt(uvX * uvX + uvY * uvY) < 0.8) {
+          targetHover = 1;
+        } else {
+          targetHover = 0;
+        }
+        mouseThrottle = false;
+      });
     };
 
     const handleMouseLeave = () => {

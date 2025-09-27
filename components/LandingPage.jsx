@@ -1,9 +1,10 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
-import Orb from "./ui/orb.jsx";
 import { LayoutTextFlipDemo } from "./LayoutTextFlipDemo.jsx";
 import { AnimatedButton } from "./ui/animated-button.jsx";
 import { performanceMonitor } from '../lib/analytics';
+
+const Orb = lazy(() => import("./ui/orb.jsx"));
 
 const LandingSection = () => {
   return (
@@ -13,12 +14,18 @@ const LandingSection = () => {
         {/* Interactive Orb with Profile */}
         <div className="mb-12 flex justify-center items-center min-h-[300px]">
           <div className="w-80 h-80 mx-auto animate-fade-in-up">
-            <Orb 
-              hue={0}
-              hoverIntensity={0.3}
-              rotateOnHover={true}
-              profileImage={true}
-            />
+            <Suspense fallback={
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-400 via-blue-500 to-indigo-600 animate-pulse" />
+              </div>
+            }>
+              <Orb 
+                hue={0}
+                hoverIntensity={0.3}
+                rotateOnHover={true}
+                profileImage={true}
+              />
+            </Suspense>
           </div>
         </div>
 
