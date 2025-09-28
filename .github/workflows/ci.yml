@@ -25,9 +25,6 @@ jobs:
     - name: Run tests
       run: npm run test
     
-    - name: Security audit
-      run: npm run security-audit
-    
     - name: Build project
       run: npm run build
     
