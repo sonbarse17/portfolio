@@ -7,18 +7,29 @@ global.PerformanceObserver = jest.fn().mockImplementation((callback) => ({
 }));
 
 // Mock performance API
-global.performance = {
-  timing: {
-    navigationStart: 1000,
-    loadEventEnd: 2000
+Object.defineProperty(global, 'performance', {
+  value: {
+    timing: {
+      navigationStart: 1000,
+      loadEventEnd: 2000
+    },
+    getEntriesByType: jest.fn(() => [{ transferSize: 1024 }]),
+    memory: {
+      usedJSHeapSize: 1024000,
+      totalJSHeapSize: 2048000,
+      jsHeapSizeLimit: 4096000
+    }
   },
-  getEntriesByType: jest.fn(() => [{ transferSize: 1024 }]),
-  memory: {
-    usedJSHeapSize: 1024000,
-    totalJSHeapSize: 2048000,
-    jsHeapSizeLimit: 4096000
-  }
-};
+  writable: true
+});
+
+// Mock window object
+Object.defineProperty(global, 'window', {
+  value: {
+    performance: global.performance
+  },
+  writable: true
+});
 
 describe('PerformanceMonitor', () => {
   let monitor;

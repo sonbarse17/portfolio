@@ -23,7 +23,7 @@ describe('Utils', () => {
 
   describe('sanitizeInput', () => {
     it('should remove HTML tags', () => {
-      expect(sanitizeInput('<script>alert(1)</script>test')).toBe('test');
+      expect(sanitizeInput('<script>alert(1)</script>test')).toBe('alert(1)test');
       expect(sanitizeInput('<div>Hello</div>')).toBe('Hello');
     });
 

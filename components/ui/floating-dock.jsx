@@ -1,5 +1,4 @@
 import { cn } from "../../lib/utils";
-import { performanceMonitor } from '../../lib/analytics';
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 

@@ -53,13 +53,13 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Handle other requests with stale-while-revalidate
-  if (request.method === 'GET') {
+  if (request.method === 'GET' && url.protocol === 'https:') {
     event.respondWith(
       caches.open(RUNTIME_CACHE).then((cache) => {
         return cache.match(request).then((cachedResponse) => {
           const fetchPromise = fetch(request).then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
-              cache.put(request, networkResponse.clone());
+              cache.put(request, networkResponse.clone()).catch(() => {});
             }
             return networkResponse;
           }).catch(() => cachedResponse);
