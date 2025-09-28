@@ -1,6 +1,8 @@
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
+const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
-})
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -26,12 +28,7 @@ const nextConfig = {
     optimizePackageImports: ['framer-motion', 'react-icons'],
   },
   
-  generateBuildId: async () => {
-    return Date.now().toString();
-  },
+  generateBuildId: async () => Date.now().toString(),
+};
 
-
-
-}
-
-module.exports = withBundleAnalyzer(nextConfig)
+export default bundleAnalyzer(nextConfig);

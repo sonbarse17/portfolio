@@ -1,5 +1,5 @@
 /** @type {import('next-sitemap').IConfig} */
-module.exports = {
+const config = {
   siteUrl: 'https://sushantsonbarse.com',
   generateRobotsText: true,
   changefreq: 'weekly',
@@ -22,4 +22,6 @@ module.exports = {
       },
     ],
   },
-}
+};
+
+export default config;
