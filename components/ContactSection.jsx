@@ -23,8 +23,7 @@ const ContactSection = () => {
         from_name: name,
         from_email: email,
         message: message,
-        to_name: 'Sushant Sonbarse',
-        to_email: 'sushantsonbarse07@gmail.com'
+        to_name: 'Sushant Sonbarse'
       };
 
       await emailjs.send(
