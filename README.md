@@ -1,86 +1,62 @@
 # Sushant Sonbarse - DevOps Engineer Portfolio
 
-A high-performance, secure, and accessible portfolio website built with Next.js, showcasing DevOps engineering expertise and projects.
+A high-performance, secure, and accessible portfolio website built with Next.js 15 App Router, showcasing DevOps engineering expertise and projects.
 
-## 🚀 Performance Metrics
+## 🚀 Tech Stack
 
-This portfolio is optimized for maximum performance and user experience:
+- **Framework**: Next.js 15 (App Router)
+- **React**: React 19
+- **Styling**: Tailwind CSS v4
+- **UI Components**: Shadcn/UI + Radix UI
+- **Animations**: Framer Motion 12
+- **3D Graphics**: Three.js + OGL
+- **Type Safety**: TypeScript (Strict Mode)
+- **Testing**: Vitest + Playwright
+- **Linting**: ESLint + Prettier
+- **Git Hooks**: Husky + lint-staged
+
+## 📊 Performance Metrics
 
 ### Core Web Vitals Targets
-- **Largest Contentful Paint (LCP)**: < 2.5s
-- **First Input Delay (FID)**: < 100ms  
-- **Cumulative Layout Shift (CLS)**: < 0.1
+- **Largest Contentful Paint (LCP)**: < 1.8s
+- **First Input Delay (FID)**: < 80ms
+- **Cumulative Layout Shift (CLS)**: < 0.05
 
-### Lighthouse Scores (Target: 90+)
+### Lighthouse Scores (Target: 95+)
 - **Performance**: 95+
 - **Accessibility**: 95+
 - **Best Practices**: 95+
 - **SEO**: 95+
 
-## 🔧 Tech Stack
-
-- **Framework**: Next.js 14
-- **Styling**: Tailwind CSS
-- **Animations**: Framer Motion
-- **Icons**: React Icons
-- **Performance**: Bundle Analyzer, Lighthouse CI
-- **Security**: CSP Headers, Input Sanitization
-- **Testing**: Jest, Testing Library
-- **Linting**: ESLint, Prettier
-- **Type Safety**: TypeScript
-
 ## 🛡️ Security Features
 
 - **Content Security Policy (CSP)** headers
 - **Input sanitization** for all user inputs
-- **Rate limiting** for API calls
-- **URL validation** to prevent SSRF attacks
-- **Error boundary** with secure error handling
-- **Security audit** in CI/CD pipeline
-
-## 📊 Performance Monitoring
-
-### Real-time Metrics (Development)
-- Core Web Vitals tracking
-- API performance monitoring
-- Memory usage tracking
-- Error rate monitoring
-- User interaction analytics
-
-### Automated Monitoring
-- Bundle size analysis
-- Performance regression detection
-- Security vulnerability scanning
-
-## 🎯 Accessibility Features
-
-- **WCAG 2.1 AA compliance**
-- **Screen reader support**
-- **Keyboard navigation**
-- **Focus management**
-- **Color contrast compliance**
-- **Reduced motion support**
+- **Rate limiting** middleware
+- **Security headers** (X-Frame-Options, X-Content-Type-Options, etc.)
+- **Strict TypeScript** configuration
+- **Dependency vulnerability scanning**
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/sonbarse17/nextjs-portfolio.git
-
-# Navigate to project directory
-cd nextjs-portfolio
-
 # Install dependencies
 npm install
 
 # Start development server
 npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start
 ```
 
 ### Available Scripts
@@ -97,90 +73,88 @@ npm run lint:fix     # Fix ESLint issues
 npm run type-check   # TypeScript type checking
 
 # Testing
-npm run test         # Run tests
-npm run test:watch   # Run tests in watch mode
-
-# Performance
-npm run analyze      # Analyze bundle size
-npm run lighthouse   # Run Lighthouse audit
-
-# Security
-npm run security-audit  # Run security audit
+npm run test         # Run unit tests with Vitest
+npm run test:e2e     # Run E2E tests with Playwright
+npm run test:e2e:ui  # Run E2E tests with UI
 ```
 
-## 📈 Performance Optimization Techniques
+## 📁 Project Structure
 
-### 1. **Image Optimization**
-- Next.js Image component with WebP/AVIF support
-- Lazy loading with intersection observer
-- Responsive images with srcset
+```
+src/
+├── app/                    # App Router pages
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Homepage
+│   ├── freelance/         # Freelance services page
+│   ├── services/          # Service detail pages
+│   ├── globals.css        # Global styles
+│   ├── loading.tsx        # Loading state
+│   ├── error.tsx          # Error boundary
+│   └── not-found.tsx      # 404 page
+├── components/
+│   ├── ui/                # Shadcn/UI components
+│   ├── features/          # Feature components
+│   └── layout/            # Layout components
+├── lib/                   # Utilities
+├── hooks/                 # Custom React hooks
+└── types/                 # TypeScript types
+```
 
-### 2. **Code Splitting**
-- Dynamic imports for heavy components
-- Route-based code splitting
-- Component-level lazy loading
+## 🎨 Design System
 
-### 3. **Caching Strategy**
-- Service Worker for offline support
-- Static asset caching
-- API response caching
+The project uses a modern design system with:
+- **Design tokens** via CSS variables
+- **Consistent spacing** and typography scales
+- **Dark/light mode** support with next-themes
+- **Accessible components** from Radix UI
+- **Utility-first** styling with Tailwind CSS
 
-### 4. **Bundle Optimization**
-- Tree shaking for unused code
-- Minification and compression
-- Bundle analysis and monitoring
+## ⚡ Performance Optimizations
 
-### 5. **Runtime Performance**
-- GPU-accelerated animations
-- Debounced event handlers
-- Memoized expensive calculations
+1. **Bundle Optimization**
+   - Tree-shaking for unused code
+   - Dynamic imports for heavy components
+   - Optimized package imports
 
-## 🔍 Monitoring & Analytics
+2. **Image Optimization**
+   - Next.js Image component with AVIF/WebP
+   - Responsive images with proper sizing
+   - Lazy loading
 
-### Development Dashboard
-Access the performance dashboard in development mode:
-- Real-time Core Web Vitals
-- API call performance
-- Memory usage tracking
-- Error monitoring
+3. **Runtime Performance**
+   - Server Components by default
+   - Client Components only when needed
+   - Proper cleanup of WebGL contexts
 
-### Production Monitoring
-- Bundle size tracking
-- Performance regression alerts
-- Security vulnerability scanning
+## 🔍 Testing
+
+### Unit Tests (Vitest)
+```bash
+npm run test
+```
+
+### E2E Tests (Playwright)
+```bash
+npm run test:e2e
+```
 
 ## 🌐 Deployment
 
-The portfolio is optimized for deployment on:
+Optimized for deployment on:
 - **Vercel** (recommended)
 - **Netlify**
 - **AWS Amplify**
-- **GitHub Pages**
 
 ### Environment Variables
 ```bash
-# Optional: GitHub API token for higher rate limits
-GITHUB_TOKEN=your_github_token
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
 ```
-
-## 📱 PWA Features
-
-- **Offline support** with service worker
-- **App-like experience** on mobile
-- **Install prompt** for supported browsers
-- **Background sync** for form submissions
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## 📞 Contact
 

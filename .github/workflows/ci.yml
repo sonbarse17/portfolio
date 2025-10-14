@@ -27,14 +27,6 @@ jobs:
     
     - name: Build project
       run: npm run build
-    
-    - name: Generate sitemap
-      run: npm run sitemap
-    
-    - name: Bundle analysis
-      run: npm run analyze
-      env:
-        ANALYZE: true
 
   lighthouse:
     runs-on: ubuntu-latest
@@ -48,9 +40,6 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm install
     
     - name: Install dependencies
       run: npm ci
