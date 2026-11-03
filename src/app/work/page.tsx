@@ -14,8 +14,8 @@ export default function WorkPage() {
     <main className="wrap pt-10">
       <h1 className="h-page">Work</h1>
       <p className="lede mt-6 max-w-3xl">
-        Professional work and personal projects are kept apart, and every page says which it is.
-        Where a detail is not verified, it is left out.
+        Selected cloud and DevOps work across AWS, Azure, Kubernetes, CI/CD, and infrastructure
+        automation.
       </p>
 
       <section aria-labelledby="professional" className="mt-14">
