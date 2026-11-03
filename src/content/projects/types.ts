@@ -2,8 +2,8 @@ import type { ProvenanceKind } from '@/components/provenance'
 import type { Region } from '@/components/schematic'
 
 /**
- * implemented  built, changed or deliberately retained in this project
- * dependency   an existing system, actor or service the design relies on
+ * implemented  built in this project
+ * dependency   the application, an actor or an external service the design relies on
  * followup     reviewed or planned, and not described as completed
  */
 export type NodeStatus = 'implemented' | 'dependency' | 'followup'

@@ -10,7 +10,7 @@ const appNode = (x: number, y: number, sub = 'web application') =>
     x,
     y,
     E,
-    'The existing application deployment. Microsoft Entra ID authentication is enabled on it, and it is the backend behind the gateway.',
+    'The application deployment. Microsoft Entra ID authentication is enabled on it, and it is the backend behind the gateway.',
     sub
   )
 
@@ -21,7 +21,7 @@ const entra = (x: number, y: number) =>
     x,
     y,
     E,
-    'Employee single sign-on. Retained as it was, so the sign-in experience did not change.',
+    'Employee single sign-on through Microsoft Entra ID.',
     'SSO'
   )
 
@@ -40,17 +40,17 @@ export const azureInternalAccess: Project = {
   slug: 'azure-internal-access',
   title: 'Internal-only access for an enterprise Azure application',
   summary:
-    'An existing application, public through Azure Front Door, moved to internal-only access behind an internal Application Gateway. Hostname and Entra ID sign-in were kept.',
+    'Internal-only access for an enterprise application, through an internal Application Gateway, with Microsoft Entra ID sign-in. I designed and deployed every component myself.',
   classification: 'professional',
   category: 'Azure infrastructure, internal network architecture, enterprise identity',
-  context: 'Professional implementation',
+  context: 'Designed and deployed by me',
   labels: ['Dev', 'UAT', 'Production'],
   tier: 'case',
   lab: 'access-trace',
   glance: [
-    { label: 'Change', value: 'Public via Front Door to internal-only access' },
+    { label: 'Access model', value: 'Internal-only, through an internal Application Gateway' },
     { label: 'Chosen solution', value: 'Internal Application Gateway, not Private Endpoint' },
-    { label: 'Kept as it was', value: 'Hostname and Microsoft Entra ID SSO' },
+    { label: 'Identity', value: 'Microsoft Entra ID SSO, under the application hostname' },
     { label: 'Reached from', value: 'Corporate VDI, Windows 365 Cloud PC, VPN' },
   ],
   stackGroups: [
@@ -139,7 +139,7 @@ export const azureInternalAccess: Project = {
           50,
           36,
           I,
-          'Internal DNS records were updated so the existing hostname resolves to the internal gateway.',
+          'Internal DNS records were updated so the application hostname resolves to the internal gateway.',
           'records point to gateway'
         ),
         node(
@@ -195,7 +195,7 @@ export const azureInternalAccess: Project = {
           18,
           40,
           I,
-          'Resolves the existing hostname to the internal gateway.'
+          'Resolves the application hostname to the internal gateway.'
         ),
         node(
           'agw',
@@ -211,7 +211,7 @@ export const azureInternalAccess: Project = {
       edges: [edge('user', 'dns'), edge('user', 'agw', 'HTTPS'), edge('agw', 'app')],
       steps: [
         {
-          text: 'The employee opens the existing application hostname. Corporate DNS resolves it to the internal gateway.',
+          text: 'The employee opens the application hostname. Corporate DNS resolves it to the internal gateway.',
           edges: [['user', 'dns']],
         },
         {
@@ -227,7 +227,7 @@ export const azureInternalAccess: Project = {
     {
       id: 'auth',
       label: 'Authentication',
-      caption: 'Employee sign-in through Microsoft Entra ID, unchanged.',
+      caption: 'Employee sign-in through Microsoft Entra ID.',
       height: 'h-[22rem]',
       nodes: [
         node('emp', 'Employee', 18, 22, E, 'Signs in with their corporate identity.'),
@@ -238,7 +238,7 @@ export const azureInternalAccess: Project = {
       steps: [
         { text: 'The employee opens the application.', edges: [['emp', 'app']] },
         {
-          text: 'Authentication is handled by Microsoft Entra ID single sign-on, which was retained.',
+          text: 'Authentication is handled by Microsoft Entra ID single sign-on.',
           edges: [['app', 'entra']],
         },
         {
@@ -279,7 +279,7 @@ export const azureInternalAccess: Project = {
       edges: [edge('client', 'dns'), edge('dns', 'agw', 'record'), edge('client', 'agw')],
       steps: [
         {
-          text: 'The client asks corporate DNS for the existing application hostname.',
+          text: 'The client asks corporate DNS for the application hostname.',
           edges: [['client', 'dns']],
         },
         {
@@ -302,7 +302,7 @@ export const azureInternalAccess: Project = {
           50,
           50,
           I,
-          'The only endpoint excluded from interactive App Service authentication. The exclusion was retained because the integration needs it.',
+          'The only endpoint excluded from interactive App Service authentication. The exclusion is in place because the integration needs it.',
           'excluded from interactive auth'
         ),
         appNode(86, 50, 'workflow'),
@@ -324,12 +324,12 @@ export const azureInternalAccess: Project = {
     {
       id: 'intro',
       provenance: 'record',
-      body: 'An enterprise web application was publicly reachable through Azure Front Door. I worked on moving it to internal-only access while keeping its hostname and the Microsoft Entra ID sign-in employees already used.',
+      body: 'An enterprise web application needed internal-only access for employees, with Microsoft Entra ID sign-in and no public exposure. I designed and deployed every component myself.',
     },
     {
       id: 'problem',
       provenance: 'record',
-      body: 'The application was exposed to the public internet. The requirement was internal-only access without changing the application hostname or the employee authentication experience.',
+      body: 'The requirement was internal-only access for employees under the application hostname, signing in with Microsoft Entra ID, with no public exposure.',
     },
     {
       id: 'context',
@@ -343,7 +343,7 @@ export const azureInternalAccess: Project = {
     {
       id: 'contribution',
       provenance: 'record',
-      body: 'I reviewed the existing architecture and evaluated the internal access options. Azure Application Gateway was the finalized choice. I then worked through the implementation sequence below: gateway deployment and network configuration, DNS changes, validation in each environment, and production readiness.',
+      body: 'I designed and deployed every component myself. I evaluated the internal access options and selected an internal Application Gateway. Then I carried out the steps below: gateway deployment and network configuration, DNS changes, validation in each environment, and production readiness.',
     },
     {
       id: 'architecture',
@@ -363,18 +363,18 @@ export const azureInternalAccess: Project = {
           },
           {
             aspect: 'Hostname',
-            before: 'Existing application hostname',
-            after: 'Maintained. Internal DNS resolves it to the gateway',
+            before: 'Application hostname',
+            after: 'The same hostname. Internal DNS resolves it to the gateway',
           },
           {
             aspect: 'Employee sign-in',
             before: 'Microsoft Entra ID SSO',
-            after: 'Retained, unchanged',
+            after: 'Microsoft Entra ID SSO, the same sign-in',
           },
           {
             aspect: 'Integration endpoint',
             before: 'One workflow endpoint excluded from interactive authentication',
-            after: 'Exclusion retained, limited to that endpoint',
+            after: 'Exclusion in place, limited to that endpoint',
           },
           {
             aspect: 'Legacy edge',
@@ -402,7 +402,7 @@ export const azureInternalAccess: Project = {
       provenance: 'record',
       body: 'The work in sequence. Environment labels mark the steps that were specific to one environment.',
       timeline: [
-        { text: 'Reviewed the existing public-facing architecture', status: 'done' },
+        { text: 'Reviewed the public-facing architecture it replaces', status: 'done' },
         { text: 'Evaluated internal access options', status: 'done' },
         { text: 'Internal Application Gateway finalized as the access solution', status: 'done' },
         { text: 'Coordinated gateway deployment and network configuration', status: 'done' },
@@ -428,7 +428,7 @@ export const azureInternalAccess: Project = {
       id: 'challenges',
       provenance: 'record',
       points: [
-        'Remove public exposure without changing the hostname or how employees sign in.',
+        'Provide internal-only access under the same hostname and the same Entra ID sign-in, with no public exposure.',
         'Make all three access paths, Corporate VDI, Windows 365 Cloud PC and VPN, resolve and reach the internal gateway.',
         'Keep the integration working without opening the rest of the application: the exclusion is scoped to one endpoint.',
         'Repeat validation in Dev, UAT and Production, since each had its own DNS and connectivity to confirm.',
@@ -440,9 +440,9 @@ export const azureInternalAccess: Project = {
       provenance: 'record',
       points: [
         'Internal-only access: requests enter through a gateway with a private IP address.',
-        'DNS resolution: internal records point the existing hostname at the gateway.',
+        'DNS resolution: internal records point the application hostname at the gateway.',
         'HTTPS: certificates were configured for the gateway.',
-        'Identity: Microsoft Entra ID SSO was retained, and employee authentication stays enabled.',
+        'Identity: Microsoft Entra ID SSO, with employee authentication enabled.',
         'API exclusion: limited to one workflow endpoint, for the integration only.',
         'Environment-specific validation, and a security review before production.',
         'Follow-up: legacy Front Door and DNS cleanup was reviewed. Decommissioning is not described as completed.',

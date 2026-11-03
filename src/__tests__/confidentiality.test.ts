@@ -6,7 +6,8 @@ import { describe, expect, it } from 'vitest'
  * Client and internal system names must never be published. The list lives in this file, so this file
  * is the one place that is skipped. Add a name here when a new engagement should stay private.
  */
-const PRIVATE = /shipiq|voycean|arcwood|ai approvals|ai-approvals|triggeraiworkflow|\bmms\b/i
+const PRIVATE =
+  /shipiq|voycean|arcwood|ai approvals|ai-approvals|triggeraiworkflow|netsanchar|cargo|\bmms\b/i
 
 const TEXT = /\.(ts|tsx|css|md|json|mjs|txt|xml)$/
 const SKIP = new Set(['node_modules', '.next', 'out', '.git', 'test-results', 'package-lock.json'])

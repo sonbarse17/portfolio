@@ -11,17 +11,17 @@ const tone: Record<NodeStatus, SchematicTone> = {
   followup: 'warn',
 }
 const word: Record<NodeStatus, string> = {
-  implemented: 'implemented or retained',
-  dependency: 'existing system',
+  implemented: 'built in this project',
+  dependency: 'application or external system',
   followup: 'follow-up, not completed',
 }
 const legend: { status: NodeStatus; swatch: string; text: string }[] = [
   {
     status: 'implemented',
     swatch: 'border-2 border-ink',
-    text: 'Implemented or retained in this project',
+    text: 'Built in this project',
   },
-  { status: 'dependency', swatch: 'border border-ink/50', text: 'Existing system or dependency' },
+  { status: 'dependency', swatch: 'border border-ink/50', text: 'Application or external system' },
   {
     status: 'followup',
     swatch: 'border border-dashed border-warn',

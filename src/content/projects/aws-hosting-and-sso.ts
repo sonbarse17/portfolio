@@ -91,10 +91,10 @@ export const awsHostingAndSso: Project = {
   slug: 'aws-hosting-and-sso',
   title: 'AWS hosting and Microsoft SSO for a client web application',
   summary:
-    'Static hosting, application hosting and enterprise sign-in on AWS Singapore. S3 and CloudFront for the site, Elastic Beanstalk for the app, Cognito federated to Microsoft over SAML.',
+    'Static hosting, application hosting and enterprise sign-in on AWS Singapore, with every component designed and deployed by me. S3 and CloudFront for the site, Elastic Beanstalk for the app, Cognito federated to Microsoft over SAML.',
   classification: 'professional',
   category: 'AWS cloud infrastructure, hosting, authentication and enterprise SSO',
-  context: 'Professional implementation',
+  context: 'Designed and deployed by me',
   labels: ['AWS ap-southeast-1'],
   tier: 'case',
   lab: 'access-trace',
@@ -271,7 +271,7 @@ export const awsHostingAndSso: Project = {
     {
       id: 'intro',
       provenance: 'record',
-      body: 'A client needed its website and application on AWS, with sign-in through Amazon Cognito and enterprise Microsoft SSO. I configured the hosting, authentication, DNS and TLS in the AWS Singapore region (ap-southeast-1).',
+      body: 'A client needed its website and application on AWS, with sign-in through Amazon Cognito and enterprise Microsoft SSO. I designed and deployed every component myself, in the AWS Singapore region (ap-southeast-1).',
     },
     {
       id: 'problem',
@@ -292,7 +292,7 @@ export const awsHostingAndSso: Project = {
     {
       id: 'contribution',
       provenance: 'record',
-      body: 'I configured the pieces below and worked on the custom authentication experience. Direct Microsoft login redirection from the custom interface is described as work I did on, not as a finished product claim.',
+      body: 'I designed and deployed every component myself.',
     },
     {
       id: 'architecture',
@@ -320,7 +320,7 @@ export const awsHostingAndSso: Project = {
     {
       id: 'implementation',
       provenance: 'record',
-      body: 'What was configured:',
+      body: 'What I configured:',
       points: [
         'Private S3 static website hosting.',
         'CloudFront with Origin Access Control.',

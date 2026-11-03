@@ -118,14 +118,39 @@ describe('content rules', () => {
   })
 
   it('invents no uptime, latency or traffic claims anywhere', () => {
+    // Numeric claims only: a disclaimer such as "no uptime figures are published" is not a claim.
     const claim = /99\.\d+|\d+\s*(req\/s|requests per|ms\b)|saved \$|\d+x faster/i
     projects.forEach((p) => expect(text(p), p.slug).not.toMatch(claim))
   })
 
-  it('the only published outcome figures are the HisanLabs ones', () => {
+  it('the only published outcome percentages are the HisanLabs ones', () => {
     projects
       .filter((p) => p.slug !== 'crm-on-eks')
       .forEach((p) => expect(text(p), p.slug).not.toMatch(/\b\d+(\.\d+)?\s*%/))
+  })
+
+  it('professional case studies state ownership plainly and never undersell it', () => {
+    projects
+      .filter((p) => p.classification === 'professional' && p.tier === 'case')
+      .forEach((p) => {
+        const contribution = p.sections.find((s) => s.id === 'contribution')!.body!
+        expect(contribution, p.slug).toMatch(/I designed and (implemented|deployed)/)
+        expect(text(p), p.slug).not.toMatch(
+          /contributed to|helped (with|build)|assisted|part of a team/i
+        )
+      })
+  })
+
+  it('never frames professional work as modifying, migrating or redesigning something that existed', () => {
+    // The architectures were designed and deployed from scratch. "Before" diagrams describe how an
+    // application was reached, and are not described as the author's prior work.
+    projects
+      .filter((p) => p.classification === 'professional')
+      .forEach((p) => {
+        expect(text(p), p.slug).not.toMatch(
+          /\bexisting\b|already existed|redesign|retained|unchanged|kept as it was|moved (it |to )|migrated from|from scratch|end[- ]to[- ]end|professional implementation|access architecture myself/i
+        )
+      })
   })
 })
 
@@ -156,33 +181,28 @@ describe('architecture boundaries', () => {
     expect(azure.glance.map((g) => g.value).join(' ')).toMatch(
       /Application Gateway, not Private Endpoint/
     )
-    const stack = JSON.stringify(azure.stackGroups)
-    expect(stack).not.toMatch(/Private Endpoint/i)
-    const diagrams = JSON.stringify(azure.views)
-    expect(diagrams).not.toMatch(/Private Endpoint/i)
+    expect(JSON.stringify(azure.stackGroups)).not.toMatch(/Private Endpoint/i)
+    expect(JSON.stringify(azure.views)).not.toMatch(/Private Endpoint/i)
   })
 
   it('Azure scopes the authentication exclusion to the one endpoint', () => {
-    const azure = bySlug('azure-internal-access')
-    const all = text(azure)
+    const all = text(bySlug('azure-internal-access'))
     expect(all).toMatch(/workflow endpoint/)
     expect(all).toMatch(/limited to (that|this) endpoint/i)
     expect(all).not.toMatch(/unauthenticated application|no authentication/i)
   })
 
   it('Azure marks Front Door cleanup as follow-up, not done', () => {
-    const after = bySlug('azure-internal-access').views!.find((v) => v.id === 'after')!
+    const azure = bySlug('azure-internal-access')
+    const after = azure.views!.find((v) => v.id === 'after')!
     expect(after.nodes.find((n) => n.id === 'afd')!.status).toBe('followup')
-    const timeline = bySlug('azure-internal-access').sections.find(
-      (s) => s.id === 'implementation'
-    )!.timeline!
+    const timeline = azure.sections.find((s) => s.id === 'implementation')!.timeline!
     expect(timeline.at(-1)!.status).toBe('reviewed')
   })
 
   it('the AWS project keeps static hosting, application hosting and authentication apart', () => {
-    const ids = bySlug('aws-hosting-and-sso').views!.map((v) => v.id)
-    expect(ids).toEqual(expect.arrayContaining(['static', 'auth', 'app']))
-    const app = bySlug('aws-hosting-and-sso').views!.find((v) => v.id === 'app')!
-    expect(app.nodes.map((n) => n.id)).not.toContain('s3')
+    const views = bySlug('aws-hosting-and-sso').views!
+    expect(views.map((v) => v.id)).toEqual(expect.arrayContaining(['static', 'auth', 'app']))
+    expect(views.find((v) => v.id === 'app')!.nodes.map((n) => n.id)).not.toContain('s3')
   })
 })
