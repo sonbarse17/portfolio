@@ -1,167 +1,81 @@
-# Sushant Sonbarse - DevOps Engineer Portfolio
+# Sushant Sonbarse: Cloud & DevOps engineering site
 
-A high-performance, secure, and accessible portfolio website built with Next.js 15 App Router, showcasing DevOps engineering expertise and projects.
+A static Next.js site built around interactive infrastructure labs, case files and a field guide, not a list of logos.
 
-## 🚀 Tech Stack
+## What is on it
 
-- **Framework**: Next.js 15 (App Router)
-- **React**: React 19
-- **Styling**: Tailwind CSS v4
-- **UI Components**: Shadcn/UI + Radix UI
-- **Animations**: Framer Motion 12
-- **3D Graphics**: Three.js + OGL
-- **Type Safety**: TypeScript (Strict Mode)
-- **Testing**: Vitest + Playwright
-- **Linting**: ESLint + Prettier
-- **Git Hooks**: Husky + lint-staged
+| Route                            | Purpose                                                                                                                 |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `/`                              | Opening message, case studies, capabilities by domain, a live failure lab, work history, and the contact form           |
+| `/lab`, `/lab/[slug]`            | Six simulations: blast radius, release path, scheduler, plan reader, error budget, access trace                         |
+| `/work`, `/work/[slug]`          | Nine projects. Professional case studies have interactive architecture diagrams. Personal projects are labelled as such |
+| `/atlas`                         | A position on each engineering domain                                                                                   |
+| `/freelance`, `/services/[slug]` | Services                                                                                                                |
 
-## 📊 Performance Metrics
+### The honesty rule
 
-### Core Web Vitals Targets
-- **Largest Contentful Paint (LCP)**: < 1.8s
-- **First Input Delay (FID)**: < 80ms
-- **Cumulative Layout Shift (CLS)**: < 0.05
+Every section carries one of five tags: **Professional**, **Personal project**, **Reference**, **Simulation** or **Live**.
+Only **Professional** content is a claim about what I did at work. The only outcome figures are the HisanLabs ones.
+The labs run real logic in the browser, with no cloud behind them, and each lab page lists what its model leaves out.
 
-### Lighthouse Scores (Target: 95+)
-- **Performance**: 95+
-- **Accessibility**: 95+
-- **Best Practices**: 95+
-- **SEO**: 95+
+When adding a project, keep a section as `reference` unless the detail actually happened, and mark diagram components `implemented`, `dependency` or `followup` honestly. The overview-only project has no diagram until its architecture is verified. Tests enforce that no project borrows another project's components.
+`src/__tests__/content.test.ts` fails if a reference section states an outcome percentage.
 
-## 🛡️ Security Features
+## Stack
 
-- **Content Security Policy (CSP)** headers
-- **Input sanitization** for all user inputs
-- **Rate limiting** middleware
-- **Security headers** (X-Frame-Options, X-Content-Type-Options, etc.)
-- **Strict TypeScript** configuration
-- **Dependency vulnerability scanning**
+Next.js 15 (App Router, `output: 'export'`), React 18, TypeScript (strict), Tailwind CSS 3, `next-themes`, EmailJS.
+There is no animation or 3D library. Diagrams are HTML over SVG, so they stay accessible and reflow.
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-
-### Installation
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm run start
-```
-
-### Available Scripts
-
-```bash
-# Development
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-
-# Code Quality
-npm run lint         # Run ESLint
-npm run lint:fix     # Fix ESLint issues
-npm run type-check   # TypeScript type checking
-
-# Testing
-npm run test         # Run unit tests with Vitest
-npm run test:e2e     # Run E2E tests with Playwright
-npm run test:e2e:ui  # Run E2E tests with UI
-```
-
-## 📁 Project Structure
+## Structure
 
 ```
 src/
-├── app/                    # App Router pages
-│   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Homepage
-│   ├── freelance/         # Freelance services page
-│   ├── services/          # Service detail pages
-│   ├── globals.css        # Global styles
-│   ├── loading.tsx        # Loading state
-│   ├── error.tsx          # Error boundary
-│   └── not-found.tsx      # 404 page
-├── components/
-│   ├── ui/                # Shadcn/UI components
-│   ├── features/          # Feature components
-│   └── layout/            # Layout components
-├── lib/                   # Utilities
-├── hooks/                 # Custom React hooks
-└── types/                 # TypeScript types
+  app/          routes (+ sitemap.ts, robots.ts)
+  components/   shared UI; labs/ holds one component per lab, lazy-loaded
+  content/      all copy and data; projects/ holds one file per project, with its diagrams
+  lib/lab/      pure simulation engines: no React, unit tested
+  __tests__/    vitest
+e2e/            Playwright: every route, axe accessibility, five widths, links, diagram and lab flows
 ```
 
-## 🎨 Design System
+The engines in `lib/lab/` are the part to read first. Each is a plain function from inputs to state, and the UI only renders it.
 
-The project uses a modern design system with:
-- **Design tokens** via CSS variables
-- **Consistent spacing** and typography scales
-- **Dark/light mode** support with next-themes
-- **Accessible components** from Radix UI
-- **Utility-first** styling with Tailwind CSS
+## Commands
 
-## ⚡ Performance Optimizations
-
-1. **Bundle Optimization**
-   - Tree-shaking for unused code
-   - Dynamic imports for heavy components
-   - Optimized package imports
-
-2. **Image Optimization**
-   - Next.js Image component with AVIF/WebP
-   - Responsive images with proper sizing
-   - Lazy loading
-
-3. **Runtime Performance**
-   - Server Components by default
-   - Client Components only when needed
-   - Proper cleanup of WebGL contexts
-
-## 🔍 Testing
-
-### Unit Tests (Vitest)
 ```bash
-npm run test
+npm install
+npm run dev          # development
+npm run build        # static export to out/
+npm test             # unit tests
+npm run test:e2e     # needs a build first: runs against out/ on :3000
+npm run lint && npm run type-check
 ```
 
-### E2E Tests (Playwright)
-```bash
-npm run test:e2e
+Browser tests need a Chromium download: `npx playwright install chromium`.
+If your machine blocks it, CI runs the same suite.
+
+## Environment
+
+Copy `.env.example` to `.env.local`:
+
+```
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
 ```
 
-## 🌐 Deployment
+These are public by design, because they ship in the browser bundle.
+Restrict the allowed origins in the EmailJS dashboard.
 
-Optimized for deployment on:
-- **Vercel** (recommended)
-- **Netlify**
-- **AWS Amplify**
+## Deployment and security
 
-### Environment Variables
-```bash
-NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
-```
+The site is a static export, so it has no server code, middleware or API routes.
+A Content-Security-Policy is shipped as a `<meta>` tag in production builds.
+A static export cannot set response headers, so set HSTS, `X-Content-Type-Options` and `frame-ancestors` at the host or CDN.
 
-## 📄 License
+Each build shows its commit and date in the footer, the only live facts on the site.
 
-This project is licensed under the MIT License.
+## Known limits
 
-## 📞 Contact
-
-- **Email**: sushant.sonbarse@example.com
-- **LinkedIn**: [linkedin.com/in/sushant-sonbarse](https://linkedin.com/in/sushant-sonbarse)
-- **GitHub**: [github.com/sonbarse17](https://github.com/sonbarse17)
-
----
-
-Built with ❤️ by Sushant Sonbarse
+- `npm audit` reports advisories in build and lint tooling (ESLint, and PostCSS inside Next 15). They need major-version upgrades and do not ship to visitors.
+- The contact form has a honeypot field only. EmailJS enforces its own rate limits.

@@ -2,80 +2,132 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Paper and ink. Signal is the one accent, reserved for faults and current position. */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    color-scheme: light;
+    --paper: 243 240 232;
+    --panel: 233 229 218;
+    --ink: 22 21 15;
+    --muted: 84 81 72;
+    --rule: 22 21 15;
+    --signal: 190 48 12;
+    --ok: 24 98 62;
+    --warn: 128 82 0;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    color-scheme: dark;
+    --paper: 18 17 13;
+    --panel: 31 30 24;
+    --ink: 237 233 221;
+    --muted: 170 166 152;
+    --rule: 237 233 221;
+    --signal: 255 112 66;
+    --ok: 98 200 146;
+    --warn: 226 178 80;
   }
-}
 
-@layer base {
-  * {
-    border-color: hsl(var(--border));
+  html {
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
   }
+
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    @apply bg-paper font-serif text-ink antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    @apply bg-signal text-paper;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--signal));
+    outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
   }
 }
 
-@layer utilities {
-  .hero-section {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+@layer components {
+  .wrap {
+    @apply mx-auto w-full max-w-[90rem] px-4 sm:px-6 lg:px-10;
   }
-  
-  .bg-grid-pattern {
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-    background-size: 40px 40px;
+
+  /* Condensed heavy display face; the width axis is what gives the site its voice. */
+  .display {
+    @apply font-display font-extrabold uppercase;
+    font-stretch: 68%;
+    letter-spacing: -0.012em;
+    line-height: 0.9;
   }
-  
-  .dark .bg-grid-pattern {
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+
+  .h-section {
+    @apply display;
+    font-size: clamp(2.5rem, 7vw, 6rem);
+  }
+
+  .h-page {
+    @apply display;
+    font-size: clamp(3.25rem, 11vw, 10rem);
+  }
+
+  .label {
+    @apply font-mono text-xs font-medium uppercase tracking-[0.08em];
+  }
+
+  .lede {
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+    line-height: 1.35;
+  }
+
+  .hairline {
+    border-color: rgb(var(--rule) / 0.22);
+  }
+
+  .link {
+    @apply underline decoration-1 underline-offset-[0.2em] transition-colors hover:text-signal;
+  }
+
+  .btn {
+    @apply label inline-flex min-h-11 items-center justify-center gap-2 border border-ink bg-ink px-4 py-2 text-paper transition-colors hover:border-signal hover:bg-signal disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-quiet {
+    @apply label inline-flex min-h-11 items-center justify-center gap-2 border border-ink px-4 py-2 text-ink transition-colors hover:border-signal hover:text-signal disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-quiet[aria-pressed='true'],
+  .btn-quiet[aria-checked='true'] {
+    @apply bg-ink text-paper hover:text-paper;
+  }
+
+  .field {
+    @apply hairline w-full border bg-transparent px-3 py-2.5 font-serif text-ink placeholder:text-muted;
+    border-color: rgb(var(--rule) / 0.55);
+  }
+
+  .prose-run p + p {
+    margin-top: 0.9em;
+  }
+
+  /* Data travelling along a healthy route in a schematic. */
+  .flow {
+    stroke-dasharray: 3 5;
+    animation: flow 1.4s linear infinite;
+  }
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -16;
   }
 }
 
@@ -87,5 +139,12 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  header,
+  footer {
+    display: none;
   }
 }

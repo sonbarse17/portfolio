@@ -12,7 +12,6 @@ hosting.*
 /.next/
 /build/
 /out/
-package-lock.json
 # production
 /build
 
@@ -32,3 +31,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# local env
+.env*.local
+# playwright
+/test-results/
+/playwright-report/
+
+# firebase
+.firebase/
+*-debug.log
