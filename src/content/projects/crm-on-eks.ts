@@ -5,7 +5,7 @@ export const crmOnEks: Project = {
   slug: 'crm-on-eks',
   title: 'CRM on AWS EKS at HisanLabs',
   summary:
-    'Deploying a CRM of 35+ microservices to AWS EKS during my DevOps internship, with the AWS infrastructure automated in Terraform.',
+    'Deployed a CRM comprising more than 35 microservices to AWS EKS during a DevOps internship, with AWS infrastructure automated through Terraform.',
   classification: 'professional',
   category: 'Kubernetes deployment, infrastructure as code, CI/CD',
   context: 'HisanLabs Pvt Ltd, DevOps Engineer Intern, Sep 2024 to May 2025',
@@ -26,12 +26,12 @@ export const crmOnEks: Project = {
     {
       id: 'intro',
       provenance: 'record',
-      body: 'During my DevOps internship at HisanLabs I deployed a CRM made up of 35+ microservices, with an Angular frontend and Spring Boot services, on AWS EKS. I also automated its AWS infrastructure with Terraform.',
+      body: 'During my DevOps internship at HisanLabs, I deployed a CRM comprising more than 35 microservices to AWS EKS. The solution included an Angular frontend, Spring Boot services, and AWS infrastructure that I automated with Terraform.',
     },
     {
       id: 'outcome',
       provenance: 'record',
-      body: 'The outcomes I recorded from this work.',
+      body: 'The recorded results from this engagement:',
       points: [
         '35+ microservices deployed',
         'AWS infrastructure automated with Terraform',

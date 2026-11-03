@@ -7,7 +7,7 @@ export const kubernetesDeployments: Project = {
   slug: 'kubernetes-deployments',
   title: 'Kubernetes application deployments',
   summary:
-    'Two applications moved onto Kubernetes with persistent databases: a Rails and PostgreSQL app on GKE, and a Java and Tomcat app with MariaDB.',
+    'A personal Kubernetes deployment project covering a Ruby on Rails application with PostgreSQL on GKE and a Java application on Tomcat with MariaDB.',
   classification: 'personal',
   category: 'Kubernetes, stateful workloads, ingress',
   context: 'Personal engineering project',
@@ -177,12 +177,12 @@ export const kubernetesDeployments: Project = {
     {
       id: 'problem',
       provenance: 'personal',
-      body: 'A personal project for hands-on practice running stateful applications on Kubernetes: databases that must keep their data, traffic that must reach the right pods, and health checks that must agree with the platform.',
+      body: 'This personal project explores stateful Kubernetes workloads: persistent databases, ingress routing, and health checks aligned with the platform.',
     },
     {
       id: 'contribution',
       provenance: 'personal',
-      body: 'I implemented both applications on Kubernetes: the database StatefulSets with persistent storage, the ingress routing, and the Kubernetes migration of the Tomcat application.',
+      body: 'I implemented both Kubernetes deployments, including database StatefulSets with persistent storage, ingress routing, and the migration of the Tomcat application.',
     },
     {
       id: 'architecture',
@@ -215,7 +215,7 @@ export const kubernetesDeployments: Project = {
     {
       id: 'outcome',
       provenance: 'personal',
-      body: 'Both applications were implemented on Kubernetes, with their data on persistent storage. This was practice and not production work, and no performance figures are published.',
+      body: 'Both applications were implemented on Kubernetes with persistent storage for their data. This personal project does not represent a production deployment, and no performance figures are reported.',
     },
     {
       id: 'lessons',

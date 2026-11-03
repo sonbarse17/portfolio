@@ -91,7 +91,7 @@ export const awsHostingAndSso: Project = {
   slug: 'aws-hosting-and-sso',
   title: 'AWS hosting and Microsoft SSO for a client web application',
   summary:
-    'Static hosting, application hosting and enterprise sign-in on AWS Singapore, with every component designed and deployed by me. S3 and CloudFront for the site, Elastic Beanstalk for the app, Cognito federated to Microsoft over SAML.',
+    'Designed and deployed an AWS solution for a client web application: private S3 and CloudFront hosting, Elastic Beanstalk application hosting, and Amazon Cognito federated with Microsoft Entra ID through SAML.',
   classification: 'professional',
   category: 'AWS cloud infrastructure, hosting, authentication and enterprise SSO',
   context: 'Designed and deployed by me',
@@ -99,7 +99,7 @@ export const awsHostingAndSso: Project = {
   tier: 'case',
   lab: 'access-trace',
   glance: [
-    { label: 'Region', value: 'AWS Singapore (ap-southeast-1)' },
+    { label: 'Region', value: 'AWS Asia Pacific (Singapore) Region (ap-southeast-1)' },
     { label: 'Static site', value: 'Private S3 behind CloudFront, using OAC' },
     { label: 'Application', value: 'AWS Elastic Beanstalk' },
     { label: 'Sign-in', value: 'Cognito, federated to Microsoft over SAML' },
@@ -114,7 +114,7 @@ export const awsHostingAndSso: Project = {
       group: 'Authentication',
       items: ['Amazon Cognito user pool', 'Cognito app client', 'Amplify UI'],
     },
-    { group: 'Enterprise identity', items: ['Microsoft Entra ID (Azure AD)', 'SAML 2.0'] },
+    { group: 'Enterprise identity', items: ['Microsoft Entra ID', 'SAML 2.0'] },
     { group: 'DNS and TLS', items: ['Amazon Route 53', 'GoDaddy DNS', 'AWS Certificate Manager'] },
   ],
   views: [
@@ -271,12 +271,12 @@ export const awsHostingAndSso: Project = {
     {
       id: 'intro',
       provenance: 'record',
-      body: 'A client needed its website and application on AWS, with sign-in through Amazon Cognito and enterprise Microsoft SSO. I designed and deployed every component myself, in the AWS Singapore region (ap-southeast-1).',
+      body: 'A client needed a website and application hosted on AWS, with Amazon Cognito authentication and Microsoft Entra ID single sign-on. I designed and deployed the complete solution in AWS Asia Pacific (Singapore), ap-southeast-1.',
     },
     {
       id: 'problem',
       provenance: 'record',
-      body: 'Configure and deploy the website and application infrastructure on AWS, with authentication and enterprise Microsoft SSO.',
+      body: 'The engagement required AWS infrastructure for a public website and application, with Cognito authentication and Microsoft Entra ID single sign-on.',
     },
     {
       id: 'context',
@@ -285,14 +285,14 @@ export const awsHostingAndSso: Project = {
         'Static website: Amazon S3 and CloudFront, with a private bucket and Origin Access Control.',
         'Application: AWS Elastic Beanstalk.',
         'Authentication: a Cognito user pool and app client, a custom Amplify UI interface and email-based sign-in.',
-        'Enterprise identity: Microsoft Entra ID (Azure AD) as a SAML 2.0 identity provider federated with Cognito.',
+        'Enterprise identity: Microsoft Entra ID as a SAML 2.0 identity provider federated with Cognito.',
         'DNS and certificates: GoDaddy DNS, Amazon Route 53 and AWS Certificate Manager.',
       ],
     },
     {
       id: 'contribution',
       provenance: 'record',
-      body: 'I designed and deployed every component myself.',
+      body: 'I designed and deployed the complete solution, including static and application hosting, authentication, enterprise federation, DNS, certificates, and the custom sign-in interface.',
     },
     {
       id: 'architecture',
@@ -320,7 +320,7 @@ export const awsHostingAndSso: Project = {
     {
       id: 'implementation',
       provenance: 'record',
-      body: 'What I configured:',
+      body: 'Implemented components and configuration:',
       points: [
         'Private S3 static website hosting.',
         'CloudFront with Origin Access Control.',

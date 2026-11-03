@@ -40,7 +40,7 @@ export const azureInternalAccess: Project = {
   slug: 'azure-internal-access',
   title: 'Internal-only access for an enterprise Azure application',
   summary:
-    'Internal-only access for an enterprise application, through an internal Application Gateway, with Microsoft Entra ID sign-in. I designed and deployed every component myself.',
+    'Designed and deployed an internal-access architecture for an enterprise Azure application, using an internal Application Gateway and Microsoft Entra ID single sign-on.',
   classification: 'professional',
   category: 'Azure infrastructure, internal network architecture, enterprise identity',
   context: 'Designed and deployed by me',
@@ -324,12 +324,12 @@ export const azureInternalAccess: Project = {
     {
       id: 'intro',
       provenance: 'record',
-      body: 'An enterprise web application needed internal-only access for employees, with Microsoft Entra ID sign-in and no public exposure. I designed and deployed every component myself.',
+      body: 'An enterprise web application required internal-only employee access, Microsoft Entra ID single sign-on, and no public exposure. I designed and deployed the complete solution.',
     },
     {
       id: 'problem',
       provenance: 'record',
-      body: 'The requirement was internal-only access for employees under the application hostname, signing in with Microsoft Entra ID, with no public exposure.',
+      body: 'The requirement was to provide internal-only employee access under the application hostname, with Microsoft Entra ID single sign-on and no public exposure.',
     },
     {
       id: 'context',
@@ -343,7 +343,7 @@ export const azureInternalAccess: Project = {
     {
       id: 'contribution',
       provenance: 'record',
-      body: 'I designed and deployed every component myself. I evaluated the internal access options and selected an internal Application Gateway. Then I carried out the steps below: gateway deployment and network configuration, DNS changes, validation in each environment, and production readiness.',
+      body: 'I designed and deployed the complete internal-access solution. I evaluated the available access patterns and selected an internal Application Gateway. My work included gateway deployment and network configuration, DNS updates, validation in each environment, and production-readiness activities.',
     },
     {
       id: 'architecture',
@@ -405,7 +405,10 @@ export const azureInternalAccess: Project = {
         { text: 'Reviewed the public-facing architecture it replaces', status: 'done' },
         { text: 'Evaluated internal access options', status: 'done' },
         { text: 'Internal Application Gateway finalized as the access solution', status: 'done' },
-        { text: 'Coordinated gateway deployment and network configuration', status: 'done' },
+        {
+          text: 'Deployed the Application Gateway and configured its network integration',
+          status: 'done',
+        },
         { text: 'Configured DNS changes', status: 'done' },
         { text: 'Updated internal DNS records to resolve to the internal gateway', status: 'done' },
         { text: 'Validated access from corporate environments', status: 'done' },
@@ -417,7 +420,7 @@ export const azureInternalAccess: Project = {
           status: 'done',
         },
         { text: 'Completed the production deployment', env: ['Production'], status: 'done' },
-        { text: 'Coordinated the security review and production readiness', status: 'done' },
+        { text: 'Led the security review and production-readiness activities', status: 'done' },
         {
           text: 'Reviewed legacy Front Door and DNS cleanup requirements. Decommissioning is follow-up work.',
           status: 'reviewed',

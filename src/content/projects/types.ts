@@ -40,17 +40,17 @@ export type TimelineItem = {
 }
 
 export const SECTION_ORDER = [
-  ['intro', 'Introduction'],
-  ['problem', 'Problem'],
+  ['intro', 'Overview'],
+  ['problem', 'Objective'],
   ['context', 'Technical context'],
-  ['contribution', 'My contribution'],
+  ['contribution', 'Role and contribution'],
   ['architecture', 'Architecture'],
   ['stack', 'Technology stack'],
-  ['implementation', 'Implementation'],
-  ['challenges', 'Engineering challenges'],
+  ['implementation', 'Implementation scope'],
+  ['challenges', 'Engineering considerations'],
   ['security', 'Security and reliability'],
-  ['outcome', 'Outcome'],
-  ['lessons', 'Lessons learned'],
+  ['outcome', 'Results'],
+  ['lessons', 'Key takeaways'],
 ] as const
 export type SectionId = (typeof SECTION_ORDER)[number][0]
 

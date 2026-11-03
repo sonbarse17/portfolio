@@ -7,7 +7,7 @@ export const webApplications: Project = {
   slug: 'web-applications',
   title: 'Personal web applications and hosting',
   summary:
-    'A 50+ calculator site built client-side with Next.js, and this portfolio: a static Next.js site on Firebase Hosting with a custom domain.',
+    'Two personal web projects: a Next.js site with more than 50 client-side calculators, and this static Next.js portfolio hosted on Firebase Hosting with a custom domain.',
   classification: 'personal',
   category: 'Web applications, static hosting, DNS',
   context: 'Personal engineering projects',
@@ -16,7 +16,7 @@ export const webApplications: Project = {
   glance: [
     { label: 'SaveMoneyTools', value: '50+ client-side calculators on Next.js 15' },
     { label: 'This portfolio', value: 'Static Next.js export on Firebase Hosting' },
-    { label: 'Also', value: 'Custom domains, DNS and SSL troubleshooting' },
+    { label: 'Also', value: 'Custom domains, DNS and TLS troubleshooting' },
   ],
   stackGroups: [
     {
@@ -123,11 +123,11 @@ export const webApplications: Project = {
         ),
         node(
           'ssl',
-          'SSL',
+          'TLS',
           88,
           50,
           I,
-          'Certificates for the custom domain. SSL and domain verification troubleshooting was part of the work.',
+          'Certificates for the custom domain. TLS and domain verification troubleshooting was part of the work.',
           'TLS'
         ),
       ],
@@ -136,7 +136,7 @@ export const webApplications: Project = {
         { text: 'The Next.js site is built as a static export.', edges: [['src', 'fh']] },
         { text: 'Firebase Hosting serves the files.', edges: [['fh', 'dns']] },
         {
-          text: 'The custom domain points at the site and is served with SSL.',
+          text: 'The custom domain points at the site and is served with TLS.',
           edges: [['dns', 'ssl']],
         },
       ],
@@ -151,12 +151,12 @@ export const webApplications: Project = {
     {
       id: 'problem',
       provenance: 'personal',
-      body: 'Personal projects to practise building and shipping web applications: client-side architecture, static export, search visibility, and hosting on a custom domain.',
+      body: 'These personal projects explore client-side application design, static exports, search visibility, and custom-domain hosting.',
     },
     {
       id: 'contribution',
       provenance: 'personal',
-      body: 'I built both sites, set up the hosting, and worked through the domain, SEO and search-console problems.',
+      body: 'I built both sites, configured their hosting, and resolved domain, SEO, and Google Search Console issues.',
     },
     { id: 'architecture', provenance: 'personal', body: 'Switch tabs between the two projects.' },
     { id: 'stack', provenance: 'personal' },
@@ -176,20 +176,20 @@ export const webApplications: Project = {
       provenance: 'personal',
       points: [
         'Google Search Console troubleshooting for SaveMoneyTools.',
-        'SSL and domain verification troubleshooting for the custom domain on Firebase Hosting.',
+        'TLS and domain verification troubleshooting for the custom domain on Firebase Hosting.',
       ],
     },
     {
       id: 'outcome',
       provenance: 'personal',
-      body: 'Both sites were built and hosted. No traffic, ranking or revenue figures are published.',
+      body: 'Both sites were built and hosted. Traffic, ranking, and revenue figures are not reported.',
     },
     {
       id: 'lessons',
       provenance: 'reference',
       points: [
         'A static export has no server, so headers, redirects and caching belong in the host configuration.',
-        'Domain verification and SSL depend on DNS being correct first. Check DNS before debugging certificates.',
+        'Domain verification and TLS depend on DNS being correct first. Check DNS before debugging certificates.',
       ],
     },
   ],

@@ -9,7 +9,7 @@ export const cloudArchitectureProject: Project = {
   slug: 'cloud-architecture-project',
   title: 'Cloud architecture project',
   summary:
-    'A cloud architecture project where I designed and deployed every component myself. Its architecture is private, so no diagram or component list is published.',
+    'A private cloud architecture engagement for which I designed and deployed the complete solution. Technical details are intentionally not published.',
   classification: 'professional',
   category: 'Cloud architecture and engineering',
   context: 'Overview only',
@@ -25,12 +25,12 @@ export const cloudArchitectureProject: Project = {
     {
       id: 'intro',
       provenance: 'record',
-      body: 'This is a cloud architecture project. I designed and deployed every component myself. It has its own dedicated architecture, which is separate from the other projects on this site and must not be read as related to them.',
+      body: 'This engagement covered a cloud architecture solution that I designed and deployed in full. Its architecture is independent of the other projects on this site and is not presented as related to them.',
     },
     {
       id: 'architecture',
       provenance: 'record',
-      body: 'The architecture is private, so there is no diagram and no list of components here. Only the existence of the project and my role in it are published.',
+      body: 'The architecture is private; therefore, this page does not include a diagram or component inventory. It documents only the engagement and my role.',
     },
   ],
 }

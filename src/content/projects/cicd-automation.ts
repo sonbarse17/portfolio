@@ -6,7 +6,7 @@ export const cicdAutomation: Project = {
   slug: 'cicd-automation',
   title: 'CI/CD and infrastructure automation',
   summary:
-    'Node.js pipelines in GitHub Actions, a Jenkins master and agent, security scanning, and Terraform-based GKE infrastructure.',
+    'A personal automation project combining Node.js CI pipelines, Jenkins controller and agent configuration, security scanning, and Terraform-defined GKE infrastructure.',
   classification: 'personal',
   category: 'CI/CD, infrastructure as code',
   context: 'Personal engineering project',
@@ -68,12 +68,12 @@ export const cicdAutomation: Project = {
     {
       id: 'jenkins',
       label: 'Jenkins',
-      caption: 'A Jenkins master and agent configuration.',
+      caption: 'A Jenkins controller and agent configuration.',
       height: 'h-[16rem]',
       nodes: [
         node(
           'master',
-          'Jenkins master',
+          'Jenkins controller',
           30,
           50,
           I,
@@ -86,13 +86,16 @@ export const cicdAutomation: Project = {
           70,
           50,
           I,
-          'Runs the build work handed to it by the master.',
+          'Runs build work assigned by the controller.',
           'build worker'
         ),
       ],
       edges: [edge('master', 'agent', 'jobs')],
       steps: [
-        { text: 'The master schedules work and the agent runs it.', edges: [['master', 'agent']] },
+        {
+          text: 'The controller schedules work and the agent executes it.',
+          edges: [['master', 'agent']],
+        },
       ],
     },
     {
@@ -138,17 +141,17 @@ export const cicdAutomation: Project = {
     {
       id: 'intro',
       provenance: 'personal',
-      body: 'Personal CI/CD and automation work: Node.js pipelines in GitHub Actions, a Jenkins master and agent, security scanning, and GKE infrastructure defined in Terraform.',
+      body: 'Personal CI/CD and automation work: Node.js pipelines in GitHub Actions, a Jenkins controller and agent, security scanning, and GKE infrastructure defined in Terraform.',
     },
     {
       id: 'problem',
       provenance: 'personal',
-      body: 'A personal project for practice with the delivery pipeline end to end: checking code, building images, scanning for problems, and defining the infrastructure that runs it.',
+      body: 'This personal project explores end-to-end delivery: code checks, container image builds, security scanning, and infrastructure defined as code.',
     },
     {
       id: 'contribution',
       provenance: 'personal',
-      body: 'I wrote the pipelines and the infrastructure code, and set up the Jenkins master and agent.',
+      body: 'I implemented the CI pipelines, Terraform configuration, and Jenkins controller and agent setup.',
     },
     {
       id: 'architecture',
@@ -163,7 +166,7 @@ export const cicdAutomation: Project = {
         'Node.js CI pipelines with lint, test and build stages.',
         'Docker image builds with Docker Buildx.',
         'SonarCloud analysis and OWASP Dependency-Check scanning.',
-        'Jenkins master and agent configuration.',
+        'Jenkins controller and agent configuration.',
         'Terraform-based GKE infrastructure.',
         'GitHub Actions infrastructure automation.',
       ],

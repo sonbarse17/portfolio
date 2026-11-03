@@ -7,7 +7,7 @@ export const dockerMicroservices: Project = {
   slug: 'docker-microservices',
   title: 'Docker Compose microservices',
   summary:
-    'Two containerized applications run with Docker Compose: a media gallery with file uploads, and a scrum tool split into services behind a gateway.',
+    'A personal Docker Compose project comprising two containerized applications: a media gallery with file uploads and a scrum tool built as services behind an API gateway.',
   classification: 'personal',
   category: 'Containers, microservices, reverse proxying',
   context: 'Personal engineering project',
@@ -157,12 +157,12 @@ export const dockerMicroservices: Project = {
     {
       id: 'problem',
       provenance: 'personal',
-      body: 'A personal project for hands-on practice with containers: running several services together, wiring them by name and port, and putting a gateway and a reverse proxy in front.',
+      body: 'This personal project explores containerized multi-service applications: service discovery by name and port, API gateway routing, and reverse-proxy configuration.',
     },
     {
       id: 'contribution',
       provenance: 'personal',
-      body: 'I containerized the applications and wrote the Compose configuration that runs them.',
+      body: 'I containerized both applications and authored the Docker Compose configuration used to run them.',
     },
     {
       id: 'architecture',

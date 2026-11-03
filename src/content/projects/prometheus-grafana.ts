@@ -7,7 +7,7 @@ export const prometheusGrafana: Project = {
   slug: 'prometheus-grafana',
   title: 'Prometheus and Grafana on Kubernetes',
   summary:
-    'A monitoring stack deployed with Helm: Prometheus collecting metrics, Grafana for dashboards, and the troubleshooting that came with ServiceMonitors and storage.',
+    'A personal Kubernetes observability project deploying Prometheus and Grafana with Helm, including metrics collection, dashboard configuration, and ServiceMonitor and storage troubleshooting.',
   classification: 'personal',
   category: 'Observability, Kubernetes monitoring',
   context: 'Personal engineering project',
@@ -106,12 +106,12 @@ export const prometheusGrafana: Project = {
     {
       id: 'problem',
       provenance: 'personal',
-      body: 'A personal project to learn how metrics move from an application to a dashboard on Kubernetes, and what breaks along the way.',
+      body: 'This personal project explores how application metrics move through a Kubernetes monitoring stack, from collection to dashboarding, and how to diagnose common configuration failures.',
     },
     {
       id: 'contribution',
       provenance: 'personal',
-      body: 'I deployed the stack with Helm, configured metrics collection and dashboards, and worked through the problems that came up.',
+      body: 'I deployed the stack with Helm, configured metrics collection and dashboards, and investigated the configuration issues encountered during implementation.',
     },
     {
       id: 'architecture',
@@ -137,7 +137,7 @@ export const prometheusGrafana: Project = {
     {
       id: 'outcome',
       provenance: 'personal',
-      body: 'Metrics collection and dashboards were set up and working. This was practice and not production monitoring, and no alerting or reliability figures are published.',
+      body: 'The monitoring stack collected metrics and supported dashboards. This personal project does not represent production monitoring; alerting and reliability figures are not reported.',
     },
     {
       id: 'lessons',
