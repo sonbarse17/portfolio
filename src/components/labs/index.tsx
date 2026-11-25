@@ -1,3 +1,5 @@
+'use client'
+
 import dynamic from 'next/dynamic'
 import type { ComponentType } from 'react'
 
@@ -8,7 +10,7 @@ const loading = () => (
 )
 
 /** One chunk per lab, so a visitor downloads only the engine they open. */
-export const labComponents: Record<string, ComponentType> = {
+const labComponents: Record<string, ComponentType> = {
   'blast-radius': dynamic(() => import('./blast-radius').then((m) => m.BlastRadiusLab), {
     loading,
   }),
@@ -23,4 +25,9 @@ export const labComponents: Record<string, ComponentType> = {
   'access-trace': dynamic(() => import('./access-trace').then((m) => m.AccessTraceLab), {
     loading,
   }),
+}
+
+export function LabExperience({ slug }: { slug: string }) {
+  const Lab = labComponents[slug]
+  return <Lab />
 }

@@ -52,45 +52,46 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <main className="wrap pt-8">
       <Link href="/work" className="label link">
-        ← All work
+        All work
       </Link>
 
-      <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
-        <ClassificationTag project={project} />
-        <Chips items={project.labels} />
+      <div className="detail-masthead">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <ClassificationTag project={project} />
+          <Chips items={project.labels} />
+        </div>
+        <h1 className="h-section mt-3 max-w-5xl">{project.title}</h1>
+        <p className="lede mt-5 max-w-3xl">{project.summary}</p>
+
+        <dl className="detail-facts mt-8 grid sm:grid-cols-2 lg:grid-cols-4">
+          {project.glance.map((fact) => (
+            <div
+              key={fact.label}
+              className="hairline border-b py-4 lg:border-b-0 lg:border-r lg:last:border-r-0"
+            >
+              <dt className="label text-muted">{fact.label}</dt>
+              <dd className="mt-1 font-display text-xl font-bold leading-tight [font-stretch:80%]">
+                {fact.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+
+        <p className="label mt-3 flex flex-wrap gap-x-6 gap-y-1 text-muted">
+          <span>{project.category}</span>
+          <span>{project.context}</span>
+          {project.views && (
+            <a href="#architecture" className="link text-ink">
+              Explore the architecture
+            </a>
+          )}
+        </p>
       </div>
-      <h1 className="h-section mt-3 max-w-5xl">{project.title}</h1>
-      <p className="lede mt-5 max-w-3xl">{project.summary}</p>
-
-      <dl className="hairline mt-8 grid border-y sm:grid-cols-2 lg:grid-cols-4">
-        {project.glance.map((fact) => (
-          <div
-            key={fact.label}
-            className="hairline border-b py-4 sm:pr-5 lg:border-b-0 lg:border-r lg:px-5 lg:first:pl-0 lg:last:border-r-0"
-          >
-            <dt className="label text-muted">{fact.label}</dt>
-            <dd className="mt-1 font-display text-xl font-bold leading-tight [font-stretch:80%]">
-              {fact.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
-
-      <p className="label mt-3 flex flex-wrap gap-x-6 gap-y-1 text-muted">
-        <span>{project.category}</span>
-        <span>{project.context}</span>
-        {project.views && (
-          <a href="#architecture" className="link text-ink">
-            Jump to the architecture ↓
-          </a>
-        )}
-      </p>
 
       {overview && (
         <p className="hairline mt-8 max-w-3xl border-l-2 border-ink bg-panel p-4 leading-snug">
           <span className="label mr-2">Overview only</span>
-          This page publishes what is verified and stops there. There is no architecture diagram
-          because none has been verified for it.
+          This project is documented with verified scope and outcomes.
         </p>
       )}
 
@@ -100,23 +101,20 @@ export default async function ProjectPage({ params }: Props) {
         </aside>
 
         <div className="min-w-0 lg:col-span-9">
-          {sections.map(({ id, title }, i) => {
+          {sections.map(({ id, title }) => {
             const section = project.sections.find((s) => s.id === id)
             return (
               <section
                 key={id}
                 id={id}
                 aria-labelledby={`${id}-title`}
-                className="hairline scroll-mt-20 border-b py-8 first:pt-0 last:border-b-0"
+                className="hairline border-b py-8 first:pt-0 last:border-b-0"
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <h2
                     id={`${id}-title`}
                     className="font-display text-3xl font-bold leading-tight [font-stretch:80%]"
                   >
-                    <span className="label mr-3 align-middle text-muted">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
                     {title}
                   </h2>
                   <ProvenanceTag
@@ -173,21 +171,21 @@ export default async function ProjectPage({ params }: Props) {
         {lab ? (
           <Link href={`/lab/${lab.slug}`} className="group border border-ink p-5">
             <span className="label text-muted">Related lab</span>
-            <span className="display mt-2 block text-3xl transition-colors group-hover:text-signal">
+            <span className="display mt-2 block text-3xl transition-colors group-hover:text-accent">
               {lab.title}
             </span>
           </Link>
         ) : (
           <Link href="/lab" className="group border border-ink p-5">
             <span className="label text-muted">Try something</span>
-            <span className="display mt-2 block text-3xl transition-colors group-hover:text-signal">
+            <span className="display mt-2 block text-3xl transition-colors group-hover:text-accent">
               The lab
             </span>
           </Link>
         )}
         <Link href={`/work/${next.slug}`} className="group border border-ink p-5 sm:border-l-0">
           <span className="label text-muted">Next project</span>
-          <span className="display mt-2 block text-3xl transition-colors group-hover:text-signal">
+          <span className="display mt-2 block text-3xl transition-colors group-hover:text-accent">
             {next.title}
           </span>
         </Link>

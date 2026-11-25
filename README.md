@@ -1,21 +1,21 @@
 # Sushant Sonbarse: Cloud & DevOps engineering site
 
-A static Next.js site built around interactive infrastructure labs, case files and a field guide, not a list of logos.
+A static Next.js portfolio built around infrastructure case studies, interactive simulations, and an engineering field guide.
 
 ## What is on it
 
 | Route                            | Purpose                                                                                                                 |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `/`                              | Opening message, case studies, capabilities by domain, a live failure lab, work history, and the contact form           |
+| `/`                              | Interactive deployment path, selected work, technology ecosystem, failure simulator, experience, and contact            |
 | `/lab`, `/lab/[slug]`            | Six simulations: blast radius, release path, scheduler, plan reader, error budget, access trace                         |
 | `/work`, `/work/[slug]`          | Nine projects. Professional case studies have interactive architecture diagrams. Personal projects are labelled as such |
 | `/atlas`                         | A position on each engineering domain                                                                                   |
 | `/freelance`, `/services/[slug]` | Services                                                                                                                |
+| `/resume`                        | Printable résumé with experience, engineering work, and education                                                       |
 
 ### The honesty rule
 
-Every section carries one of five tags: **Professional**, **Personal project**, **Reference**, **Simulation** or **Live**.
-Only **Professional** content is a claim about what I did at work. The only outcome figures are the HisanLabs ones.
+Case studies identify professional and personal work, and use **Reference** for explanatory material. Lab pages are marked **Simulation**. The published outcome figures come from the HisanLabs internship.
 The labs run real logic in the browser, with no cloud behind them, and each lab page lists what its model leaves out.
 
 When adding a project, keep a section as `reference` unless the detail actually happened, and mark diagram components `implemented`, `dependency` or `followup` honestly. The overview-only project has no diagram until its architecture is verified. Tests enforce that no project borrows another project's components.
@@ -24,7 +24,7 @@ When adding a project, keep a section as `reference` unless the detail actually 
 ## Stack
 
 Next.js 15 (App Router, `output: 'export'`), React 18, TypeScript (strict), Tailwind CSS 3, `next-themes`, EmailJS.
-There is no animation or 3D library. Diagrams are HTML over SVG, so they stay accessible and reflow.
+The design uses local Geist fonts, graphite and light themes, and citron for interactive emphasis. Shared tokens live in `src/app/globals.css`, route surfaces in `src/app/catalog.css`, and the homepage compositions in `src/app/home.css`. Diagrams use HTML and SVG. Motion uses CSS and respects reduced-motion preferences.
 
 ## Structure
 
@@ -35,7 +35,7 @@ src/
   content/      all copy and data; projects/ holds one file per project, with its diagrams
   lib/lab/      pure simulation engines: no React, unit tested
   __tests__/    vitest
-e2e/            Playwright: every route, axe accessibility, five widths, links, diagram and lab flows
+e2e/            Playwright: every route, axe accessibility, eight widths, links, diagram and lab flows
 ```
 
 The engines in `lib/lab/` are the part to read first. Each is a plain function from inputs to state, and the UI only renders it.

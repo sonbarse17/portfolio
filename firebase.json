@@ -39,7 +39,7 @@
         "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
       },
       {
-        "source": "{/,/work,/work/**,/lab,/lab/**,/atlas,/freelance,/services/**,**/*.@(html|txt|xml)}",
+        "source": "{/,/work,/work/**,/lab,/lab/**,/atlas,/freelance,/resume,/services/**,**/*.@(html|txt|xml)}",
         "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
       }
     ]

@@ -10,6 +10,7 @@ const routes = [
   '/lab',
   '/atlas',
   '/freelance',
+  '/resume',
   ...projects.map((p) => `/work/${p.slug}`),
   ...labs.map((l) => `/lab/${l.slug}`),
   ...services.map((s) => `/services/${s.id}`),
@@ -47,7 +48,7 @@ test.describe('every route', () => {
 })
 
 test.describe('responsive widths', () => {
-  const widths = [375, 430, 768, 1280, 1440]
+  const widths = [320, 375, 430, 768, 1280, 1440, 1920, 2560]
   const key = [
     '/',
     '/work/azure-internal-access',
@@ -61,6 +62,18 @@ test.describe('responsive widths', () => {
       for (const route of key) {
         await page.goto(route, { waitUntil: 'networkidle' })
         expect(await overflow(page), `${route} at ${width}px`).toBeLessThanOrEqual(0)
+        if (route === '/') {
+          const wordsFit = await page.locator('h1 span').evaluateAll((words) => {
+            return words.every((word) => {
+              const range = document.createRange()
+              range.selectNodeContents(word)
+              const text = range.getBoundingClientRect()
+              const line = word.getBoundingClientRect()
+              return range.getClientRects().length === 1 && text.right <= line.right
+            })
+          })
+          expect(wordsFit, `name fits in the hero at ${width}px`).toBe(true)
+        }
       }
     })
   }
@@ -97,11 +110,41 @@ test('main navigation and unknown routes', async ({ page }) => {
   await expect(page.locator('h1')).toContainText('No such route')
 })
 
-test('home shows the opening message, availability and the path strip', async ({ page }) => {
+test('home shows availability and the deployment diagram responds to the keyboard', async ({
+  page,
+}) => {
   await page.goto('/')
   await expect(page.getByText(/path from a commit to production/)).toBeVisible()
   await expect(page.getByText('Available', { exact: false }).first()).toBeVisible()
   await expect(page.getByRole('link', { name: /Fail a stage yourself/ })).toBeVisible()
+  const build = page.getByRole('button', { name: 'Build', exact: true })
+  await build.focus()
+  await page.keyboard.press('Enter')
+  await expect(build).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByText('Build an artifact', { exact: true })).toBeVisible()
+})
+
+test('home domain selection, simulator, career details and résumé work', async ({ page }) => {
+  await page.goto('/')
+
+  const observability = page.getByRole('button', { name: 'Observability', exact: true })
+  await observability.click()
+  await expect(observability).toHaveAttribute('aria-pressed', 'true')
+  await expect(
+    page.getByRole('link', { name: 'Prometheus and Grafana on Kubernetes' })
+  ).toBeVisible()
+
+  await page.getByRole('button', { name: 'Try the simulator' }).click()
+  await page.getByRole('button', { name: 'DNS failure' }).click()
+  await expect(page.getByRole('log')).toContainText('DNS failed')
+  await page.getByRole('button', { name: 'Close simulator' }).click()
+  await expect(page.getByRole('log')).toHaveCount(0)
+
+  await page.locator('summary').filter({ hasText: 'DevOps Engineer Intern' }).click()
+  await expect(page.getByText('Improved CI/CD pipeline efficiency by 40%')).toBeVisible()
+  await page.getByRole('link', { name: 'View résumé' }).click()
+  await expect(page).toHaveURL(/\/resume$/)
+  await expect(page.getByRole('button', { name: 'Print or save PDF' })).toBeVisible()
 })
 
 test('external links open safely', async ({ page }) => {
@@ -116,11 +159,13 @@ test('external links open safely', async ({ page }) => {
 
 test('theme toggle switches and persists', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
-  await page.goto('/atlas')
-  await page.getByRole('button', { name: 'Switch to dark theme' }).click()
-  await expect(page.locator('html')).toHaveClass(/dark/)
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Switch to light theme' }).click()
+  await expect(page.locator('html')).toHaveClass(/light/)
   await page.reload()
-  await expect(page.locator('html')).toHaveClass(/dark/)
+  await expect(page.locator('html')).toHaveClass(/light/)
+  const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
+  expect(axe.violations.map((violation) => violation.id)).toEqual([])
 })
 
 test.describe('architecture explorer', () => {

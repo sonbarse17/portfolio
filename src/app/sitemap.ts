@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/lab',
     '/atlas',
     '/freelance',
+    '/resume',
     ...projects.map((p) => `/work/${p.slug}`),
     ...labs.map((l) => `/lab/${l.slug}`),
     ...services.map((s) => `/services/${s.id}`),

@@ -13,7 +13,7 @@ export const nav = [
   { href: '/lab', label: 'Lab' },
   { href: '/atlas', label: 'Atlas' },
   { href: '/freelance', label: 'Services' },
-  { href: '/#contact', label: 'Contact' },
+  { href: '/#about', label: 'About' },
 ]
 
 export const roles = [
@@ -39,6 +39,8 @@ export const roles = [
     points: [
       'Deployed a CRM with 35+ microservices',
       'Automated AWS infrastructure with Terraform',
+      'Reduced deployment time from 2 hours to 30 minutes',
+      'Improved CI/CD pipeline efficiency by 40%',
     ],
     stack: ['Angular', 'Spring Boot', 'AWS EKS', 'Terraform'],
   },

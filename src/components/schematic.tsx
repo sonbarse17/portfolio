@@ -166,7 +166,7 @@ export function Schematic({
             aria-hidden="true"
             className={cn(
               'pointer-events-none absolute flex h-5 min-w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center border px-1 font-mono text-[0.625rem] font-medium leading-none',
-              b.active ? 'border-signal bg-signal text-paper' : 'border-ink bg-paper text-ink'
+              b.active ? 'border-accent bg-accent text-paper' : 'border-ink bg-paper text-ink'
             )}
             style={{ left: `${(from.x + to.x) / 2}%`, top: `${(from.y + to.y) / 2 + 3}%` }}
           >
@@ -214,7 +214,7 @@ export function Schematic({
             className={cn(
               base,
               toneClass[tone],
-              'min-h-11 hover:border-signal',
+              'min-h-11 hover:border-accent',
               selected === node.id && 'outline outline-2 outline-offset-2 outline-ink'
             )}
           >

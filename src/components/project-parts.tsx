@@ -138,25 +138,15 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
   )
 }
 
-export function ProjectRow({ project, index }: { project: Project; index: number }) {
+export function ProjectRow({ project }: { project: Project }) {
   return (
-    <li className="hairline">
-      <Link
-        href={`/work/${project.slug}`}
-        className="group grid gap-x-6 gap-y-2 py-6 lg:grid-cols-12"
-      >
-        <span className="label text-muted lg:col-span-1">{String(index + 1).padStart(2, '0')}</span>
-        <div className="lg:col-span-7">
-          <h3 className="display text-3xl transition-colors group-hover:text-signal sm:text-4xl">
-            {project.title}
-          </h3>
-          <p className="mt-3 max-w-[60ch] leading-snug text-muted">{project.summary}</p>
-        </div>
-        <div className="space-y-2 lg:col-span-4">
+    <li>
+      <Link href={`/work/${project.slug}`} className="catalog-row">
+        <div>
           <ClassificationTag project={project} />
-          <Chips items={project.labels} />
-          <p className="label text-muted">{project.category}</p>
+          <h3 className="display mt-1 text-2xl sm:text-3xl">{project.title}</h3>
         </div>
+        <p className="text-muted">{project.summary}</p>
       </Link>
     </li>
   )

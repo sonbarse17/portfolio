@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { labComponents } from '@/components/labs'
+import { LabExperience } from '@/components/labs'
 import { ProvenanceTag } from '@/components/provenance'
 import { labs } from '@/content/labs'
 
@@ -24,22 +24,23 @@ export default async function LabDetailPage({ params }: Props) {
 
   const lab = labs[index]
   const next = labs[(index + 1) % labs.length]
-  const Lab = labComponents[lab.slug]
 
   return (
     <main className="wrap pt-8">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <Link href="/lab" className="label link">
-          ← All labs
+          All labs
         </Link>
         <ProvenanceTag kind="simulation" />
       </div>
-      <p className="label mt-6 text-muted">{lab.title}</p>
-      <h1 className="h-section mt-2 max-w-5xl">{lab.question}</h1>
-      <p className="lede mt-5 max-w-3xl">{lab.summary}</p>
+      <div className="detail-masthead lab-masthead">
+        <p className="eyebrow">{lab.title}</p>
+        <h1 className="h-section mt-2 max-w-5xl">{lab.question}</h1>
+        <p className="lede mt-5 max-w-3xl">{lab.summary}</p>
+      </div>
 
-      <div className="hairline mt-10 border-t pt-8">
-        <Lab />
+      <div className="lab-embed mt-8">
+        <LabExperience slug={lab.slug} />
       </div>
 
       <section
@@ -72,7 +73,7 @@ export default async function LabDetailPage({ params }: Props) {
 
       <Link href={`/lab/${next.slug}`} className="group mt-12 block border border-ink p-5">
         <span className="label text-muted">Next lab</span>
-        <span className="display mt-2 block text-3xl transition-colors group-hover:text-signal sm:text-4xl">
+        <span className="display mt-2 block text-3xl transition-colors group-hover:text-accent sm:text-4xl">
           {next.question}
         </span>
       </Link>

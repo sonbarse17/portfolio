@@ -98,7 +98,7 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
       <div
         role="tablist"
         aria-label={`${title} diagram views`}
-        className="hairline -mx-4 flex gap-1 overflow-x-auto border-b px-4 sm:mx-0 sm:px-0"
+        className="hairline flex flex-wrap gap-1 border-b px-1"
       >
         {views.map((v, i) => (
           <button
@@ -115,8 +115,8 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
             onClick={() => open(v.id)}
             onKeyDown={(e) => onTabKey(e, i)}
             className={cn(
-              'label min-h-11 shrink-0 border-b-2 px-3 transition-colors hover:text-signal',
-              v.id === viewId ? 'border-signal text-ink' : 'border-transparent text-muted'
+              'label min-h-11 shrink-0 border-b-2 px-3 transition-colors hover:text-accent',
+              v.id === viewId ? 'border-accent text-accent' : 'border-transparent text-muted'
             )}
           >
             {v.label}
@@ -128,33 +128,43 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
         id={`${uid}-panel`}
         role="tabpanel"
         aria-labelledby={`${uid}-tab-${viewId}`}
-        className="mt-4 grid gap-8 lg:grid-cols-12"
+        className="mt-4 grid gap-8 xl:grid-cols-12"
       >
-        <div className="min-w-0 lg:col-span-8">
+        <div className="min-w-0 xl:col-span-8">
           <p className="mb-3 leading-snug text-muted">{view.caption}</p>
-          <div className="bg-panel/40 p-2 sm:p-4">
-            <Schematic
-              title={`${title}: ${view.label}`}
-              height={view.height}
-              hideSubOnMobile
-              animate={false}
-              selectMode="select"
-              nodes={view.nodes.map((n) => ({
-                id: n.id,
-                label: n.label,
-                sub: n.sub,
-                x: n.x,
-                y: n.y,
-                tone: tone[n.status],
-                status: word[n.status],
-              }))}
-              edges={view.edges}
-              regions={view.regions}
-              highlight={highlight}
-              badges={badges}
-              selected={selected}
-              onSelect={setSelected}
-            />
+          <p className="architecture-hint mb-2 text-sm text-muted">
+            Scroll the diagram to see all components.
+          </p>
+          <div
+            className="architecture-workbench overflow-x-auto p-2 sm:p-4"
+            role="region"
+            aria-label="Architecture diagram viewport"
+            tabIndex={0}
+          >
+            <div className="architecture-canvas">
+              <Schematic
+                title={`${title}: ${view.label}`}
+                height={view.height}
+                hideSubOnMobile
+                animate={false}
+                selectMode="select"
+                nodes={view.nodes.map((n) => ({
+                  id: n.id,
+                  label: n.label,
+                  sub: n.sub,
+                  x: n.x,
+                  y: n.y,
+                  tone: tone[n.status],
+                  status: word[n.status],
+                }))}
+                edges={view.edges}
+                regions={view.regions}
+                highlight={highlight}
+                badges={badges}
+                selected={selected}
+                onSelect={setSelected}
+              />
+            </div>
           </div>
           <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
             {legend.map((l) => (
@@ -169,7 +179,7 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
           </ul>
         </div>
 
-        <aside className="lg:col-span-4">
+        <aside className="xl:col-span-4">
           {steps.length > 0 && (
             <>
               <h3 className="label text-muted">Follow the flow</h3>
@@ -181,7 +191,7 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
                       aria-pressed={step === i}
                       onClick={() => setStep(step === i ? null : i)}
                       className={cn(
-                        'grid min-h-11 w-full grid-cols-[1.75rem_1fr] gap-x-1 border px-2 py-2 text-left leading-snug transition-colors hover:border-signal',
+                        'grid min-h-11 w-full grid-cols-[1.75rem_1fr] gap-x-1 border px-2 py-2 text-left leading-snug transition-colors hover:border-accent',
                         step === i ? 'border-ink bg-panel' : 'border-transparent'
                       )}
                     >

@@ -28,10 +28,13 @@ export default async function ServicePage({ params }: Props) {
   return (
     <main className="wrap pt-8">
       <Link href="/freelance" className="label link">
-        ← All services
+        All services
       </Link>
-      <h1 className="h-section mt-6 max-w-5xl">{service.title}</h1>
-      <p className="lede mt-5 max-w-3xl">{service.description}</p>
+      <div className="detail-masthead">
+        <p className="eyebrow">Freelance service</p>
+        <h1 className="h-section mt-2 max-w-5xl">{service.title}</h1>
+        <p className="lede mt-5 max-w-3xl">{service.description}</p>
+      </div>
 
       <div className="hairline mt-12 grid gap-10 border-t pt-8 lg:grid-cols-12">
         <section aria-labelledby="covers" className="lg:col-span-5">
@@ -63,7 +66,7 @@ export default async function ServicePage({ params }: Props) {
             Talk about this
           </Link>
           <Link href={`/lab/${lab.slug}`} className="label link mt-4 inline-block py-2">
-            Related lab: {lab.title} →
+            Related lab · {lab.title}
           </Link>
         </div>
       </div>

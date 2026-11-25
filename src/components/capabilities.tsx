@@ -1,39 +1,65 @@
+'use client'
+
+import { useId, useState } from 'react'
 import Link from 'next/link'
-import { capabilities } from '@/content/capabilities'
-import { projects } from '@/content/projects'
 
-const title = (slug: string) => projects.find((p) => p.slug === slug)!.title
+type Domain = {
+  domain: string
+  projects: {
+    slug: string
+    title: string
+    tools: { tool: string; note?: string }[]
+  }[]
+  also: string[]
+}
 
-export function Capabilities() {
+export function Capabilities({ domains }: { domains: Domain[] }) {
+  const [active, setActive] = useState(0)
+  const id = useId()
+  const current = domains[active]
+
   return (
-    <dl className="hairline divide-y border-y">
-      {capabilities.map((cap) => (
-        <div key={cap.domain} className="hairline grid gap-3 py-5 lg:grid-cols-12 lg:gap-6">
-          <dt className="display text-2xl lg:col-span-3">{cap.domain}</dt>
-          <dd className="lg:col-span-9">
-            <ul className="grid gap-x-8 gap-y-2 sm:grid-cols-2">
-              {cap.applied.map((a) => (
-                <li key={a.tool} className="leading-snug">
-                  <span className="font-medium">{a.tool}</span>
-                  {a.note && <span className="text-muted">, {a.note}</span>}
-                  <span className="mt-0.5 block text-[0.9375rem]">
-                    <span className="label text-muted">Used in </span>
-                    <Link href={`/work/${a.project}`} className="link">
-                      {title(a.project)}
-                    </Link>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            {cap.also.length > 0 && (
-              <p className="mt-3 text-[0.9375rem] leading-snug text-muted">
-                <span className="label">Also worked with </span>
-                {cap.also.join(', ')}
-              </p>
-            )}
-          </dd>
-        </div>
-      ))}
-    </dl>
+    <div className="capability-map">
+      <div className="capability-controls" role="group" aria-label="Engineering domains">
+        {domains.map((domain, i) => (
+          <button
+            type="button"
+            key={domain.domain}
+            aria-pressed={i === active}
+            aria-controls={id}
+            onClick={() => setActive(i)}
+          >
+            <span aria-hidden="true" />
+            {domain.domain}
+          </button>
+        ))}
+      </div>
+      <section id={id} aria-labelledby={`${id}-title`} className="capability-detail">
+        <h3 id={`${id}-title`} className="display" aria-live="polite">
+          {current.domain}
+        </h3>
+        <ul className="capability-projects" aria-label="Tools mapped to projects">
+          {current.projects.map((project) => (
+            <li className="capability-project" key={project.slug}>
+              <ul>
+                {project.tools.map((item) => (
+                  <li key={item.tool}>
+                    {item.tool}
+                    {item.note && <small>{item.note}</small>}
+                  </li>
+                ))}
+              </ul>
+              <Link href={`/work/${project.slug}`}>{project.title}</Link>
+            </li>
+          ))}
+        </ul>
+        {current.also.length > 0 && (
+          <p className="capability-more">
+            <span className="label">Also worked with</span>
+            {current.also.join(', ')}
+          </p>
+        )}
+      </section>
+    </div>
   )
 }
