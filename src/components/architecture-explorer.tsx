@@ -141,7 +141,7 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
             aria-label="Architecture diagram viewport"
             tabIndex={0}
           >
-            <div className="architecture-canvas">
+            <div key={view.id} className="architecture-canvas">
               <Schematic
                 title={`${title}: ${view.label}`}
                 height={view.height}

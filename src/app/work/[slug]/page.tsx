@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArchitectureExplorer } from '@/components/architecture-explorer'
 import { CaseRail } from '@/components/case-rail'
+import { hasProjectArtwork, ProjectArtwork } from '@/components/project-artwork'
 import { ProvenanceTag } from '@/components/provenance'
 import {
   Accordion,
@@ -48,6 +49,7 @@ export default async function ProjectPage({ params }: Props) {
   const lab = labs.find((l) => l.slug === project.lab)
   const sections = presentSections(project)
   const overview = project.tier === 'overview'
+  const illustrated = hasProjectArtwork(project.slug)
 
   return (
     <main className="wrap pt-8">
@@ -56,12 +58,17 @@ export default async function ProjectPage({ params }: Props) {
       </Link>
 
       <div className="detail-masthead">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <ClassificationTag project={project} />
-          <Chips items={project.labels} />
+        <div className={illustrated ? 'case-masthead-composition' : undefined}>
+          <div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <ClassificationTag project={project} />
+              <Chips items={project.labels} />
+            </div>
+            <h1 className="h-section mt-3 max-w-5xl">{project.title}</h1>
+            <p className="lede mt-5 max-w-3xl">{project.summary}</p>
+          </div>
+          {illustrated && <ProjectArtwork slug={project.slug} />}
         </div>
-        <h1 className="h-section mt-3 max-w-5xl">{project.title}</h1>
-        <p className="lede mt-5 max-w-3xl">{project.summary}</p>
 
         <dl className="detail-facts mt-8 grid sm:grid-cols-2 lg:grid-cols-4">
           {project.glance.map((fact) => (

@@ -26,6 +26,48 @@ When adding a project, keep a section as `reference` unless the detail actually 
 Next.js 15 (App Router, `output: 'export'`), React 18, TypeScript (strict), Tailwind CSS 3, `next-themes`, EmailJS.
 The design uses local Geist fonts, graphite and light themes, and citron for interactive emphasis. Shared tokens live in `src/app/globals.css`, route surfaces in `src/app/catalog.css`, and the homepage compositions in `src/app/home.css`. Diagrams use HTML and SVG. Motion uses CSS and respects reduced-motion preferences.
 
+### Phase 2 media
+
+The homepage uses locally optimized ImageGen artwork and an original procedural failover loop rendered with Canvas in Chromium. The portfolio loads the film when it enters view. It pauses off-screen and has a poster for reduced-motion preferences.
+
+| Scene                          | Files                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------- |
+| Data-center opening            | `public/assets/phase-two/aisle.webp`, `aisle-mobile.webp`                       |
+| Azure case study               | `public/assets/phase-two/private-ingress.webp`                                  |
+| AWS case study                 | `public/assets/phase-two/hosting-layers.webp`                                   |
+| Illustrative failover sequence | `public/assets/phase-two/failover` and `failover-mobile` in WebM, MP4, and WebP |
+
+Regenerate the original failover assets with `node scripts/render-lab-film.mjs` after installing the Playwright Chromium browser.
+
+<details>
+<summary>Original ImageGen prompts</summary>
+
+#### Data-center opening
+
+```text
+Use case: photorealistic-natural
+Asset type: full-bleed wide homepage hero for a cloud infrastructure engineer's creative portfolio, approximately 16:9.
+A striking cinematic photograph of a modern, physically plausible data center. View from inside the aisle, looking towards a brighter opening on the RIGHT THIRD, very dark quiet space across the LEFT HALF for overlaid white typography. Large matte graphite and smoked-glass server racks with subtle olive green and amber indicator lights, dense honest cable and vent details, metal grading, deep shadows, quiet photographic grain, precise sharp edges. Layers in strong perspective, graduated reflections on the cold floor, a clean vertical white light strip in the far right, dramatic backlight closer to muted pale moss than neon. The illuminated right half has beautiful clarity and scale. Restrained warm gray / charcoal / olive color grade. Architectural photography for a premium industrial design journal, editorial worldbuilding through realistic objects and carefully composed tonal contrast. No people, no text, no logos, no watermarks, no sci-fi neon, no overlaid graphics or target markers. Supply only the finished photographic visual.
+```
+
+#### Private ingress
+
+```text
+Use case: stylized-concept
+Asset type: wide landscape case-study artwork for a professional portfolio, approximately 16:9.
+An original editorial architectural model about private network ingress. Inside a dark museum-like concrete space, imagine one rectangular doorway glowing with cool soft blue-white light, nested inside three offset monumental graphite concrete passage walls. A slim, straight luminous route on the smooth stone floor leads into the innermost aperture. Strong architectural perspective with the gateway slightly off center. Deep charcoal and slate blue-gray tones, a little atmospheric depth, sharp utilitarian geometry, fine tactile surfaces. Quiet and precise, like a high-end architecture magazine photographed with a real camera, realistic material and light transport. Relate to an internal application gateway conceptually, no digital overlays. No people, logos, graphics, letters, numbers, or generic server illustration.
+```
+
+#### Hosting layers
+
+```text
+Use case: product-mockup
+Asset type: wide landscape case-study artwork for a premium engineering portfolio, approximately 16:9.
+An original tactile editorial close-up representing a layered hosting architecture. A stack of three wide brushed aluminum slabs, between them thin translucent oxide-green glass and a single warm amber edge light. Carefully engineered edges, small mounting details, a few indication channels machined into the metal surface, no superfluous electronics. Photographed from a low oblique three-quarter angle on a dark warm-gray studio floor. Warm tungsten kick light from one side, cold pale green reflection on the glass, directional shadow, sophisticated restrained contrast. Architectural model meets actual industrial material photography. Strong simple silhouette filling most of the frame with breathing room at the edges. No logos, no text, no floating HUD, no random neon, no stock server illustration.
+```
+
+</details>
+
 ## Structure
 
 ```

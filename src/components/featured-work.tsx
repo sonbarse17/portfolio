@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArchitecturePreview } from '@/components/architecture-preview'
+import { ProjectArtwork } from '@/components/project-artwork'
 import { ClassificationTag } from '@/components/project-parts'
 import { professional } from '@/content/projects'
 
@@ -32,7 +33,9 @@ export function FeaturedWork({ fullTitles = false }: { fullTitles?: boolean }) {
         return (
           <article key={project.slug}>
             <Link href={`/work/${project.slug}`} className="featured-case">
-              {view && <ArchitecturePreview view={view} tone={item.tone} />}
+              <ProjectArtwork slug={project.slug}>
+                {view && <ArchitecturePreview view={view} tone={item.tone} />}
+              </ProjectArtwork>
               <div className="featured-body">
                 <p className="featured-meta">
                   <ClassificationTag project={project} />

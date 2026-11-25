@@ -387,3 +387,30 @@
     display: none !important;
   }
 }
+
+.main-nav a {
+  position: relative;
+}
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0.29rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 260ms var(--ease);
+}
+.main-nav a:is(:hover, :focus-visible, [aria-current])::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.main-nav a[aria-current] {
+  text-decoration: none;
+}
+.theme-toggle svg {
+  transition: transform 310ms var(--ease);
+}
+.theme-toggle:hover svg {
+  transform: rotate(14deg);
+}

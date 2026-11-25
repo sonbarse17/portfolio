@@ -1,141 +1,252 @@
 'use client'
 
-import { useId, useState } from 'react'
 import Link from 'next/link'
+import { useEffect, useId, useRef, useState } from 'react'
+import { useSceneActivity } from '@/components/scene-motion'
 
 const stages = [
   {
     label: 'Build',
     caption: 'Build an artifact',
-    description: 'Test the change, scan dependencies, and publish a versioned image.',
-    position: 'translate(150 251)',
-    trace: 'M36 334 84 307 84 288 150 251 150 219',
-    icon: 'm-15-11-13 11 13 11m30-22 13 11-13 11m-10-27-10 32',
+    description: 'Run tests and security checks, then publish a versioned image to the registry.',
+    chapter: 'Prove the change.',
+    story:
+      'A commit starts a repeatable process. The checks run against the code and its dependencies before an image can move forward.',
   },
   {
     label: 'Deploy',
     caption: 'Roll out the change',
-    description: 'Provision the environment, roll out the image, and verify readiness.',
-    position: 'translate(322 153)',
-    trace: 'M150 219v32l79-46h29l64-37v-48',
-    icon: 'm0-24 26 14v24L0 28l-26-14v-24L0-24Zm-26 14L0 5l26-15M0 5v23M-13-17l26 14',
+    description:
+      'Apply infrastructure changes, then roll out the same image behind readiness checks.',
+    chapter: 'Ship the same artifact.',
+    story:
+      'The registry hands off an immutable image. Start with a small rollout, wait for readiness, and expand only when the service can handle traffic.',
   },
   {
     label: 'Operate',
     caption: 'Watch the rollout',
-    description: 'Use health checks and telemetry to decide whether to continue or roll back.',
-    position: 'translate(495 246)',
-    trace: 'M322 120v48l73 42h39l61 36v-33m0 33 65 37v25l48 27',
-    icon: 'M-26 1h13l8-15L6 14 14 1h12',
+    description:
+      'Compare health signals with the baseline and decide whether to continue or roll back.',
+    chapter: 'Make recovery a decision.',
+    story:
+      'A healthy process is visible to the team. Latency and errors show whether a rollout should advance, pause, or return to a known-good version.',
   },
 ] as const
 
-const board = 'M21 280 320 108 619 280 320 452Z'
+const nodes = [
+  {
+    label: 'Commit',
+    x: 99,
+    y: 273,
+    icon: 'M-7-9v17m0-13c11 0 14-2 14-8m-11 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm14-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM-4 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+  },
+  { label: 'CI checks', x: 203, y: 212, icon: 'm-11 1 7 7 15-17' },
+  {
+    label: 'Registry',
+    x: 311,
+    y: 150,
+    icon: 'M0-12 12-5v12L0 14-12 7V-5L0-12Zm-12 7L0 2l12-7M0 2v12',
+  },
+  {
+    label: 'Infrastructure',
+    x: 424,
+    y: 216,
+    icon: 'm-12 4 12 7L12 4M-12-2 0 5l12-7m-24-4 12-7 12 7',
+  },
+  { label: 'Rollout', x: 518, y: 270, icon: 'M-11 8h22M-8 4v-6m8 6v-15m8 15v-9' },
+  { label: 'Telemetry', x: 612, y: 324, icon: 'M-13 0h7l4-8L4 8l4-8h6' },
+]
 
-export function DeploymentMap() {
-  const [active, setActive] = useState(1)
+const routes = [
+  'M99 273 203 212',
+  'M203 212 311 150',
+  'M311 150 424 216',
+  'M424 216 518 270',
+  'M518 270 612 324',
+]
+
+function PipelineProjection({ stage }: { stage: number }) {
   const id = useId()
-  const stage = stages[active]
 
   return (
-    <figure className="deployment-map" aria-labelledby={`${id}-title`}>
-      <div className="map-topline">
-        <span id={`${id}-title`}>Deployment path</span>
-        <span>Interactive model</span>
-      </div>
-      <div className="map-art">
-        <svg aria-hidden="true" viewBox="0 0 640 440" fill="none">
-          <defs>
-            <clipPath id={`${id}-board`}>
-              <path d={board} />
-            </clipPath>
-          </defs>
-          <path
-            className="map-guide"
-            d="M0 111h640M0 217h640M0 323h640M107 0v440M213 0v440M320 0v440M427 0v440M533 0v440"
-          />
-          <g className="map-crosses">
-            <path d="M95 68h18m-9-9v18m416-16h18m-9-9v18m-473 117h14m-7-7v14m501 6h14m-7-7v14m-476 158h18m-9-9v18m420-8h18m-9-9v18" />
-            <circle cx="320" cy="64" r="5" />
-            <circle cx="588" cy="111" r="3" />
-            <circle cx="54" cy="110" r="3" />
+    <svg className="pipeline-projection" viewBox="0 60 720 370" fill="none" aria-hidden="true">
+      <defs>
+        <pattern id={`${id}-floor`} width="22" height="22" patternUnits="userSpaceOnUse">
+          <path d="M22 0H0v22" stroke="#a8bf9d" strokeOpacity="0.28" strokeWidth="0.8" />
+        </pattern>
+        <radialGradient id={`${id}-light`}>
+          <stop stopColor="#9cec78" stopOpacity=".15" />
+          <stop offset="1" stopColor="#9cec78" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse
+        className="pipeline-halo"
+        cx="390"
+        cy="236"
+        rx="240"
+        ry="194"
+        fill={`url(#${id}-light)`}
+      />
+      <path className="pipeline-plane-shadow" d="M30 284v12l324 119 332-87v-12l-332 87Z" />
+      <path className="pipeline-plane" d="M30 284 310 123l376 193-332 87Z" />
+      <path d="M30 284 310 123l376 193-332 87Z" fill={`url(#${id}-floor)`} />
+      <path className="pipeline-plane-inset" d="M54 284 311 137l350 177-308 77Z" />
+      <path
+        className="pipeline-braces"
+        d="m310 123 5-53m-9 0h18M30 284 13 296m673 20 19 7m-351 80v17m-8 0h16M92 320l65-39 55 9 85-50m-45 131 84-49 88 28 80-31M114 254l70-41m355 16 66 36"
+      />
+      {routes.map((path, index) => (
+        <g key={path} className="pipeline-route" data-charged={index < (stage + 1) * 2}>
+          <path d={path} className="pipeline-route-track" />
+          <path d={path} className="pipeline-route-lit" pathLength="1" />
+          {Math.floor(index / 2) === stage && (
+            <path d={path} className="pipeline-route-packet" pathLength="1" />
+          )}
+        </g>
+      ))}
+      {nodes.map((node, index) => (
+        <g
+          key={node.label}
+          transform={`translate(${node.x} ${node.y})`}
+          className="pipeline-node"
+          data-active={Math.floor(index / 2) === stage}
+        >
+          <path className="pipeline-node-floor" d="m-39 0 39-21 39 21-39 21Z" />
+          <path className="pipeline-node-support" d="M-26 0v-32M26 0v-32M0 16v-32" />
+          <g className="pipeline-node-cap">
+            <path className="pipeline-node-side" d="m-33-31 33 17 33-17v9L0-5l-33-17Z" />
+            <path className="pipeline-node-face" d="m-33-31 33-18 33 18L0-14Z" />
+            <path
+              className="pipeline-node-icon"
+              d={node.icon}
+              transform="translate(0 -31) matrix(.75 .41 -.66 .37 0 0)"
+            />
           </g>
-          <g transform="translate(0 -38)">
-            <path className="map-board-depth" d="M21 280v13l299 172 299-172v-13L320 452Z" />
-            <path className="map-board" d={board} />
-            <g clipPath={`url(#${id}-board)`} className="map-grid">
-              {Array.from({ length: 20 }, (_, i) => (
-                <path key={i} d={`M${-308 + i * 64} 108l600 346 M${-308 + i * 64} 454l600-346`} />
+          <text x="0" y="39" textAnchor="middle">
+            {node.label}
+          </text>
+        </g>
+      ))}
+    </svg>
+  )
+}
+
+export function DeploymentMap() {
+  const [activeStage, setActiveStage] = useState(0)
+  const { ref, active } = useSceneActivity<HTMLDivElement>()
+  const chapters = useRef<Array<HTMLElement | null>>([])
+  const id = useId()
+  const stage = stages[activeStage]
+
+  useEffect(() => {
+    if (!active) return
+
+    let frame = 0
+    const desktop = window.matchMedia('(min-width: 900px)')
+    const update = () => {
+      frame = 0
+      if (!desktop.matches) return
+
+      const pivot = window.innerHeight * 0.54
+      const chapter = chapters.current.findIndex((item) => {
+        const bounds = item?.getBoundingClientRect()
+        return bounds && bounds.top <= pivot && bounds.bottom >= pivot
+      })
+      if (chapter !== -1) setActiveStage(chapter)
+    }
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    schedule()
+
+    return () => {
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      cancelAnimationFrame(frame)
+    }
+  }, [active])
+
+  function select(index: number) {
+    setActiveStage(index)
+    if (active && window.matchMedia('(min-width: 900px)').matches) {
+      chapters.current[index]?.scrollIntoView({ block: 'center', behavior: 'instant' })
+    }
+  }
+
+  return (
+    <section className="pipeline-section" id="pipeline" aria-labelledby="pipeline-title">
+      <div className="wrap">
+        <div className="section-heading pipeline-heading">
+          <div>
+            <p className="eyebrow">Deployment path</p>
+            <h2 id="pipeline-title" className="h-section">
+              From commit to production.
+            </h2>
+          </div>
+          <p className="section-note">
+            Follow a change through build, rollout, and the signals that tell you what to do next.
+          </p>
+        </div>
+        <div className="pipeline-layout">
+          <div className="pipeline-console">
+            <div className="pipeline-art" ref={ref} data-running={active} data-stage={activeStage}>
+              <div className="pipeline-art-labels">
+                <span>Release topology</span>
+                <span>Interactive model</span>
+              </div>
+              <PipelineProjection stage={activeStage} />
+            </div>
+            <div className="pipeline-controls" role="group" aria-label="Deployment stages">
+              {stages.map((item, index) => (
+                <button
+                  type="button"
+                  key={item.label}
+                  aria-pressed={activeStage === index}
+                  aria-controls={id}
+                  onClick={() => select(index)}
+                >
+                  <span aria-hidden="true" />
+                  {item.label}
+                </button>
               ))}
-            </g>
-            <path className="map-board-inset" d="m47 280 273-157 273 157-273 157Z" />
-            <path
-              className="map-aux"
-              d="M101 325l76 44h47l54 31h74l82-47m-253-7 40-23h43l56-32h42l83-48m-182-9-40 23v24l-57 33m283-41v21l53 31m-184-54 49 28v27l-47 27"
-            />
-            <g className="map-ports">
-              <path d="m92 324 9-5 9 5-9 5Zm177 78 9-5 9 5-9 5Zm153-50 9-5 9 5-9 5Zm70-28 9-5 9 5-9 5Zm-181-91 9-5 9 5-9 5Z" />
-            </g>
-            {stages.map((item, i) => (
-              <path
+            </div>
+            <div className="pipeline-readout">
+              <div id={id} className="pipeline-summary" aria-live="polite">
+                {stages.map((item, index) => (
+                  <div key={item.label} data-active={activeStage === index}>
+                    <strong>{item.caption}</strong>
+                    <p>{item.description}</p>
+                  </div>
+                ))}
+              </div>
+              <Link href="/lab/release-path" prefetch={false} className="text-link">
+                Fail a stage yourself
+              </Link>
+            </div>
+          </div>
+          <div className="pipeline-chapters" aria-label="Release stages">
+            {stages.map((item, index) => (
+              <article
                 key={item.label}
-                className="map-trace"
-                data-active={i === active}
-                d={item.trace}
-              />
-            ))}
-            <path key={stage.label} className="map-pulse" d={stage.trace} />
-            {stages.map((item, i) => (
-              <g
-                key={item.label}
-                transform={item.position}
-                className="map-tile"
-                data-active={i === active}
+                ref={(element) => {
+                  chapters.current[index] = element
+                }}
+                className="pipeline-chapter"
+                data-current={stage.label === item.label}
               >
-                <path className="tile-base" d="m-81 0 81-47 81 47L0 47Z" />
-                <path className="tile-support" d="M-60-2v-30m120 30v-30M0 34V6m0-71v-29" />
-                <g className="tile-chip">
-                  <path className="tile-front" d="m-61-31 61 35 61-35v15L0 19l-61-35Z" />
-                  <path className="tile-face" d="m-61-31 61-35 61 35L0 4Z" />
-                  <path
-                    className="tile-detail"
-                    d="m-47-16 21 12m-8 1 7 4M41-12l8-5M32-7l3-2m-34 17v6"
-                  />
-                  <path
-                    className="tile-symbol"
-                    d={item.icon}
-                    transform="translate(0 -31) matrix(.87 .5 -.75 .43 0 0)"
-                  />
-                </g>
-              </g>
+                <div>
+                  <p className="eyebrow">{item.label}</p>
+                  <h3 className="display">{item.chapter}</h3>
+                  <p>{item.story}</p>
+                </div>
+              </article>
             ))}
-            <path
-              className="map-index"
-              d="M30 280l18-10m254 171 18 11 18-11m254-171 18 10M320 108l20 12"
-            />
-          </g>
-        </svg>
+          </div>
+        </div>
       </div>
-      <div className="map-controls" role="group" aria-label="Deployment stages">
-        {stages.map((item, i) => (
-          <button
-            key={item.label}
-            type="button"
-            aria-pressed={i === active}
-            onClick={() => setActive(i)}
-          >
-            <span className="map-control-mark" aria-hidden="true" />
-            {item.label}
-          </button>
-        ))}
-      </div>
-      <figcaption className="map-caption" aria-live="polite">
-        <strong>{stage.caption}</strong>
-        <span>{stage.description}</span>
-      </figcaption>
-      <Link href="/lab/release-path" prefetch={false} className="map-lab-link">
-        Fail a stage yourself
-      </Link>
-    </figure>
+    </section>
   )
 }

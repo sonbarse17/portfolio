@@ -147,6 +147,62 @@ test('home domain selection, simulator, career details and résumé work', async
   await expect(page.getByRole('button', { name: 'Print or save PDF' })).toBeVisible()
 })
 
+test('desktop scrolling advances the pinned deployment sequence', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 960 })
+  await page.goto('/')
+  const chapters = page.locator('.pipeline-chapter')
+  const stages = page.getByRole('group', { name: 'Deployment stages' })
+
+  await chapters.nth(1).evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }))
+  await expect(stages.getByRole('button', { name: 'Deploy' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  )
+  await chapters.nth(2).evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }))
+  await expect(stages.getByRole('button', { name: 'Operate' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  )
+  await expect(page.getByText('Watch the rollout', { exact: true })).toBeVisible()
+})
+
+test('the failover film loads in view and pauses when requested or off-screen', async ({
+  page,
+}) => {
+  await page.goto('/')
+  const film = page.locator('.failover-film')
+  const video = film.locator('video')
+  const paused = () => video.evaluate((media: HTMLVideoElement) => media.paused)
+
+  await expect(video.locator('source')).toHaveCount(0)
+  await film.scrollIntoViewIfNeeded()
+  await expect
+    .poll(() => video.evaluate((media: HTMLVideoElement) => media.currentTime))
+    .toBeGreaterThan(0)
+
+  await film.getByRole('button', { name: 'Pause motion' }).click()
+  await expect.poll(paused).toBe(true)
+  await film.getByRole('button', { name: 'Play motion' }).click()
+  await expect.poll(paused).toBe(false)
+  await page.locator('h1').scrollIntoViewIfNeeded()
+  await expect.poll(paused).toBe(true)
+})
+
+test('reduced motion preserves the deployment controls and uses the film poster', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  const build = page.getByRole('button', { name: 'Build', exact: true })
+  await build.click()
+  await expect(build).toHaveAttribute('aria-pressed', 'true')
+
+  const film = page.locator('.failover-film')
+  await film.scrollIntoViewIfNeeded()
+  await expect(film.locator('video source')).toHaveCount(0)
+  await expect(film.locator('picture img')).toBeVisible()
+})
+
 test('external links open safely', async ({ page }) => {
   await page.goto('/')
   const links = page.locator('a[href^="https://"]')
