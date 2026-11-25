@@ -26,6 +26,16 @@ When adding a project, keep a section as `reference` unless the detail actually 
 Next.js 15 (App Router, `output: 'export'`), React 18, TypeScript (strict), Tailwind CSS 3, `next-themes`, EmailJS.
 The design uses local Geist fonts, graphite and light themes, and citron for interactive emphasis. Shared tokens live in `src/app/globals.css`, route surfaces in `src/app/catalog.css`, and the homepage compositions in `src/app/home.css`. Diagrams use HTML and SVG. Motion uses CSS and respects reduced-motion preferences.
 
+### Phase 3 rendering and interaction
+
+The homepage renders an original infrastructure model with WebGL 2 when an eligible device supplies a usable context. Both WebP posters come from the same GLSL scene. The standard tier uses a smaller drawing buffer, lower frame cadence, and shorter ray marches. Mobile, reduced-motion, unavailable WebGL, and lost contexts use the poster.
+
+The heading and poster are rendered in the static HTML. The browser loads the shader after the poster appears and suspends drawing when the scene leaves view. The browser also loads the finder and release simulation on request. The simulation shares the release lab's model and rollout assumptions.
+
+Open the finder with Ctrl or Command + K. Search for `diagnostics` to view the renderer observed when the finder opened and the public build identifier.
+
+Regenerate the two `public/assets/phase-three/infrastructure*.webp` posters with `node scripts/render-infrastructure.mjs` using Playwright Chromium.
+
 ### Phase 2 media
 
 The homepage uses locally optimized ImageGen artwork and an original procedural failover loop rendered with Canvas in Chromium. The portfolio loads the film when it enters view. It pauses off-screen and has a poster for reduced-motion preferences.

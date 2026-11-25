@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { BrandMark } from '@/components/brand-mark'
+import { FinderTrigger } from '@/components/finder-trigger'
 import { nav, site } from '@/content/site'
 
 function ThemeToggle() {
@@ -76,6 +77,7 @@ export function SiteHeader() {
           </ul>
         </nav>
         <div className="header-actions">
+          <FinderTrigger />
           <ThemeToggle />
           <Link href="/#contact" className="header-contact">
             Contact

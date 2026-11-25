@@ -57,7 +57,7 @@ export default async function ProjectPage({ params }: Props) {
         All work
       </Link>
 
-      <div className="detail-masthead">
+      <div className={illustrated ? 'detail-masthead flagship-case' : 'detail-masthead'}>
         <div className={illustrated ? 'case-masthead-composition' : undefined}>
           <div>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">

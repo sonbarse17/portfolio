@@ -21,54 +21,6 @@
   min-height: var(--scene-height);
   padding-block: clamp(3rem, 7vh, 6rem) 1.25rem;
 }
-.scene-environment,
-.scene-image,
-.scene-shade,
-.scene-routing {
-  position: absolute;
-  pointer-events: none;
-}
-.scene-environment {
-  inset: 0;
-  z-index: -1;
-}
-.scene-image {
-  inset: -1.5%;
-  display: block;
-  transform: translate(var(--drift-x, 0), var(--drift-y, 0)) scale(1.015);
-}
-.scene-image img {
-  object-fit: cover;
-  object-position: center 54%;
-}
-.scene-shade {
-  inset: 0;
-  background:
-    linear-gradient(0deg, #11170fea 0%, transparent 45%),
-    linear-gradient(90deg, #0d110cb3 0%, #0d110c66 38%, transparent 73%);
-}
-.scene-routing {
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  transform: translate(calc(var(--drift-x, 0px) * -0.45), calc(var(--drift-y, 0px) * -0.45));
-}
-.scene-routing circle {
-  fill: #cfefa3;
-  stroke: #0b120b;
-  stroke-width: 2;
-}
-.scene-route-guide {
-  stroke: #c3df9e;
-  opacity: 0.37;
-  stroke-width: 0.85;
-}
-.scene-route-base {
-  stroke: #b7e484;
-  opacity: 0.55;
-  stroke-width: 1.05;
-}
-.scene-route-flow,
 .pipeline-route-packet,
 .capability-packet {
   stroke: #e7ffc0;
@@ -78,11 +30,6 @@
   stroke-dashoffset: 0.04;
   animation: packet-travel 4.2s linear infinite paused;
 }
-.scene-route-secondary {
-  animation-duration: 5.4s;
-  animation-delay: -2.3s;
-}
-[data-running='true'] .scene-route-flow,
 [data-running='true'] .pipeline-route-packet,
 [data-running='true'] .capability-packet {
   animation-play-state: running;
@@ -733,18 +680,6 @@
   .hero-actions {
     margin-top: 1.25rem;
   }
-  .scene-image img {
-    object-position: right center;
-  }
-  .scene-shade {
-    background:
-      linear-gradient(0deg, #0f160ff5 1%, #11170e40 55%, #10160f86 100%),
-      linear-gradient(90deg, #11170eee 5%, #11170ec0 57%, #0e150e27);
-  }
-  .scene-routing {
-    opacity: 0.61;
-    transform: translateX(-14%);
-  }
   .scene-hero-footer {
     align-items: start;
     gap: 0.45rem;
@@ -791,7 +726,6 @@
   .pipeline-chapters {
     display: none;
   }
-  .scene-route-flow,
   .pipeline-route-packet,
   .capability-packet {
     display: none;

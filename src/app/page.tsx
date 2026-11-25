@@ -5,6 +5,7 @@ import { CinematicHero } from '@/components/cinematic-hero'
 import { ContactForm } from '@/components/contact-form'
 import { DeploymentMap } from '@/components/deployment-map'
 import { FeaturedWork } from '@/components/featured-work'
+import { JourneyRail } from '@/components/journey-rail'
 import { LabPreview } from '@/components/lab-preview'
 import { SceneMotion } from '@/components/scene-motion'
 import { capabilities } from '@/content/capabilities'
@@ -12,6 +13,7 @@ import { projects } from '@/content/projects'
 import { background, figures, roles, site } from '@/content/site'
 import './home.css'
 import './cinema.css'
+import './phase-three.css'
 
 const personJsonLd = {
   '@context': 'https://schema.org',
@@ -46,6 +48,7 @@ export default function Home() {
       />
       <SceneMotion>
         <CinematicHero />
+        <JourneyRail />
         <section className="home-section home-work" aria-labelledby="work">
           <div className="wrap">
             <div className="section-heading">

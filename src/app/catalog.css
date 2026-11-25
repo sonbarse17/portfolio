@@ -464,3 +464,26 @@
     display: none;
   }
 }
+
+.flagship-case {
+  border-radius: 0;
+  border-color: rgb(var(--rule) / 0.37);
+  background: radial-gradient(ellipse at 83% 29%, rgb(var(--panel)), rgb(var(--paper)) 72%);
+}
+.flagship-case .case-masthead-composition .case-artwork {
+  aspect-ratio: 1.52;
+}
+.flagship-case .detail-facts {
+  border-radius: 0;
+}
+.trace-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .trace-controls .trace-play {
+    display: none;
+  }
+}

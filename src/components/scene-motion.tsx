@@ -8,6 +8,10 @@ const Motion = createContext({
   toggle: () => {},
 })
 
+export function useSceneSettings() {
+  return useContext(Motion)
+}
+
 export function SceneMotion({ children }: { children: ReactNode }) {
   const [paused, setPaused] = useState(false)
   const [reduced, setReduced] = useState(false)

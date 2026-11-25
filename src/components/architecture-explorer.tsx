@@ -1,6 +1,7 @@
 'use client'
 
-import { useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { useSceneActivity } from '@/components/scene-motion'
 import { Schematic, edgeKey, type SchematicTone } from '@/components/schematic'
 import type { DiagramView, NodeStatus } from '@/content/projects/types'
 import { cn } from '@/lib/utils'
@@ -34,16 +35,47 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
   const [viewId, setViewId] = useState(views[0].id)
   const [step, setStep] = useState<number | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
+  const [playing, setPlaying] = useState(false)
+  const { ref, active } = useSceneActivity<HTMLDivElement>()
   const tabs = useRef<(HTMLButtonElement | null)[]>([])
 
   const view = views.find((v) => v.id === viewId)!
   const steps = useMemo(() => view.steps ?? [], [view])
   const node = view.nodes.find((n) => n.id === selected)
 
+  useEffect(() => {
+    if (!active || !playing || step === null) return
+    const timer = setTimeout(() => {
+      if (step + 1 < steps.length) setStep(step + 1)
+      else setPlaying(false)
+    }, 1650)
+    return () => clearTimeout(timer)
+  }, [active, playing, step, steps.length])
+
+  function advance() {
+    setPlaying(false)
+    setStep((value) => ((value ?? -1) + 1) % steps.length)
+  }
+
+  function play() {
+    if (playing) {
+      setPlaying(false)
+      return
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      advance()
+      return
+    }
+    setStep(0)
+    setSelected(null)
+    setPlaying(true)
+  }
+
   const open = (id: string) => {
     setViewId(id)
     setStep(null)
     setSelected(null)
+    setPlaying(false)
   }
 
   const onTabKey = (event: KeyboardEvent, index: number) => {
@@ -94,7 +126,7 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
   }, [steps, step])
 
   return (
-    <div className="mt-6">
+    <div className="mt-6" ref={ref}>
       <div
         role="tablist"
         aria-label={`${title} diagram views`}
@@ -162,7 +194,10 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
                 highlight={highlight}
                 badges={badges}
                 selected={selected}
-                onSelect={setSelected}
+                onSelect={(value) => {
+                  setSelected(value)
+                  setPlaying(false)
+                }}
               />
             </div>
           </div>
@@ -183,13 +218,27 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
           {steps.length > 0 && (
             <>
               <h3 className="label text-muted">Follow the flow</h3>
+              <div className="trace-controls">
+                <button type="button" className="btn-quiet trace-play" onClick={play}>
+                  {playing ? 'Pause route' : 'Play route'}
+                </button>
+                <button type="button" className="btn-quiet" onClick={advance}>
+                  Next hop
+                </button>
+              </div>
+              <p role="status" className="sr-only">
+                {step !== null && `Route step ${step + 1} of ${steps.length}.`}
+              </p>
               <ol className="mt-2 space-y-1">
                 {steps.map((s, i) => (
                   <li key={s.text}>
                     <button
                       type="button"
                       aria-pressed={step === i}
-                      onClick={() => setStep(step === i ? null : i)}
+                      onClick={() => {
+                        setPlaying(false)
+                        setStep(step === i ? null : i)
+                      }}
                       className={cn(
                         'grid min-h-11 w-full grid-cols-[1.75rem_1fr] gap-x-1 border px-2 py-2 text-left leading-snug transition-colors hover:border-accent',
                         step === i ? 'border-ink bg-panel' : 'border-transparent'

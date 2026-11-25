@@ -6,6 +6,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { site } from '@/content/site'
 import './globals.css'
 import './catalog.css'
+import './finder.css'
 
 const display = localFont({
   src: './fonts/geist-latin.woff2',

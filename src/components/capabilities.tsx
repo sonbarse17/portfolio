@@ -32,6 +32,11 @@ export function Capabilities({ domains }: { domains: Domain[] }) {
   const { ref, active: animated } = useSceneActivity<HTMLDivElement>()
   const id = useId()
   const current = domains[active]
+  const references = new Set(current.projects.map((project) => project.slug))
+  const related = domains.map(
+    (domain, index) =>
+      index !== active && domain.projects.some((project) => references.has(project.slug))
+  )
 
   return (
     <div className="capability-map" ref={ref} data-running={animated}>
@@ -51,7 +56,7 @@ export function Capabilities({ domains }: { domains: Domain[] }) {
             const elbow = x < 50 ? 34 : x > 50 ? 66 : 50
             const route = `M50 60H${elbow}V${y}H${x}`
             return (
-              <g key={i} data-live={i === active}>
+              <g key={i} data-live={i === active} data-related={related[i]}>
                 <path className="capability-wire" d={route} vectorEffect="non-scaling-stroke" />
                 {i === active && (
                   <path
@@ -73,6 +78,7 @@ export function Capabilities({ domains }: { domains: Domain[] }) {
               type="button"
               key={domain.domain}
               aria-pressed={index === active}
+              data-related={related[index]}
               aria-controls={id}
               style={{ '--node-x': `${x}%`, '--node-y': `${y}%` } as CSSProperties}
               onClick={() => setActive(index)}
@@ -87,6 +93,15 @@ export function Capabilities({ domains }: { domains: Domain[] }) {
         <h3 id={`${id}-title`} className="display" aria-live="polite">
           {current.domain}
         </h3>
+        {related.some(Boolean) && (
+          <p className="capability-related">
+            <strong>Shared projects with</strong>{' '}
+            {domains
+              .filter((_, index) => related[index])
+              .map(({ domain }) => domain)
+              .join(', ')}
+          </p>
+        )}
         <div className="capability-evidence" key={current.domain}>
           <ul className="capability-projects" aria-label="Tools mapped to projects">
             {current.projects.map((project) => (

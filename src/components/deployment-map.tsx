@@ -1,8 +1,15 @@
 'use client'
 
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { useEffect, useId, useRef, useState } from 'react'
 import { useSceneActivity } from '@/components/scene-motion'
+import type { ReleaseSignal } from '@/components/release-run'
+
+const ReleaseRun = dynamic(
+  () => import('@/components/release-run').then((module) => module.ReleaseRun),
+  { loading: () => <p role="status">Loading deployment simulation…</p> }
+)
 
 const stages = [
   {
@@ -133,13 +140,16 @@ function PipelineProjection({ stage }: { stage: number }) {
 
 export function DeploymentMap() {
   const [activeStage, setActiveStage] = useState(0)
+  const [showRun, setShowRun] = useState(false)
+  const [signal, setSignal] = useState<ReleaseSignal | null>(null)
   const { ref, active } = useSceneActivity<HTMLDivElement>()
   const chapters = useRef<Array<HTMLElement | null>>([])
   const id = useId()
   const stage = stages[activeStage]
+  const phase = showRun ? (signal?.phase ?? 0) : activeStage
 
   useEffect(() => {
-    if (!active) return
+    if (!active || showRun) return
 
     let frame = 0
     const desktop = window.matchMedia('(min-width: 900px)')
@@ -167,7 +177,7 @@ export function DeploymentMap() {
       window.removeEventListener('resize', schedule)
       cancelAnimationFrame(frame)
     }
-  }, [active])
+  }, [active, showRun])
 
   function select(index: number) {
     setActiveStage(index)
@@ -190,22 +200,29 @@ export function DeploymentMap() {
             Follow a change through build, rollout, and the signals that tell you what to do next.
           </p>
         </div>
-        <div className="pipeline-layout">
+        <div className="pipeline-layout" data-simulation={showRun}>
           <div className="pipeline-console">
-            <div className="pipeline-art" ref={ref} data-running={active} data-stage={activeStage}>
+            <div
+              className="pipeline-art"
+              ref={ref}
+              data-running={active}
+              data-stage={phase}
+              data-signal={signal?.state}
+            >
               <div className="pipeline-art-labels">
                 <span>Release topology</span>
                 <span>Interactive model</span>
               </div>
-              <PipelineProjection stage={activeStage} />
+              <PipelineProjection stage={phase} />
             </div>
             <div className="pipeline-controls" role="group" aria-label="Deployment stages">
               {stages.map((item, index) => (
                 <button
                   type="button"
                   key={item.label}
-                  aria-pressed={activeStage === index}
+                  aria-pressed={phase === index}
                   aria-controls={id}
+                  disabled={showRun}
                   onClick={() => select(index)}
                 >
                   <span aria-hidden="true" />
@@ -216,18 +233,35 @@ export function DeploymentMap() {
             <div className="pipeline-readout">
               <div id={id} className="pipeline-summary" aria-live="polite">
                 {stages.map((item, index) => (
-                  <div key={item.label} data-active={activeStage === index}>
+                  <div key={item.label} data-active={phase === index}>
                     <strong>{item.caption}</strong>
                     <p>{item.description}</p>
                   </div>
                 ))}
               </div>
-              <Link href="/lab/release-path" prefetch={false} className="text-link">
-                Fail a stage yourself
-              </Link>
+              <div className="pipeline-actions">
+                <button
+                  type="button"
+                  className="btn-quiet"
+                  aria-expanded={showRun}
+                  aria-controls={`${id}-run`}
+                  onClick={() => {
+                    setSignal(null)
+                    setShowRun(!showRun)
+                  }}
+                >
+                  {showRun ? 'Close simulation' : 'Simulate a deployment'}
+                </button>
+                <Link href="/lab/release-path" prefetch={false} className="text-link">
+                  Fail a stage yourself
+                </Link>
+              </div>
             </div>
           </div>
-          <div className="pipeline-chapters" aria-label="Release stages">
+          <div id={`${id}-run`} hidden={!showRun}>
+            {showRun && <ReleaseRun onSignal={setSignal} />}
+          </div>
+          <div className="pipeline-chapters" aria-label="Release stages" hidden={showRun}>
             {stages.map((item, index) => (
               <article
                 key={item.label}

@@ -328,7 +328,7 @@
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 800px) {
   .site-header {
     position: relative;
   }

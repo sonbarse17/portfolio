@@ -203,6 +203,74 @@ test('reduced motion preserves the deployment controls and uses the film poster'
   await expect(film.locator('picture img')).toBeVisible()
 })
 
+test('the finder closes with Escape and opens the résumé by keyboard', async ({ page }) => {
+  await page.goto('/')
+  const trigger = page.getByRole('button', { name: 'Find in portfolio' })
+  await trigger.click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+
+  await page.keyboard.press('Control+k')
+  const search = page.getByRole('combobox', { name: 'Search the portfolio' })
+  await search.fill('resume')
+  await expect(page.getByRole('option', { name: /Résumé/ })).toBeVisible()
+  await search.press('Enter')
+  await expect(page).toHaveURL(/\/resume$/)
+})
+
+test('the homepage simulation models a scan block and two rollout outcomes', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Simulate a deployment' }).click()
+  const run = page.getByRole('region', { name: 'Deployment simulation' })
+  const scenario = run.getByLabel('Scenario')
+  const status = run.getByRole('status')
+
+  await scenario.selectOption('cve')
+  await run.getByRole('button', { name: 'Start simulation' }).click()
+  await expect(status).toContainText('0%')
+  await expect(run.getByText('Blocked', { exact: true })).toBeVisible()
+
+  await scenario.selectOption('bad-release')
+  await run.getByRole('button', { name: 'Start simulation' }).click()
+  await expect(status).toContainText('5%')
+  await expect(run.getByText('Rolled back', { exact: true })).toBeVisible()
+  await run.getByLabel('Rollout strategy').selectOption('rolling')
+  await run.getByRole('button', { name: 'Start simulation' }).click()
+  await expect(status).toContainText('25%')
+})
+
+test('the desktop scene falls back to the same artwork when WebGL is disabled', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.addInitScript(() => {
+    const get = HTMLCanvasElement.prototype.getContext
+    Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+      value: function (this: HTMLCanvasElement, context: string, options?: unknown) {
+        if (context === 'webgl2') return null
+        return Reflect.apply(get, this, [context, options])
+      },
+    })
+  })
+  await page.goto('/')
+  await expect(page.locator('.stack-art picture img')).toBeVisible()
+  await expect(page.locator('.stack-art')).toHaveAttribute('data-renderer', 'poster')
+  await expect(page.getByRole('link', { name: 'See the work' })).toBeVisible()
+})
+
+test('case studies step through documented traffic with reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/work/azure-internal-access')
+  await page.getByRole('tab', { name: 'Traffic flow' }).click()
+  await page.getByRole('button', { name: 'Next hop' }).click()
+  await expect(page.getByRole('status')).toContainText('Route step 1')
+  await page.getByRole('button', { name: 'Next hop' }).click()
+  await expect(page.getByRole('status')).toContainText('Route step 2')
+})
+
 test('external links open safely', async ({ page }) => {
   await page.goto('/')
   const links = page.locator('a[href^="https://"]')
