@@ -36,8 +36,7 @@ export function ContactForm() {
       )
       form.reset()
       setStatus('sent')
-    } catch (error) {
-      console.error('EmailJS error:', error)
+    } catch {
       setStatus('error')
     }
   }
@@ -46,11 +45,11 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block">
-          <span className="label mb-1.5 block">Name</span>
+          <span className="mb-1.5 block text-sm font-medium">Name</span>
           <input name="name" required maxLength={100} autoComplete="name" className="field" />
         </label>
         <label className="block">
-          <span className="label mb-1.5 block">Email</span>
+          <span className="mb-1.5 block text-sm font-medium">Email</span>
           <input
             name="email"
             type="email"
@@ -62,7 +61,7 @@ export function ContactForm() {
         </label>
       </div>
       <label className="block">
-        <span className="label mb-1.5 block">What are you working on?</span>
+        <span className="mb-1.5 block text-sm font-medium">What are you working on?</span>
         <textarea name="message" required maxLength={5000} rows={6} className="field resize-y" />
       </label>
       <div className="hidden" aria-hidden="true">

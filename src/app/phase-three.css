@@ -1,0 +1,354 @@
+.scene-hero {
+  --scene-height: clamp(40rem, calc(100svh - 4.3rem), 66rem);
+  background: radial-gradient(ellipse at 74% 48%, #27382b 0%, #161e17 48%, #0f1410 80%);
+}
+
+.scene-hero-inner {
+  grid-template-columns: minmax(0, 0.93fr) minmax(0, 1.1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0 clamp(0.4rem, 2.1vw, 2.2rem);
+  padding-block: clamp(2.3rem, 5vh, 4.5rem) 1.1rem;
+}
+
+.hero-role {
+  margin-bottom: 1.42rem;
+}
+.hero-role::before {
+  width: 1rem;
+  height: 0.4rem;
+  border-left: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+}
+.hero-copy {
+  position: relative;
+  z-index: 1;
+}
+.hero-name {
+  font-size: clamp(4rem, 9vw, 8.7rem);
+  font-weight: 615;
+  letter-spacing: -0.064em;
+}
+.hero-intro {
+  max-width: 30ch;
+}
+.hero-actions .btn-quiet {
+  background: #10191065;
+}
+
+.stack-scene {
+  position: relative;
+  min-width: 0;
+}
+.stack-art {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 1.145;
+}
+.stack-art picture,
+.stack-art canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  mask-image:
+    radial-gradient(ellipse 72% 72% at 50% 50%, #000 55%, transparent 99%),
+    linear-gradient(to right, transparent, #000 9% 91%, transparent),
+    linear-gradient(to bottom, transparent, #000 8% 92%, transparent);
+  mask-composite: intersect;
+}
+.stack-art picture img {
+  object-fit: contain;
+}
+.stack-art canvas {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms ease;
+}
+.stack-art[data-renderer='standard'] canvas,
+.stack-art[data-renderer='high'] canvas {
+  opacity: 1;
+}
+.stack-scene figcaption {
+  position: absolute;
+  inset: auto 0 0 auto;
+  padding: 0.28rem 0.55rem;
+  color: #d2dec9;
+  background: #141c15;
+  font:
+    500 0.75rem/1.45 var(--font-mono),
+    monospace;
+}
+.stack-annotations {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.stack-annotations path {
+  fill: none;
+  stroke: #bdcbad;
+  stroke-width: 0.15;
+  opacity: 0.69;
+}
+.scene-hero-footer {
+  grid-column: 1 / -1;
+}
+
+.journey-rail {
+  position: sticky;
+  top: 4.25rem;
+  z-index: 25;
+  background: rgb(var(--paper));
+  border-bottom: 1px solid rgb(var(--rule) / 0.19);
+}
+.journey-inner {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.journey-rail ol {
+  position: relative;
+  width: max-content;
+  min-width: min(100%, 39rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(0.9rem, 3.3vw, 2.65rem);
+  list-style: none;
+}
+.journey-rail a {
+  min-height: 2.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: rgb(var(--muted));
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+.journey-node {
+  width: 0.39rem;
+  height: 0.39rem;
+  border: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+.journey-rail a:is(:hover, :focus-visible, [aria-current='location']) {
+  color: var(--accent);
+}
+.journey-rail a[aria-current='location'] {
+  font-weight: 630;
+}
+.journey-rail a[aria-current='location'] .journey-node {
+  background-color: var(--accent);
+}
+.journey-progress {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  inset: auto 0 0;
+  background: var(--accent);
+  transform-origin: left;
+  transition: transform 520ms var(--ease);
+}
+@media (min-width: 2000px) {
+  .scene-hero-inner {
+    max-width: 102rem;
+  }
+  .hero-name {
+    font-size: 9.45rem;
+  }
+}
+html:has(.journey-rail) {
+  scroll-padding-top: 8rem;
+}
+
+.home-work {
+  background: linear-gradient(180deg, rgb(var(--panel) / 0.5), rgb(var(--paper)) 20rem);
+}
+.pipeline-heading .h-section {
+  max-width: 14ch;
+}
+.pipeline-section {
+  background: radial-gradient(ellipse at 25% 38%, #263b2c, #101912 75%);
+}
+.pipeline-console {
+  top: clamp(7.6rem, calc((100svh - 33.5rem) / 2), 12rem);
+}
+.pipeline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 1.06rem;
+  padding-top: 0.65rem;
+}
+.pipeline-controls button:disabled {
+  cursor: default;
+}
+.pipeline-layout[data-simulation='true'] .pipeline-console {
+  position: static;
+}
+.pipeline-layout > [hidden] {
+  display: none;
+}
+
+.pipeline-art[data-signal='failed'] .pipeline-node[data-active='true'] .pipeline-node-face,
+.pipeline-art[data-signal='rolled-back'] .pipeline-node[data-active='true'] .pipeline-node-face {
+  fill: #fac081;
+  stroke: #ffe2ba;
+}
+.pipeline-art[data-signal='failed'] .pipeline-node[data-active='true'] text,
+.pipeline-art[data-signal='rolled-back'] .pipeline-node[data-active='true'] text {
+  fill: #ffd1a1;
+}
+.pipeline-art[data-signal='failed'] .pipeline-route-packet,
+.pipeline-art[data-signal='rolled-back'] .pipeline-route-packet {
+  display: none;
+}
+
+.release-run {
+  min-width: 0;
+  padding: clamp(1.05rem, 2.35vw, 2.1rem);
+  border: 1px solid #526e5b;
+  background: #15251b;
+  color: #edf5e9;
+  color-scheme: dark;
+}
+.release-run > h3 {
+  font-size: clamp(1.85rem, 3.4vw, 3rem);
+  margin-top: 0.5rem;
+}
+.release-description {
+  margin: 0.45rem 0 0.95rem;
+  color: #bed0c0;
+  line-height: 1.42;
+}
+.release-fields {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 0.7rem;
+}
+.release-fields label {
+  display: block;
+}
+.release-fields label > span {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.875rem;
+}
+.release-fields .field {
+  min-height: 2.75rem;
+}
+.release-steps {
+  display: grid;
+  gap: 0.18rem;
+  margin: 0.9rem 0;
+}
+.release-steps li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.34rem 0.1rem;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #81aa8749;
+}
+.release-steps small {
+  min-width: fit-content;
+  color: #bfd0c1;
+  font-size: 0.8rem;
+}
+.release-steps [data-state='running'] {
+  color: #e6ffa7;
+  border-color: #b8f18c;
+}
+.release-steps [data-state='failed'] small,
+.release-steps [data-state='rolled-back'] small {
+  color: #ffc990;
+}
+.release-steps [data-state='passed'] small {
+  color: #c2f39d;
+}
+.release-outcome {
+  min-height: 3rem;
+  line-height: 1.45;
+  color: #c9e6c2;
+  font-size: 0.9rem;
+}
+.release-outcome p + p {
+  color: #f4d2a4;
+  margin-top: 0.35rem;
+}
+
+.home-capabilities .section-heading h2 {
+  max-width: 14ch;
+}
+.home-about {
+  border-top: 1px solid #687e67;
+  background: #dfe4d5;
+}
+.home-experience[data-motion='paused'] .stack-art canvas,
+.home-experience[data-motion='paused'] .journey-progress {
+  transition: none;
+}
+
+@media (max-width: 800px) {
+  .journey-rail {
+    top: 0;
+  }
+  html:has(.journey-rail) {
+    scroll-padding-top: 4.25rem;
+  }
+}
+@media (max-width: 760px) {
+  .scene-hero-inner {
+    min-height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding-block: 2rem 0.8rem;
+  }
+  .hero-copy {
+    padding-block: 0.65rem 0.7rem;
+  }
+  .hero-role {
+    margin-bottom: 0.77rem;
+  }
+  .hero-name {
+    font-size: clamp(3.4rem, 13.8vw, 6.2rem);
+  }
+  .hero-intro {
+    margin-top: 0.65rem;
+  }
+  .hero-actions {
+    margin-top: 0.9rem;
+  }
+  .stack-scene {
+    margin: 0 auto 0.75rem;
+    width: min(100%, 29rem);
+  }
+  .stack-art {
+    aspect-ratio: 1.09;
+  }
+  .stack-scene figcaption {
+    font-size: 0.71rem;
+  }
+}
+
+.capability-wiring [data-related='true'] .capability-wire {
+  stroke: #a6ceaa;
+  opacity: 0.94;
+}
+.capability-controls button[data-related='true'] {
+  border-color: #a6ceaa;
+}
+.capability-related {
+  max-width: 37ch;
+  color: rgb(var(--muted));
+  margin-top: 0.55rem;
+  font-size: 0.875rem;
+}
+.capability-related strong {
+  font-weight: 650;
+  color: rgb(var(--ink));
+}

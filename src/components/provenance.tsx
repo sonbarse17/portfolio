@@ -48,18 +48,3 @@ export function ProvenanceTag({ kind, className }: { kind: ProvenanceKind; class
     </span>
   )
 }
-
-export function ProvenanceLegend() {
-  return (
-    <dl className="hairline divide-y border-y">
-      {(Object.keys(provenance) as ProvenanceKind[]).map((kind) => (
-        <div key={kind} className="hairline grid gap-1 py-3 sm:grid-cols-[9rem_1fr] sm:gap-4">
-          <dt>
-            <ProvenanceTag kind={kind} className="text-ink" />
-          </dt>
-          <dd className="text-base leading-snug text-muted">{provenance[kind].means}</dd>
-        </div>
-      ))}
-    </dl>
-  )
-}

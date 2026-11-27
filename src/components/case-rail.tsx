@@ -24,15 +24,14 @@ export function CaseRail({ sections }: { sections: { id: string; title: string }
 
   return (
     <nav aria-label="Case file sections" className="sticky top-20 hidden lg:block">
-      <ol className="relative">
-        <span aria-hidden="true" className="absolute bottom-3 left-[3px] top-3 w-px bg-ink/30" />
+      <ol className="relative before:absolute before:bottom-3 before:left-[3px] before:top-3 before:w-px before:bg-ink/30 before:content-['']">
         {sections.map(({ id, title }) => (
           <li key={id}>
             <a
               href={`#${id}`}
               aria-current={active === id ? 'location' : undefined}
               className={cn(
-                'relative flex items-center gap-3 py-1 text-[0.9375rem] leading-snug transition-colors hover:text-signal',
+                'relative flex items-center gap-3 py-1 text-[0.9375rem] leading-snug transition-colors hover:text-accent',
                 active === id ? 'text-ink' : 'text-muted'
               )}
             >
@@ -40,7 +39,7 @@ export function CaseRail({ sections }: { sections: { id: string; title: string }
                 aria-hidden="true"
                 className={cn(
                   'relative z-10 h-[7px] w-[7px] shrink-0 border',
-                  active === id ? 'border-signal bg-signal' : 'border-ink/50 bg-paper'
+                  active === id ? 'border-accent bg-accent' : 'border-ink/50 bg-paper'
                 )}
               />
               {title}

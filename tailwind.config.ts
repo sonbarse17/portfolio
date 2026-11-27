@@ -15,12 +15,12 @@ const config: Config = {
         muted: token('muted'),
         rule: token('rule'),
         signal: token('signal'),
+        accent: 'var(--accent)',
         ok: token('ok'),
         warn: token('warn'),
       },
       fontFamily: {
         display: ['var(--font-display)', 'sans-serif'],
-        serif: ['var(--font-serif)', 'Georgia', 'serif'],
         mono: ['var(--font-mono)', 'monospace'],
       },
     },

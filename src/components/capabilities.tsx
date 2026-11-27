@@ -1,39 +1,131 @@
+'use client'
+
+import { useId, useState, type CSSProperties } from 'react'
 import Link from 'next/link'
-import { capabilities } from '@/content/capabilities'
-import { projects } from '@/content/projects'
+import { useSceneActivity } from '@/components/scene-motion'
 
-const title = (slug: string) => projects.find((p) => p.slug === slug)!.title
+type Domain = {
+  domain: string
+  projects: {
+    slug: string
+    title: string
+    tools: { tool: string; note?: string }[]
+  }[]
+  also: string[]
+}
 
-export function Capabilities() {
+const positions = [
+  [18, 15],
+  [18, 33],
+  [18, 51],
+  [50, 15],
+  [50, 33],
+  [50, 83],
+  [82, 15],
+  [82, 33],
+  [82, 58],
+  [82, 83],
+]
+
+export function Capabilities({ domains }: { domains: Domain[] }) {
+  const [active, setActive] = useState(0)
+  const { ref, active: animated } = useSceneActivity<HTMLDivElement>()
+  const id = useId()
+  const current = domains[active]
+  const references = new Set(current.projects.map((project) => project.slug))
+  const related = domains.map(
+    (domain, index) =>
+      index !== active && domain.projects.some((project) => references.has(project.slug))
+  )
+
   return (
-    <dl className="hairline divide-y border-y">
-      {capabilities.map((cap) => (
-        <div key={cap.domain} className="hairline grid gap-3 py-5 lg:grid-cols-12 lg:gap-6">
-          <dt className="display text-2xl lg:col-span-3">{cap.domain}</dt>
-          <dd className="lg:col-span-9">
-            <ul className="grid gap-x-8 gap-y-2 sm:grid-cols-2">
-              {cap.applied.map((a) => (
-                <li key={a.tool} className="leading-snug">
-                  <span className="font-medium">{a.tool}</span>
-                  {a.note && <span className="text-muted">, {a.note}</span>}
-                  <span className="mt-0.5 block text-[0.9375rem]">
-                    <span className="label text-muted">Used in </span>
-                    <Link href={`/work/${a.project}`} className="link">
-                      {title(a.project)}
-                    </Link>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            {cap.also.length > 0 && (
-              <p className="mt-3 text-[0.9375rem] leading-snug text-muted">
-                <span className="label">Also worked with </span>
-                {cap.also.join(', ')}
-              </p>
-            )}
-          </dd>
+    <div className="capability-map" ref={ref} data-running={animated}>
+      <div className="capability-controls" role="group" aria-label="Engineering domains">
+        <svg
+          className="capability-wiring"
+          aria-hidden="true"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          <path
+            className="capability-grid-line"
+            d="M8 9h84v81H8zm26 0v81m32-81v81M8 26h84M8 45h84M8 64h84M8 82h84"
+          />
+          {positions.map(([x, y], i) => {
+            const elbow = x < 50 ? 34 : x > 50 ? 66 : 50
+            const route = `M50 60H${elbow}V${y}H${x}`
+            return (
+              <g key={i} data-live={i === active} data-related={related[i]}>
+                <path className="capability-wire" d={route} vectorEffect="non-scaling-stroke" />
+                {i === active && (
+                  <path
+                    className="capability-packet"
+                    d={route}
+                    pathLength="1"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                )}
+              </g>
+            )
+          })}
+          <path className="capability-core" d="m50 53 5 7-5 7-5-7Z" />
+        </svg>
+        {domains.map((domain, index) => {
+          const [x, y] = positions[index]
+          return (
+            <button
+              type="button"
+              key={domain.domain}
+              aria-pressed={index === active}
+              data-related={related[index]}
+              aria-controls={id}
+              style={{ '--node-x': `${x}%`, '--node-y': `${y}%` } as CSSProperties}
+              onClick={() => setActive(index)}
+            >
+              <span aria-hidden="true" />
+              {domain.domain}
+            </button>
+          )
+        })}
+      </div>
+      <section id={id} aria-labelledby={`${id}-title`} className="capability-detail">
+        <h3 id={`${id}-title`} className="display" aria-live="polite">
+          {current.domain}
+        </h3>
+        {related.some(Boolean) && (
+          <p className="capability-related">
+            <strong>Shared projects with</strong>{' '}
+            {domains
+              .filter((_, index) => related[index])
+              .map(({ domain }) => domain)
+              .join(', ')}
+          </p>
+        )}
+        <div className="capability-evidence" key={current.domain}>
+          <ul className="capability-projects" aria-label="Tools mapped to projects">
+            {current.projects.map((project) => (
+              <li className="capability-project" key={project.slug}>
+                <ul>
+                  {project.tools.map((item) => (
+                    <li key={item.tool}>
+                      {item.tool}
+                      {item.note && <small>{item.note}</small>}
+                    </li>
+                  ))}
+                </ul>
+                <Link href={`/work/${project.slug}`}>{project.title}</Link>
+              </li>
+            ))}
+          </ul>
+          {current.also.length > 0 && (
+            <p className="capability-more">
+              <span className="label">Also worked with</span>
+              {current.also.join(', ')}
+            </p>
+          )}
         </div>
-      ))}
-    </dl>
+      </section>
+    </div>
   )
 }

@@ -10,6 +10,7 @@ const routes = [
   '/lab',
   '/atlas',
   '/freelance',
+  '/resume',
   ...projects.map((p) => `/work/${p.slug}`),
   ...labs.map((l) => `/lab/${l.slug}`),
   ...services.map((s) => `/services/${s.id}`),
@@ -47,7 +48,7 @@ test.describe('every route', () => {
 })
 
 test.describe('responsive widths', () => {
-  const widths = [375, 430, 768, 1280, 1440]
+  const widths = [320, 375, 430, 768, 1280, 1440, 1920, 2560]
   const key = [
     '/',
     '/work/azure-internal-access',
@@ -61,6 +62,18 @@ test.describe('responsive widths', () => {
       for (const route of key) {
         await page.goto(route, { waitUntil: 'networkidle' })
         expect(await overflow(page), `${route} at ${width}px`).toBeLessThanOrEqual(0)
+        if (route === '/') {
+          const wordsFit = await page.locator('h1 span').evaluateAll((words) => {
+            return words.every((word) => {
+              const range = document.createRange()
+              range.selectNodeContents(word)
+              const text = range.getBoundingClientRect()
+              const line = word.getBoundingClientRect()
+              return range.getClientRects().length === 1 && text.right <= line.right
+            })
+          })
+          expect(wordsFit, `name fits in the hero at ${width}px`).toBe(true)
+        }
       }
     })
   }
@@ -97,11 +110,165 @@ test('main navigation and unknown routes', async ({ page }) => {
   await expect(page.locator('h1')).toContainText('No such route')
 })
 
-test('home shows the opening message, availability and the path strip', async ({ page }) => {
+test('home shows availability and the deployment diagram responds to the keyboard', async ({
+  page,
+}) => {
   await page.goto('/')
   await expect(page.getByText(/path from a commit to production/)).toBeVisible()
   await expect(page.getByText('Available', { exact: false }).first()).toBeVisible()
   await expect(page.getByRole('link', { name: /Fail a stage yourself/ })).toBeVisible()
+  const build = page.getByRole('button', { name: 'Build', exact: true })
+  await build.focus()
+  await page.keyboard.press('Enter')
+  await expect(build).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByText('Build an artifact', { exact: true })).toBeVisible()
+})
+
+test('home domain selection, simulator, career details and résumé work', async ({ page }) => {
+  await page.goto('/')
+
+  const observability = page.getByRole('button', { name: 'Observability', exact: true })
+  await observability.click()
+  await expect(observability).toHaveAttribute('aria-pressed', 'true')
+  await expect(
+    page.getByRole('link', { name: 'Prometheus and Grafana on Kubernetes' })
+  ).toBeVisible()
+
+  await page.getByRole('button', { name: 'Try the simulator' }).click()
+  await page.getByRole('button', { name: 'DNS failure' }).click()
+  await expect(page.getByRole('log')).toContainText('DNS failed')
+  await page.getByRole('button', { name: 'Close simulator' }).click()
+  await expect(page.getByRole('log')).toHaveCount(0)
+
+  await page.locator('summary').filter({ hasText: 'DevOps Engineer Intern' }).click()
+  await expect(page.getByText('Improved CI/CD pipeline efficiency by 40%')).toBeVisible()
+  await page.getByRole('link', { name: 'View résumé' }).click()
+  await expect(page).toHaveURL(/\/resume$/)
+  await expect(page.getByRole('button', { name: 'Print or save PDF' })).toBeVisible()
+})
+
+test('desktop scrolling advances the pinned deployment sequence', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 960 })
+  await page.goto('/')
+  const chapters = page.locator('.pipeline-chapter')
+  const stages = page.getByRole('group', { name: 'Deployment stages' })
+
+  await chapters.nth(1).evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }))
+  await expect(stages.getByRole('button', { name: 'Deploy' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  )
+  await chapters.nth(2).evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }))
+  await expect(stages.getByRole('button', { name: 'Operate' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  )
+  await expect(page.getByText('Watch the rollout', { exact: true })).toBeVisible()
+})
+
+test('the failover film loads in view and pauses when requested or off-screen', async ({
+  page,
+}) => {
+  await page.goto('/')
+  const film = page.locator('.failover-film')
+  const video = film.locator('video')
+  const paused = () => video.evaluate((media: HTMLVideoElement) => media.paused)
+
+  await expect(video.locator('source')).toHaveCount(0)
+  await film.scrollIntoViewIfNeeded()
+  await expect
+    .poll(() => video.evaluate((media: HTMLVideoElement) => media.currentTime))
+    .toBeGreaterThan(0)
+
+  await film.getByRole('button', { name: 'Pause motion' }).click()
+  await expect.poll(paused).toBe(true)
+  await film.getByRole('button', { name: 'Play motion' }).click()
+  await expect.poll(paused).toBe(false)
+  await page.locator('h1').scrollIntoViewIfNeeded()
+  await expect.poll(paused).toBe(true)
+})
+
+test('reduced motion preserves the deployment controls and uses the film poster', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  const build = page.getByRole('button', { name: 'Build', exact: true })
+  await build.click()
+  await expect(build).toHaveAttribute('aria-pressed', 'true')
+
+  const film = page.locator('.failover-film')
+  await film.scrollIntoViewIfNeeded()
+  await expect(film.locator('video source')).toHaveCount(0)
+  await expect(film.locator('picture img')).toBeVisible()
+})
+
+test('the finder closes with Escape and opens the résumé by keyboard', async ({ page }) => {
+  await page.goto('/')
+  const trigger = page.getByRole('button', { name: 'Find in portfolio' })
+  await trigger.click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+
+  await page.keyboard.press('Control+k')
+  const search = page.getByRole('combobox', { name: 'Search the portfolio' })
+  await search.fill('resume')
+  await expect(page.getByRole('option', { name: /Résumé/ })).toBeVisible()
+  await search.press('Enter')
+  await expect(page).toHaveURL(/\/resume$/)
+})
+
+test('the homepage simulation models a scan block and two rollout outcomes', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Simulate a deployment' }).click()
+  const run = page.getByRole('region', { name: 'Deployment simulation' })
+  const scenario = run.getByLabel('Scenario')
+  const status = run.getByRole('status')
+
+  await scenario.selectOption('cve')
+  await run.getByRole('button', { name: 'Start simulation' }).click()
+  await expect(status).toContainText('0%')
+  await expect(run.getByText('Blocked', { exact: true })).toBeVisible()
+
+  await scenario.selectOption('bad-release')
+  await run.getByRole('button', { name: 'Start simulation' }).click()
+  await expect(status).toContainText('5%')
+  await expect(run.getByText('Rolled back', { exact: true })).toBeVisible()
+  await run.getByLabel('Rollout strategy').selectOption('rolling')
+  await run.getByRole('button', { name: 'Start simulation' }).click()
+  await expect(status).toContainText('25%')
+})
+
+test('the desktop scene falls back to the same artwork when WebGL is disabled', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.addInitScript(() => {
+    const get = HTMLCanvasElement.prototype.getContext
+    Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+      value: function (this: HTMLCanvasElement, context: string, options?: unknown) {
+        if (context === 'webgl2') return null
+        return Reflect.apply(get, this, [context, options])
+      },
+    })
+  })
+  await page.goto('/')
+  await expect(page.locator('.stack-art picture img')).toBeVisible()
+  await expect(page.locator('.stack-art')).toHaveAttribute('data-renderer', 'poster')
+  await expect(page.getByRole('link', { name: 'See the work' })).toBeVisible()
+})
+
+test('case studies step through documented traffic with reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/work/azure-internal-access')
+  await page.getByRole('tab', { name: 'Traffic flow' }).click()
+  await page.getByRole('button', { name: 'Next hop' }).click()
+  await expect(page.getByRole('status')).toContainText('Route step 1')
+  await page.getByRole('button', { name: 'Next hop' }).click()
+  await expect(page.getByRole('status')).toContainText('Route step 2')
 })
 
 test('external links open safely', async ({ page }) => {
@@ -116,11 +283,13 @@ test('external links open safely', async ({ page }) => {
 
 test('theme toggle switches and persists', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
-  await page.goto('/atlas')
-  await page.getByRole('button', { name: 'Switch to dark theme' }).click()
-  await expect(page.locator('html')).toHaveClass(/dark/)
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Switch to light theme' }).click()
+  await expect(page.locator('html')).toHaveClass(/light/)
   await page.reload()
-  await expect(page.locator('html')).toHaveClass(/dark/)
+  await expect(page.locator('html')).toHaveClass(/light/)
+  const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
+  expect(axe.violations.map((violation) => violation.id)).toEqual([])
 })
 
 test.describe('architecture explorer', () => {
