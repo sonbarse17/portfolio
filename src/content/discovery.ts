@@ -13,6 +13,7 @@ type Entry = {
 
 export const destinations: Entry[] = [
   { title: 'Résumé', href: '/resume', group: 'Profile', keywords: 'resume CV printable PDF' },
+  { title: 'About Sushant', href: '/#about', group: 'Profile', keywords: 'bio background career' },
   { title: 'Selected projects', href: '/work', group: 'Work', keywords: 'portfolio cases' },
   { title: 'Infrastructure labs', href: '/lab', group: 'Lab', keywords: 'interactive simulation' },
   { title: 'Engineering field guide', href: '/atlas', group: 'Atlas', keywords: 'technical notes' },

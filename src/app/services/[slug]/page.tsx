@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { labs } from '@/content/labs'
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const service = services.find((s) => s.id === slug)
   return service
-    ? { title: service.title, description: service.description }
+    ? pageMetadata(`/services/${slug}`, service.title, service.description)
     : { title: 'Service not found' }
 }
 

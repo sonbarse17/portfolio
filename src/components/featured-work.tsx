@@ -19,6 +19,13 @@ const featured = [
     stack: 'AWS · CloudFront · Cognito',
     tone: 'mint',
   },
+  {
+    slug: 'crm-on-eks',
+    view: null,
+    title: '35+ microservices on AWS EKS',
+    stack: 'HisanLabs internship · EKS · Terraform',
+    tone: 'mint',
+  },
 ] as const
 
 export const featuredProjectSlugs = new Set<string>(featured.map((item) => item.slug))
@@ -32,7 +39,12 @@ export function FeaturedWork({ fullTitles = false }: { fullTitles?: boolean }) {
 
         return (
           <article key={project.slug}>
-            <Link href={`/work/${project.slug}`} className="featured-case">
+            <Link
+              href={`/work/${project.slug}`}
+              className="featured-case"
+              data-tier={project.tier}
+              prefetch={false}
+            >
               <ProjectArtwork slug={project.slug}>
                 {view && <ArchitecturePreview view={view} tone={item.tone} />}
               </ProjectArtwork>
@@ -43,7 +55,9 @@ export function FeaturedWork({ fullTitles = false }: { fullTitles?: boolean }) {
                 </p>
                 <h3 className="display">{fullTitles ? project.title : item.title}</h3>
                 <p className="featured-summary">{project.summary}</p>
-                <span className="featured-action">Read case study</span>
+                <span className="featured-action">
+                  {project.tier === 'overview' ? 'Read project overview' : 'Read case study'}
+                </span>
               </div>
             </Link>
           </article>

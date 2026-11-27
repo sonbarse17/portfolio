@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { site } from '@/content/site'
+import { homeTitle } from '@/lib/metadata'
 import './globals.css'
 import './catalog.css'
 import './finder.css'
@@ -22,30 +23,11 @@ const mono = localFont({
   preload: false,
 })
 
-const title = `${site.name} | ${site.role}`
-
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: title, template: `%s | ${site.name}` },
-  description: site.description,
+  title: { default: homeTitle, template: `%s | ${site.name}` },
   authors: [{ name: site.name }],
   icons: { icon: '/brand.svg' },
-  alternates: { canonical: './' },
-  openGraph: {
-    title,
-    description: site.description,
-    url: site.url,
-    siteName: site.name,
-    images: [{ url: '/assets/images/profile.jpg' }],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary',
-    title,
-    description: site.description,
-    images: ['/assets/images/profile.jpg'],
-  },
 }
 
 // A static export cannot set response headers, so the policy ships as a meta tag. Next.js and
@@ -58,6 +40,7 @@ const csp = [
   "font-src 'self'",
   "connect-src 'self' https://api.emailjs.com",
   "object-src 'none'",
+  "frame-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
 ].join('; ')

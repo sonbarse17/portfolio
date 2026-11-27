@@ -1,13 +1,13 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { RouteIntro } from '@/components/route-intro'
 import { labs } from '@/content/labs'
 
-export const metadata: Metadata = {
-  title: 'The lab',
-  description:
-    'Interactive simulations of failure domains, release pipelines, Kubernetes scheduling, Terraform plans, SLO burn rates and IAM evaluation.',
-}
+export const metadata = pageMetadata(
+  '/lab',
+  'The lab',
+  'Interactive simulations of failure domains, release pipelines, Kubernetes scheduling, Terraform plans, SLO burn rates and IAM evaluation.'
+)
 
 export default function LabPage() {
   return (

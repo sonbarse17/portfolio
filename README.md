@@ -2,6 +2,8 @@
 
 A static Next.js portfolio built around infrastructure case studies, interactive simulations, and an engineering field guide.
 
+See the [Phase 4 quality audit](docs/phase-four.md) for the implementation history, asset sources, browser evidence and release constraints.
+
 ## What is on it
 
 | Route                            | Purpose                                                                                                                 |
@@ -34,7 +36,7 @@ The browser loads the shader after the opening image appears and suspends drawin
 
 Open the finder with Ctrl or Command + K. Search for `diagnostics` to view the renderer observed when the finder opened and the public build identifier.
 
-Regenerate `public/assets/phase-three/fabric*.webp` with `node scripts/render-infrastructure.mjs` using Playwright Chromium. The recovery chapter uses a conceptual ImageGen still and an original 7.5-second Canvas film, with mobile crops, WebM and MP4 encodes, and stills. Run `node scripts/render-recovery-film.mjs` with Playwright Chromium and FFmpeg on `PATH` to rebuild the films from the desktop still. The video is muted, starts in view, and pauses when off-screen. In reduced motion, only the still is shown.
+Regenerate the active `public/assets/phase-four/fabric*.webp` with `node scripts/render-infrastructure.mjs` using Playwright Chromium. The recovery chapter uses a conceptual ImageGen still and an original 7.5-second Canvas film, with mobile crops, WebM and MP4 encodes, and stills. Run `node scripts/render-recovery-film.mjs` with Playwright Chromium and FFmpeg on `PATH` to rebuild the films from the desktop still. The video is muted, starts in view, and pauses when off-screen. Reduced-motion sessions show the still, while data-saving sessions can request playback explicitly.
 
 <details>
 <summary>Recovery artwork prompt</summary>
@@ -138,5 +140,5 @@ Each build shows its commit and date in the footer, the only live facts on the s
 
 ## Known limits
 
-- `npm audit` reports advisories in build and lint tooling (ESLint, and PostCSS inside Next 15). They need major-version upgrades and do not ship to visitors.
+- The application is a static export. Check both `npm audit --omit=dev` and `npm audit` when updating the lockfile. See the linked quality audit for the Phase 4 results and scope.
 - The contact form has a honeypot field only. EmailJS enforces its own rate limits.

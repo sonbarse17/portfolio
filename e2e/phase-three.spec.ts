@@ -12,6 +12,7 @@ const viewports = [
   { width: 430, height: 932 },
   { width: 390, height: 844 },
   { width: 360, height: 800 },
+  { width: 320, height: 568 },
 ]
 
 test('the hero keeps the primary actions in view at the requested screen sizes', async ({

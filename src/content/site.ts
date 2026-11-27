@@ -13,7 +13,7 @@ export const nav = [
   { href: '/lab', label: 'Lab' },
   { href: '/atlas', label: 'Atlas' },
   { href: '/freelance', label: 'Services' },
-  { href: '/#about', label: 'About' },
+  { href: '/resume', label: 'Résumé' },
 ]
 
 export const roles = [

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArchitectureExplorer } from '@/components/architecture-explorer'
@@ -27,7 +28,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const project = projects.find((p) => p.slug === slug)
-  return project ? { title: project.title, description: project.summary } : { title: 'Not found' }
+  return project
+    ? pageMetadata(`/work/${slug}`, project.title, project.summary)
+    : { title: 'Not found' }
 }
 
 function presentSections(project: Project) {
@@ -67,10 +70,15 @@ function FlagshipMasthead({ project }: { project: Project }) {
           <h1 className="display">{project.title}</h1>
           <p className="case-feature-summary">{project.summary}</p>
           <div className="case-feature-actions">
-            <a href="#architecture" className="case-feature-primary">
-              Explore the architecture
-            </a>
-            <a href="#outcome" className="case-feature-result">
+            {project.views && (
+              <a href="#architecture" className="case-feature-primary">
+                Explore the architecture
+              </a>
+            )}
+            <a
+              href="#outcome"
+              className={project.views ? 'case-feature-result' : 'case-feature-primary'}
+            >
               Results
             </a>
           </div>
@@ -183,7 +191,8 @@ export default async function ProjectPage({ params }: Props) {
   const sections = presentSections(project)
   const overview = project.tier === 'overview'
   const illustrated = hasProjectArtwork(project.slug)
-  const architecture = illustrated && sections.find(({ id }) => id === 'architecture')
+  const architecture =
+    illustrated && project.views && sections.find(({ id }) => id === 'architecture')
   const chapters = architecture ? sections.filter(({ id }) => id !== architecture.id) : sections
   const contents = architecture ? [architecture, ...chapters] : chapters
 

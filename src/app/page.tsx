@@ -11,19 +11,27 @@ import { SceneMotion } from '@/components/scene-motion'
 import { capabilities } from '@/content/capabilities'
 import { projects } from '@/content/projects'
 import { background, figures, roles, site } from '@/content/site'
+import { pageMetadata } from '@/lib/metadata'
 import './home.css'
 import './cinema.css'
 import './phase-three.css'
 import './flagship.css'
 
-const personJsonLd = {
+export const metadata = pageMetadata('/')
+
+const profileJsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: site.name,
-  jobTitle: site.role,
-  url: site.url,
-  image: `${site.url}/assets/images/profile.jpg`,
-  sameAs: [site.github, site.linkedin],
+  '@type': 'ProfilePage',
+  url: `${site.url}/`,
+  mainEntity: {
+    '@type': 'Person',
+    '@id': `${site.url}/#sushant-sonbarse`,
+    name: site.name,
+    jobTitle: site.role,
+    url: `${site.url}/`,
+    image: `${site.url}/assets/images/profile.jpg`,
+    sameAs: [site.github, site.linkedin],
+  },
 }
 
 const ecosystem = capabilities.map(({ domain, applied, also }) => {
@@ -45,7 +53,7 @@ export default function Home() {
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(profileJsonLd).replace(/</g, '\\u003c') }}
       />
       <SceneMotion>
         <CinematicHero />

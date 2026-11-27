@@ -1,14 +1,14 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { RouteIntro } from '@/components/route-intro'
 import { domains } from '@/content/atlas'
 import { labs } from '@/content/labs'
 
-export const metadata: Metadata = {
-  title: 'The atlas',
-  description:
-    'An engineering field guide to cloud architecture, CI/CD, Kubernetes, Terraform, observability, security and MLOps.',
-}
+export const metadata = pageMetadata(
+  '/atlas',
+  'The atlas',
+  'An engineering field guide to cloud architecture, CI/CD, Kubernetes, Terraform, observability, security and MLOps.'
+)
 
 export default function AtlasPage() {
   return (

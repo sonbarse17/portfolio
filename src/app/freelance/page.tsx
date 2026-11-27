@@ -1,13 +1,13 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { RouteIntro } from '@/components/route-intro'
 import { engagement, services } from '@/content/services'
 
-export const metadata: Metadata = {
-  title: 'Freelance Cloud and DevOps services',
-  description:
-    'Freelance DevOps and cloud services: CI/CD, cloud infrastructure, Kubernetes, Terraform, cost optimization and strategy.',
-}
+export const metadata = pageMetadata(
+  '/freelance',
+  'Freelance Cloud and DevOps services',
+  'Freelance DevOps and cloud services: CI/CD, cloud infrastructure, Kubernetes, Terraform, cost optimization and strategy.'
+)
 
 export default function FreelancePage() {
   return (

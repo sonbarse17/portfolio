@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { LabExperience } from '@/components/labs'
@@ -14,7 +15,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const lab = labs.find((l) => l.slug === slug)
-  return lab ? { title: `${lab.title} lab`, description: lab.summary } : { title: 'Not found' }
+  return lab
+    ? pageMetadata(`/lab/${slug}`, `${lab.title} lab`, lab.summary)
+    : { title: 'Not found' }
 }
 
 export default async function LabDetailPage({ params }: Props) {

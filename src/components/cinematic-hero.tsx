@@ -16,11 +16,12 @@ export function CinematicHero() {
             I work on the path from a commit to production, and on what happens when part of it
             breaks.
           </p>
+          <p className="hero-specialties">AWS · Azure · Kubernetes · CI/CD</p>
           <div className="hero-actions">
-            <Link href="/work" className="btn">
+            <Link href="/work" className="btn" prefetch={false}>
               See the work
             </Link>
-            <Link href="/resume" className="btn-quiet">
+            <Link href="/resume" className="btn-quiet" prefetch={false}>
               View résumé
             </Link>
           </div>

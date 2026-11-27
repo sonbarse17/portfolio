@@ -52,7 +52,7 @@ export function SiteHeader() {
         Skip to content
       </a>
       <div className="wrap header-inner">
-        <Link href="/" className="site-brand">
+        <Link href="/" className="site-brand" prefetch={false}>
           <BrandMark />
           <span>{site.name}</span>
         </Link>
@@ -65,7 +65,7 @@ export function SiteHeader() {
                 (href === '/freelance' && pathname.startsWith('/services/'))
               return (
                 <li key={href}>
-                  <Link href={href} aria-current={current ? 'page' : undefined}>
+                  <Link href={href} aria-current={current ? 'page' : undefined} prefetch={false}>
                     {label}
                   </Link>
                 </li>

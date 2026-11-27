@@ -408,15 +408,16 @@ test.describe('labs respond to interaction', () => {
     await page.goto('/lab/blast-radius', { waitUntil: 'networkidle' })
     const status = page.getByRole('status').first()
     const lb = page.getByRole('button', { name: /^Load balancer,/ })
-    await lb.focus()
-    await page.keyboard.press('Enter')
+    // The static export can show the diagram before its lazy client chunk is ready.
+    await expect(async () => {
+      await lb.press('Enter')
+      await expect(lb).toHaveAttribute('aria-current', 'true', { timeout: 800 })
+    }).toPass({ timeout: 10000 })
     // Selecting only inspects. It must not change health.
     await expect(status).toContainText('Read data: Healthy')
-    await page.getByRole('button', { name: 'Fail this component' }).focus()
-    await page.keyboard.press('Enter')
+    await page.getByRole('button', { name: 'Fail this component' }).press('Enter')
     await expect(status).toContainText('Read data: Down')
-    await page.getByRole('button', { name: 'Apply recovery' }).focus()
-    await page.keyboard.press('Enter')
+    await page.getByRole('button', { name: 'Apply recovery' }).press('Enter')
     await expect(status).toContainText('Read data: Healthy')
   })
 

@@ -1,13 +1,14 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { PrintResume } from '@/components/print-resume'
 import { projects } from '@/content/projects'
 import { background, roles, site } from '@/content/site'
 
-export const metadata: Metadata = {
-  title: 'Résumé',
-  description: 'Experience, selected engineering work, and education for Sushant Sonbarse.',
-}
+export const metadata = pageMetadata(
+  '/resume',
+  'Résumé',
+  'Experience, selected engineering work, and education for Sushant Sonbarse.'
+)
 
 const selected = projects.filter(
   (project) => project.classification === 'professional' && project.tier === 'case'

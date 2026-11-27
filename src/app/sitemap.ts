@@ -8,7 +8,7 @@ export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
-    '',
+    '/',
     '/work',
     '/lab',
     '/atlas',

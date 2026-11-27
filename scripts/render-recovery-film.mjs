@@ -6,8 +6,10 @@ import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { chromium } from 'playwright'
 
-const directory = new URL('../public/assets/phase-three/', import.meta.url)
-const still = await readFile(new URL('recovery-channel.webp', directory))
+const directory = new URL('../public/assets/phase-four/', import.meta.url)
+const still = await readFile(
+  new URL('../public/assets/phase-three/recovery-channel.webp', import.meta.url)
+)
 const encode = promisify(execFile)
 const ffmpeg = process.env.PORTFOLIO_FFMPEG ?? 'ffmpeg'
 await encode(ffmpeg, ['-version'])
@@ -87,6 +89,22 @@ try {
             dark.addColorStop(1, `rgba(7,9,7,${alternate * 0.48})`)
             ctx.fillStyle = dark
             ctx.fillRect(0, 0, width, height)
+            // Attenuate the primary fiber itself. The darker room alone leaves it glowing.
+            ctx.save()
+            ctx.lineCap = 'round'
+            ctx.lineJoin = 'round'
+            ctx.beginPath()
+            normal.slice(1).forEach(([px, py], i) => {
+              const point = [x + px * drawnWidth, y + py * drawnHeight]
+              if (i === 0) ctx.moveTo(...point)
+              else ctx.lineTo(...point)
+            })
+            ctx.lineWidth = drawnWidth * 0.013
+            ctx.strokeStyle = `rgba(10, 15, 8, ${alternate * 0.67})`
+            ctx.shadowColor = `rgba(12, 18, 9, ${alternate * 0.78})`
+            ctx.shadowBlur = drawnWidth * 0.012
+            ctx.stroke()
+            ctx.restore()
           }
           illuminate(normal, '217,255,135', 1 - alternate * 0.92)
           illuminate(failover, '255,161,82', alternate)

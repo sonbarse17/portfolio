@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 const artwork = new Map([
   ['azure-internal-access', '/assets/phase-two/private-ingress.webp'],
   ['aws-hosting-and-sso', '/assets/phase-two/hosting-layers.webp'],
+  ['crm-on-eks', '/assets/phase-four/workload-field.webp'],
 ])
 
 export function ProjectArtwork({
@@ -20,13 +21,22 @@ export function ProjectArtwork({
 
   return (
     <div className="case-artwork" data-project={slug}>
-      <Image
-        src={image}
-        alt=""
-        fill
-        priority={cover}
-        sizes="(max-width: 800px) 90vw, (max-width: 1450px) 53vw, 740px"
-      />
+      <picture>
+        {slug === 'crm-on-eks' && (
+          <source
+            media="(max-width: 800px)"
+            srcSet="/assets/phase-four/workload-field-mobile.webp"
+          />
+        )}
+        <Image
+          src={image}
+          alt=""
+          fill
+          loading={cover ? 'eager' : 'lazy'}
+          fetchPriority={cover ? 'high' : 'auto'}
+          sizes="(max-width: 800px) 90vw, (max-width: 1450px) 53vw, 740px"
+        />
+      </picture>
       <span className="case-artwork-credit">Concept illustration</span>
       {children}
     </div>

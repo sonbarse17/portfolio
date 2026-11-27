@@ -3,12 +3,12 @@
   --action: #d5fa91;
   --ink: 246 247 239;
   --muted: 205 211 197;
-  background: radial-gradient(ellipse at 76% 43%, #222823 0, #111612 44%, #0b100e 76%);
+  background: radial-gradient(ellipse at 75% 36%, #252a21 0, #121713 47%, #0b100e 78%);
 }
 
 .scene-hero-inner {
   --scene-height: clamp(39rem, calc(100svh - 4.3rem), 74rem);
-  max-width: 105rem;
+  max-width: 112rem;
   grid-template-columns: 0.9fr 1.1fr;
   gap: 0;
   padding-block: 1.35rem 0.85rem;
@@ -32,7 +32,7 @@
 
 .scene-hero .hero-name {
   font-size: clamp(4rem, 9.35vw, 10.2rem);
-  font-weight: 550;
+  font-weight: 570;
   line-height: 0.83;
   letter-spacing: -0.082em;
 }
@@ -45,6 +45,13 @@
 
 .scene-hero .hero-actions {
   margin-top: clamp(1rem, 2.8vh, 1.95rem);
+}
+
+.hero-specialties {
+  margin-top: 0.8rem;
+  color: rgb(var(--muted));
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
 }
 
 .scene-hero .stack-scene {
@@ -73,18 +80,44 @@
 .scene-hero .stack-scene figcaption {
   position: relative;
   inset: auto;
-  max-width: min(100%, 32rem);
+  max-width: min(100%, 38rem);
   width: 100%;
   justify-self: end;
   padding: 0;
   background: transparent;
 }
 
+.stack-caption {
+  margin-bottom: 0.52rem;
+  color: #e2e9dc;
+}
+
+.stack-readout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.9rem;
+  align-items: baseline;
+}
+
+.stack-case-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.24em;
+}
+
+.stack-scene[data-layer='2'] {
+  --accent: #ffbd85;
+}
+
 .stack-layers {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   border-bottom: 1px solid #a6b6a050;
-  gap: 0.3rem;
+  gap: 1px;
+  background: #a6b6a035;
 }
 
 .stack-layers button {
@@ -92,6 +125,7 @@
   min-height: 2.75rem;
   padding-inline: 0.45rem;
   text-align: left;
+  background: #111710;
   color: #cbd6c9;
   font-size: 0.8125rem;
   transition:
@@ -102,7 +136,7 @@
 .stack-layers button:hover,
 .stack-layers button[aria-pressed='true'] {
   color: var(--accent);
-  background: #e7ffa30b;
+  background: #212920;
 }
 
 .stack-layers button[aria-pressed='true']::after {
@@ -115,7 +149,7 @@
 
 .stack-layer-detail {
   min-height: 2.4em;
-  margin: 0.62rem 0.45rem 0;
+  margin: 0.62rem 0 0;
   color: rgb(var(--muted));
   font:
     400 0.875rem/1.4 var(--font-display),
@@ -290,6 +324,14 @@
     object-fit: cover;
   }
 
+  .stack-readout {
+    grid-template-columns: 1fr;
+  }
+
+  .stack-layer-detail {
+    min-height: 2.6em;
+  }
+
   .recovery-stage {
     align-items: start;
     min-height: 0;
@@ -307,6 +349,15 @@
 
   .recovery-layout {
     padding-block: 3rem 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .scene-hero .hero-name {
+    font-size: clamp(3rem, 14vw, 3.55rem);
+  }
+  .scene-hero .hero-copy {
+    padding-block-end: 0.55rem;
   }
 }
 

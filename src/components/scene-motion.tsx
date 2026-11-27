@@ -12,6 +12,25 @@ export function useSceneSettings() {
   return useContext(Motion)
 }
 
+export function useDataSaver() {
+  const [saving, setSaving] = useState(false)
+  useEffect(() => {
+    const connection = (
+      navigator as Navigator & {
+        connection?: EventTarget & { saveData?: boolean; effectiveType?: string }
+      }
+    ).connection
+    const update = () =>
+      setSaving(
+        Boolean(connection?.saveData || /^(slow-)?2g$/.test(connection?.effectiveType ?? ''))
+      )
+    update()
+    connection?.addEventListener('change', update)
+    return () => connection?.removeEventListener('change', update)
+  }, [])
+  return saving
+}
+
 export function SceneMotion({ children }: { children: ReactNode }) {
   const [paused, setPaused] = useState(false)
   const [reduced, setReduced] = useState(false)

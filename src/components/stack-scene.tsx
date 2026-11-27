@@ -1,23 +1,40 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { useSceneActivity, useSceneSettings } from '@/components/scene-motion'
+import { useDataSaver, useSceneActivity, useSceneSettings } from '@/components/scene-motion'
 import type { createInfrastructureRenderer } from '@/lib/visual/infrastructure'
 
 type Renderer = NonNullable<ReturnType<typeof createInfrastructureRenderer>>
 
 const layers = [
-  { name: 'Ingress', detail: 'Authenticate the request before it reaches the workload.' },
-  { name: 'Runtime', detail: 'Deliver traffic to a healthy, ready instance.' },
-  { name: 'Recovery', detail: 'Isolate a failure and restore a healthy path.' },
+  {
+    name: 'Ingress',
+    detail: 'Authenticate the request at the network boundary.',
+    href: '/work/azure-internal-access#architecture',
+    link: 'Trace Azure ingress',
+  },
+  {
+    name: 'Runtime',
+    detail: 'Route traffic to a workload that has passed readiness checks.',
+    href: '#pipeline',
+    link: 'Follow a rollout',
+  },
+  {
+    name: 'Recovery',
+    detail: 'Move traffic to a healthy path when the primary fails.',
+    href: '#break-it',
+    link: 'Explore failover',
+  },
 ]
 
-const artwork = '/assets/phase-three/fabric'
+const artwork = '/assets/phase-four/fabric'
 
 export function StackScene() {
   const { ref, active, reduced } = useSceneActivity<HTMLDivElement>()
   const { paused } = useSceneSettings()
+  const saving = useDataSaver()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const posterRef = useRef<HTMLImageElement>(null)
   const engine = useRef<Renderer | null>(null)
@@ -49,7 +66,8 @@ export function StackScene() {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const lost = () => {
+    const lost = (event: Event) => {
+      event.preventDefault()
       failed.current = true
       engine.current = null
       setMode('poster')
@@ -65,8 +83,8 @@ export function StackScene() {
   useEffect(() => {
     const canvas = canvasRef.current
     const art = ref.current
-    if (!eligible || reduced) setMode('poster')
-    if (!canvas || !art || !active || !eligible || !posterReady || failed.current) return
+    if (!eligible || reduced || saving) setMode('poster')
+    if (!canvas || !art || !active || !eligible || saving || !posterReady || failed.current) return
 
     let frame = 0
     let previous = 0
@@ -191,10 +209,10 @@ export function StackScene() {
       hero?.removeEventListener('pointermove', point)
       hero?.removeEventListener('pointerleave', clearPoint)
     }
-  }, [active, eligible, posterReady, reduced, ref])
+  }, [active, eligible, posterReady, reduced, ref, saving])
 
   return (
-    <figure className="stack-scene">
+    <figure className="stack-scene" data-layer={selected}>
       <div
         className="stack-art"
         ref={ref}
@@ -220,6 +238,7 @@ export function StackScene() {
         <canvas ref={canvasRef} aria-hidden="true" />
       </div>
       <figcaption>
+        <p className="stack-caption label">Trace a request</p>
         <div className="stack-layers" role="group" aria-label="Infrastructure layers">
           {layers.map((layer, index) => (
             <button
@@ -235,9 +254,14 @@ export function StackScene() {
             </button>
           ))}
         </div>
-        <p className="stack-layer-detail" aria-live="polite">
-          {layers[selected].detail}
-        </p>
+        <div className="stack-readout">
+          <p className="stack-layer-detail" aria-live="polite">
+            {layers[selected].detail}
+          </p>
+          <Link href={layers[selected].href} className="stack-case-link" prefetch={false}>
+            {layers[selected].link}
+          </Link>
+        </div>
       </figcaption>
     </figure>
   )

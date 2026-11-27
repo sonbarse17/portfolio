@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { chromium } from 'playwright'
 import ts from 'typescript'
 
-const folder = new URL('../public/assets/phase-three/', import.meta.url)
+const folder = new URL('../public/assets/phase-four/', import.meta.url)
 const source = await readFile(
   new URL('../src/lib/visual/infrastructure.ts', import.meta.url),
   'utf8'

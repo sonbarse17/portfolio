@@ -357,6 +357,45 @@
 .featured-case:is(:hover, :focus-visible) .featured-action {
   color: var(--accent);
 }
+
+@media (min-width: 850px) {
+  .featured-grid .featured-case[data-tier='overview'] {
+    --muted: 218 224 209;
+    --accent: #def89c;
+    position: relative;
+    isolation: isolate;
+    grid-template: 1fr / 1fr;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    min-height: clamp(24rem, 44vw, 36rem);
+    color: #f1f5e8;
+  }
+
+  .featured-case[data-tier='overview'] .case-artwork,
+  .featured-case[data-tier='overview'] .featured-body {
+    grid-area: 1 / 1;
+  }
+
+  .featured-case[data-tier='overview'] .case-artwork {
+    aspect-ratio: auto;
+  }
+
+  .featured-case[data-tier='overview'] .case-artwork::after {
+    background: linear-gradient(90deg, #131912 4%, #131912ed 24%, #1319129c 45%, #13191210 76%);
+  }
+
+  .featured-case[data-tier='overview'] .case-artwork-credit {
+    inset: auto 0.72rem 0.72rem auto;
+  }
+
+  .featured-case[data-tier='overview'] .featured-body {
+    position: relative;
+    align-self: center;
+    max-width: min(51%, 32rem);
+    padding: clamp(1.5rem, 4vw, 4rem);
+  }
+}
 .case-masthead-composition {
   display: grid;
   align-items: center;

@@ -1,15 +1,15 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/metadata'
 import { FeaturedWork, featuredProjectSlugs } from '@/components/featured-work'
 import { ProjectRow } from '@/components/project-parts'
 import { RouteIntro } from '@/components/route-intro'
 import { personal, professional } from '@/content/projects'
 import './case-study.css'
 
-export const metadata: Metadata = {
-  title: 'Work',
-  description:
-    'Professional case studies in Azure internal access and AWS hosting with SSO, plus personal projects in Kubernetes, Docker, monitoring and CI/CD.',
-}
+export const metadata = pageMetadata(
+  '/work',
+  'Work',
+  'Professional case studies in Azure internal access and AWS hosting with SSO, plus personal projects in Kubernetes, Docker, monitoring and CI/CD.'
+)
 
 export default function WorkPage() {
   return (

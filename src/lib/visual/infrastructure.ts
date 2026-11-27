@@ -56,9 +56,10 @@ export function createInfrastructureRenderer(canvas: HTMLCanvasElement, allowSof
     }
 
     vec3 rackPosition(vec3 p, float row) {
-      float spread = 0.19 + 0.46 * max(uTravel, smoothstep(0.0, 1.0, uLayer));
-      return p - vec3(sin(row * 0.72) * 0.19, row * slotHeight,
-        cos(row * 0.66) * 0.11 + spread * (1.0 - abs(row - (2.0 - 2.0 * uLayer)) / 5.5));
+      float selected = exp(-0.9 * abs(row - (3.0 - 3.0 * uLayer)));
+      float open = selected * (0.15 + max(smoothstep(0.0, 1.0, uLayer), uTravel) * 0.58);
+      return p - vec3(sin(row * 0.72) * 0.16 - open * 0.32, row * slotHeight,
+        cos(row * 0.66) * 0.11 + open);
     }
 
     float segment(vec3 p, vec3 a, vec3 b) {
@@ -116,8 +117,8 @@ export function createInfrastructureRenderer(canvas: HTMLCanvasElement, allowSof
 
     void main() {
       vec2 uv = (gl_FragCoord.xy * 2.0 - uResolution.xy) / uResolution.y;
-      float orbit = 0.58 + uPointer.x * 0.12 + uTravel * 0.29 - uLayer * 0.29 + sin(uTime * 0.32) * 0.037;
-      float arm = 8.2 + uTravel * 1.1;
+      float orbit = 0.66 + uPointer.x * 0.12 + uTravel * 0.22 - uLayer * 0.20 + sin(uTime * 0.32) * 0.037;
+      float arm = 8.65 + uTravel * 0.8;
       vec3 camera = vec3(sin(orbit) * arm, 3.40 + uPointer.y * 0.5 + uTravel * 1.38 - uLayer * 0.82, cos(orbit) * arm);
       vec3 forward = normalize(vec3(0, -0.08 - uLayer * 0.3, 0) - camera);
       vec3 right = normalize(cross(forward, vec3(0, 1, 0)));
@@ -168,12 +169,12 @@ export function createInfrastructureRenderer(canvas: HTMLCanvasElement, allowSof
           float front = smoothstep(0.74, 0.98, abs(n.z));
           float horizontal = smoothstep(0.68, 0.99, abs(n.y));
           float grain = hash(floor(vec2(p.x + p.z * 0.33, p.y * 3.0) * 690.0));
-          vec3 material = (hit.y < 1.5) ? mix(vec3(0.19, 0.215, 0.203), vec3(0.65, 0.638, 0.55), alternating * 0.36)
+          vec3 material = (hit.y < 1.5) ? mix(vec3(0.18, 0.20, 0.19), vec3(0.66, 0.64, 0.53), alternating * 0.32)
             : vec3(0.12, 0.14, 0.13);
           float bevel = pow(1.0 - max(0.0, dot(n, -ray)), 3.0);
           float brushed = 0.75 + 0.25 * hash(vec2(floor(p.y * 410.0), floor(p.z * 29.0)));
           vec3 base = material * (0.33 + diffuse * 0.84 + edge * 0.43) * brushed;
-          base += vec3(0.85, 0.87, 0.73) * (specular * 0.54 + bevel * 0.17);
+          base += vec3(0.91, 0.87, 0.72) * (specular * 0.55 + bevel * 0.20);
           base += (grain - 0.5) * 0.034;
           if (hit.y > 0.5 && hit.y < 1.5) {
             float grooves = abs(fract(q.x * 13.0 + 0.5) - 0.5);
@@ -184,8 +185,10 @@ export function createInfrastructureRenderer(canvas: HTMLCanvasElement, allowSof
             float seam = 1.0 - smoothstep(0.008, 0.017, abs(q.y + 0.135));
             float band = smoothstep(0.42, 0.46, abs(q.x)) * (1.0 - smoothstep(extent.x - 0.4, extent.x - 0.28, abs(q.x)));
             float aligned = 0.53 + 0.47 * pow(0.5 + 0.5 * cos(q.x * 2.4 - uTime * 1.3 + row * 0.8), 4.0);
-            float selected = exp(-0.65 * abs(row - (2.0 - 2.0 * uLayer)));
-            base += signal * seam * band * front * aligned * (0.2 + selected * 0.9);
+            float selected = exp(-0.9 * abs(row - (3.0 - 3.0 * uLayer)));
+            base += signal * seam * band * front * aligned * (0.13 + selected * 1.08);
+            float edgeLight = exp(-28.0 * abs(q.y - 0.18)) * (1.0 - smoothstep(extent.x - 0.2, extent.x, abs(q.x)));
+            base += signal * edgeLight * front * selected * 0.25;
             vec2 indicator = vec2(q.x + extent.x - 0.26, q.y - 0.038);
             float dotLight = 1.0 - smoothstep(0.023, 0.032, length(indicator));
             base += signal * dotLight * front * 0.81;
@@ -198,8 +201,12 @@ export function createInfrastructureRenderer(canvas: HTMLCanvasElement, allowSof
               base += (trace + endcaps) * horizontal * band * vec3(0.14, 0.27, 0.11);
             }
           } else if (hit.y > 4.5) {
-            float packet = pow(0.5 + 0.5 * cos((p.x + p.y) * 2.1 - uTime * 3.2), 9.0);
-            base = signal * (0.51 + 0.49 * packet);
+            float route = (p.x + p.y) * 2.1;
+            float packet = pow(0.5 + 0.5 * cos(route - uTime * 3.2), 14.0);
+            float reserve = smoothstep(1.05, 1.84, uLayer);
+            float energized = mix(1.0 - reserve * 0.83, 0.24 + reserve * 0.76, step(p.z, 0.1));
+            vec3 fiber = mix(vec3(0.66, 0.91, 0.32), vec3(1.0, 0.57, 0.23), step(p.z, 0.1) * reserve);
+            base = fiber * (0.15 + energized * (0.48 + 0.56 * packet));
           } else if (hit.y > 3.5) {
             float fresnel = pow(1.0 - max(0.0, dot(n, -ray)), 3.0);
             float line = 1.0 - smoothstep(0.012, 0.038, abs(p.z - 0.16));

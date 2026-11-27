@@ -20,6 +20,9 @@ export function SiteFooter() {
                 <Link href="/resume">Résumé</Link>
               </li>
               <li>
+                <Link href="/#about">About</Link>
+              </li>
+              <li>
                 <a href={site.github} target="_blank" rel="noopener noreferrer">
                   GitHub
                 </a>
