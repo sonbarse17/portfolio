@@ -236,7 +236,7 @@ export const awsHostingAndSso: Project = {
         },
         {
           text: 'Microsoft returns the SAML authentication response to Cognito, along the same federation link.',
-          edges: [['cognito', 'idp']],
+          edges: [['idp', 'cognito']],
         },
         {
           text: 'Cognito returns the authentication result to the application through the configured callback URL.',

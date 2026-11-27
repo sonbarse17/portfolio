@@ -6,7 +6,15 @@ const artwork = new Map([
   ['aws-hosting-and-sso', '/assets/phase-two/hosting-layers.webp'],
 ])
 
-export function ProjectArtwork({ slug, children }: { slug: string; children?: ReactNode }) {
+export function ProjectArtwork({
+  slug,
+  children,
+  cover = false,
+}: {
+  slug: string
+  children?: ReactNode
+  cover?: boolean
+}) {
   const image = artwork.get(slug)
   if (!image) return null
 
@@ -16,7 +24,8 @@ export function ProjectArtwork({ slug, children }: { slug: string; children?: Re
         src={image}
         alt=""
         fill
-        sizes="(max-width: 760px) 92vw, (max-width: 1450px) 55vw, 770px"
+        priority={cover}
+        sizes="(max-width: 800px) 90vw, (max-width: 1450px) 53vw, 740px"
       />
       <span className="case-artwork-credit">Concept illustration</span>
       {children}

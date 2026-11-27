@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { SceneMotionToggle, useSceneActivity } from '@/components/scene-motion'
 
-const directory = '/assets/phase-two/'
+const artwork = '/assets/phase-three/recovery-channel'
 
 export function FailoverFilm() {
   const { ref, active } = useSceneActivity<HTMLElement>()
@@ -30,39 +30,27 @@ export function FailoverFilm() {
     <figure className="failover-film" ref={ref}>
       <div className="failover-viewport" aria-hidden="true">
         <picture>
-          <source media="(max-width: 720px)" srcSet={`${directory}failover-mobile.webp`} />
-          <Image
-            src={`${directory}failover.webp`}
-            fill
-            sizes="(max-width: 900px) 90vw, 55vw"
-            alt=""
-          />
+          <source media="(max-width: 720px)" srcSet={`${artwork}-mobile.webp`} />
+          <Image src={`${artwork}.webp`} fill sizes="100vw" alt="" />
         </picture>
         <video
           ref={video}
           aria-hidden="true"
-          data-playing={playing}
+          data-playing={playing && active}
           muted
           playsInline
           loop
           preload="none"
           onPlaying={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
           onError={() => setPlaying(false)}
         >
           {requested && (
             <>
-              <source
-                media="(max-width: 720px)"
-                src={`${directory}failover-mobile.webm`}
-                type="video/webm"
-              />
-              <source
-                media="(max-width: 720px)"
-                src={`${directory}failover-mobile.mp4`}
-                type="video/mp4"
-              />
-              <source src={`${directory}failover.webm`} type="video/webm" />
-              <source src={`${directory}failover.mp4`} type="video/mp4" />
+              <source media="(max-width: 720px)" src={`${artwork}-mobile.webm`} type="video/webm" />
+              <source media="(max-width: 720px)" src={`${artwork}-mobile.mp4`} type="video/mp4" />
+              <source src={`${artwork}.webm`} type="video/webm" />
+              <source src={`${artwork}.mp4`} type="video/mp4" />
             </>
           )}
         </video>

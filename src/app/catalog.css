@@ -147,37 +147,6 @@
   border-bottom: none;
 }
 
-.architecture-workbench {
-  border: 1px solid rgb(var(--rule) / 0.26);
-  border-radius: var(--radius);
-  background-color: rgb(var(--panel));
-  background-image:
-    linear-gradient(rgb(var(--rule) / 0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(var(--rule) / 0.09) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.architecture-canvas {
-  min-width: 31rem;
-}
-
-.architecture-canvas .stroke-signal {
-  stroke: var(--accent);
-}
-
-.architecture-hint {
-  display: none;
-}
-
-@media (max-width: 580px) {
-  .architecture-hint {
-    display: block;
-  }
-  .architecture-canvas button > span:first-child {
-    font-size: 0.75rem;
-  }
-}
-
 .lab-embed {
   padding: clamp(0.8rem, 3vw, 2rem);
   border: 1px solid rgb(var(--rule) / 0.3);
@@ -400,32 +369,6 @@
 .case-masthead-composition .case-artwork {
   aspect-ratio: 1.31;
 }
-.architecture-canvas {
-  position: relative;
-  isolation: isolate;
-}
-.architecture-canvas::after {
-  content: '';
-  position: absolute;
-  z-index: 3;
-  top: 0;
-  left: 0;
-  width: 18%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgb(var(--rule) / 0.17), transparent);
-  animation: architecture-sweep 740ms var(--ease) forwards;
-  pointer-events: none;
-}
-@keyframes architecture-sweep {
-  from {
-    transform: translateX(-100%);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(540%);
-    opacity: 0;
-  }
-}
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .featured-grid .case-artwork {
@@ -459,12 +402,6 @@
     aspect-ratio: 1.68;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .architecture-canvas::after {
-    display: none;
-  }
-}
-
 .flagship-case {
   border-radius: 0;
   border-color: rgb(var(--rule) / 0.37);
@@ -475,15 +412,4 @@
 }
 .flagship-case .detail-facts {
   border-radius: 0;
-}
-.trace-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-@media (prefers-reduced-motion: reduce) {
-  .trace-controls .trace-play {
-    display: none;
-  }
 }

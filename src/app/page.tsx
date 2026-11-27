@@ -14,6 +14,7 @@ import { background, figures, roles, site } from '@/content/site'
 import './home.css'
 import './cinema.css'
 import './phase-three.css'
+import './flagship.css'
 
 const personJsonLd = {
   '@context': 'https://schema.org',
@@ -68,6 +69,27 @@ export default function Home() {
 
         <DeploymentMap />
 
+        <section className="home-section home-capabilities" aria-labelledby="capabilities">
+          <div className="wrap">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Technology ecosystem</p>
+                <h2 id="capabilities" className="h-section">
+                  Where the tools fit.
+                </h2>
+              </div>
+              <p className="section-note">
+                Select a domain to see the tools in context and the projects where I used them.
+              </p>
+            </div>
+            <Capabilities domains={ecosystem} />
+          </div>
+        </section>
+
+        <section className="recovery-section" aria-labelledby="break-it">
+          <LabPreview />
+        </section>
+
         <section id="about" className="home-section home-about" aria-labelledby="about-title">
           <div className="wrap about-layout">
             <figure className="about-portrait">
@@ -98,29 +120,6 @@ export default function Home() {
                 Read my engineering field guide
               </Link>
             </div>
-          </div>
-        </section>
-
-        <section className="home-section home-capabilities" aria-labelledby="capabilities">
-          <div className="wrap">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Technology ecosystem</p>
-                <h2 id="capabilities" className="h-section">
-                  Where the tools fit.
-                </h2>
-              </div>
-              <p className="section-note">
-                Select a domain to see the tools in context and the projects where I used them.
-              </p>
-            </div>
-            <Capabilities domains={ecosystem} />
-          </div>
-        </section>
-
-        <section className="home-section" aria-labelledby="break-it">
-          <div className="wrap">
-            <LabPreview />
           </div>
         </section>
 

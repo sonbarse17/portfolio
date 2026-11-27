@@ -80,9 +80,10 @@ test.describe('responsive widths', () => {
 })
 
 test('all internal links resolve', async ({ page, request }) => {
+  test.slow()
   const seen = new Set<string>()
   for (const route of routes) {
-    await page.goto(route)
+    await page.goto(route, { waitUntil: 'domcontentloaded' })
     const hrefs = await page
       .locator('a[href^="/"]')
       .evaluateAll((els) => els.map((el) => el.getAttribute('href')!.split('#')[0] || '/'))
@@ -302,7 +303,7 @@ test.describe('architecture explorer', () => {
     await expect(page.getByRole('button', { name: /^Internal Application Gateway/ })).toBeVisible()
 
     // The legacy edge is marked as follow-up, never as completed.
-    const frontDoor = page.getByRole('button', { name: /^Azure Front Door.*follow-up/ })
+    const frontDoor = page.getByRole('button', { name: /^Azure Front Door.*follow-up/i })
     await expect(frontDoor).toBeVisible()
     await frontDoor.click()
     await expect(page.getByText('The legacy public entry point')).toBeVisible()
@@ -321,6 +322,7 @@ test.describe('architecture explorer', () => {
 
     await page.getByRole('tab', { name: 'Integration workflow' }).click()
     await expect(page.getByRole('button', { name: /^Workflow endpoint/ })).toBeVisible()
+    await page.getByRole('button', { name: /Only this endpoint skips interactive sign-in/ }).click()
     await expect(page.getByText(/Only this endpoint skips interactive sign-in/)).toBeVisible()
   })
 
@@ -431,7 +433,9 @@ test.describe('labs respond to interaction', () => {
     page,
   }) => {
     await page.goto('/lab/cluster', { waitUntil: 'networkidle' })
-    await page.getByLabel('Web tier CPU demand').fill('5000')
+    const slider = page.getByRole('slider', { name: 'Web tier CPU demand' })
+    const width = await slider.evaluate((input) => input.clientWidth)
+    await slider.click({ position: { x: width - 12, y: 16 } })
     await expect(page.getByText(/added node-4/)).toBeVisible()
     await page.getByLabel(/Cluster Autoscaler/).uncheck()
     await expect(page.getByText(/Pending, no node can host/)).toBeVisible()

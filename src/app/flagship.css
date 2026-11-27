@@ -1,0 +1,321 @@
+.scene-hero {
+  --accent: #dbff9a;
+  --action: #d5fa91;
+  --ink: 246 247 239;
+  --muted: 205 211 197;
+  background: radial-gradient(ellipse at 76% 43%, #222823 0, #111612 44%, #0b100e 76%);
+}
+
+.scene-hero-inner {
+  --scene-height: clamp(39rem, calc(100svh - 4.3rem), 74rem);
+  max-width: 105rem;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 0;
+  padding-block: 1.35rem 0.85rem;
+}
+
+.scene-hero .hero-copy {
+  align-self: center;
+  padding-block: 1rem 3.5rem;
+}
+
+.scene-hero .hero-role {
+  margin-bottom: clamp(1.1rem, 2.35vh, 2rem);
+}
+
+.scene-hero .hero-role::before {
+  width: 1.3rem;
+  height: 1px;
+  border: 0;
+  background: currentColor;
+}
+
+.scene-hero .hero-name {
+  font-size: clamp(4rem, 9.35vw, 10.2rem);
+  font-weight: 550;
+  line-height: 0.83;
+  letter-spacing: -0.082em;
+}
+
+.scene-hero .hero-intro {
+  max-width: 35ch;
+  font-size: clamp(1.05rem, 1.45vw, 1.4rem);
+  margin-top: clamp(1.2rem, 2.9vh, 2.3rem);
+}
+
+.scene-hero .hero-actions {
+  margin-top: clamp(1rem, 2.8vh, 1.95rem);
+}
+
+.scene-hero .stack-scene {
+  align-self: stretch;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: center;
+  padding-block: 0 1rem;
+}
+
+.scene-hero .stack-art {
+  aspect-ratio: 1.32;
+  width: calc(100% + clamp(1rem, 4vw, 4.5rem));
+  margin-inline-start: clamp(-1.7rem, -1.8vw, -0.55rem);
+}
+
+.scene-hero .stack-art picture,
+.scene-hero .stack-art canvas {
+  mask-image: radial-gradient(ellipse 64% 67% at 50% 50%, #000 46%, transparent 90%);
+}
+
+.scene-hero .stack-art[data-still='true'] canvas {
+  opacity: 0;
+}
+
+.scene-hero .stack-scene figcaption {
+  position: relative;
+  inset: auto;
+  max-width: min(100%, 32rem);
+  width: 100%;
+  justify-self: end;
+  padding: 0;
+  background: transparent;
+}
+
+.stack-layers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid #a6b6a050;
+  gap: 0.3rem;
+}
+
+.stack-layers button {
+  position: relative;
+  min-height: 2.75rem;
+  padding-inline: 0.45rem;
+  text-align: left;
+  color: #cbd6c9;
+  font-size: 0.8125rem;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease;
+}
+
+.stack-layers button:hover,
+.stack-layers button[aria-pressed='true'] {
+  color: var(--accent);
+  background: #e7ffa30b;
+}
+
+.stack-layers button[aria-pressed='true']::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.stack-layer-detail {
+  min-height: 2.4em;
+  margin: 0.62rem 0.45rem 0;
+  color: rgb(var(--muted));
+  font:
+    400 0.875rem/1.4 var(--font-display),
+    sans-serif;
+}
+
+.scene-hero-footer {
+  border-top-color: #a6b6a050;
+}
+
+.journey-rail .journey-progress {
+  transform: scaleX(var(--chapter-progress, 0));
+  transition: none;
+  pointer-events: none;
+}
+
+.home-work .section-heading {
+  align-items: end;
+}
+
+.home-work .h-section {
+  max-width: 13ch;
+  font-size: clamp(3rem, 7.1vw, 7.5rem);
+  font-weight: 550;
+  line-height: 0.93;
+}
+
+.recovery-section {
+  --accent: #d5fa91;
+  --action: #d5fa91;
+  --action-hover: #e6ffb3;
+  --action-ink: #161d12;
+  --ink: 244 246 232;
+  --muted: 217 224 207;
+  --rule: 202 217 192;
+  background: #111610;
+  color: rgb(var(--ink));
+}
+
+.recovery-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(38rem, 65vw, 51rem);
+  display: grid;
+  align-items: center;
+}
+
+.recovery-stage .failover-film {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  align-content: end;
+  border: 0;
+  background: #111610;
+}
+
+.recovery-stage .failover-viewport {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+}
+
+.recovery-stage .failover-viewport::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #0a0e0be8 0%, #0a0e0bce 24%, #0a0e0b31 59%, transparent 82%),
+    linear-gradient(0deg, #0a0e0bfa, transparent 28%);
+}
+
+.recovery-stage .failover-film figcaption {
+  z-index: 1;
+  justify-self: center;
+  width: min(100%, 90rem);
+  padding: 0.5rem var(--gutter);
+  border: 0;
+  background: transparent;
+  color: rgb(var(--muted));
+}
+
+.recovery-layout {
+  pointer-events: none;
+  z-index: 1;
+  padding-block: 4rem 6rem;
+}
+
+.recovery-copy {
+  max-width: 29rem;
+  pointer-events: auto;
+}
+
+.recovery-copy .h-section {
+  margin-block: 0.7rem 1.1rem;
+  max-width: 9ch;
+  font-size: clamp(3.65rem, 7.2vw, 7.35rem);
+  font-weight: 550;
+  line-height: 0.89;
+}
+
+.recovery-copy > p:not(.eyebrow) {
+  margin-bottom: 1.45rem;
+  max-width: 31ch;
+  color: rgb(var(--muted));
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.recovery-copy .btn-quiet {
+  background: #111610bc;
+}
+
+.recovery-embed {
+  --panel: 25 31 25;
+  --paper: 17 22 17;
+  padding-block: 1.2rem 3rem;
+}
+
+@media (max-width: 1024px) and (min-width: 761px) {
+  .scene-hero .hero-name {
+    font-size: clamp(4.25rem, 9.1vw, 6.3rem);
+  }
+  .scene-hero-inner {
+    --scene-height: clamp(36rem, calc(87svh - 5rem), 52rem);
+  }
+}
+
+@media (max-width: 760px) {
+  .scene-hero {
+    background: radial-gradient(ellipse at 51% 63%, #232b21 0, #0d120f 65%);
+  }
+
+  .scene-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 1.8rem 0.55rem;
+  }
+
+  .scene-hero .hero-copy {
+    padding-block: 0 0.15rem;
+  }
+
+  .scene-hero .hero-role {
+    margin-bottom: 0.82rem;
+  }
+
+  .scene-hero .hero-name {
+    font-size: clamp(3.55rem, 14.5vw, 7rem);
+  }
+
+  .scene-hero .hero-intro {
+    margin-top: 0.78rem;
+  }
+
+  .scene-hero .hero-actions {
+    margin-top: 0.95rem;
+  }
+
+  .scene-hero .stack-scene {
+    width: min(100%, 31rem);
+    padding: 0;
+    margin: 0 auto 0.25rem;
+  }
+
+  .scene-hero .stack-art {
+    width: 100%;
+    aspect-ratio: 1.43;
+    margin: 0;
+  }
+
+  .scene-hero .stack-art picture img {
+    object-fit: cover;
+  }
+
+  .recovery-stage {
+    align-items: start;
+    min-height: 0;
+    padding-bottom: min(65vw, 28rem);
+  }
+
+  .recovery-stage .failover-viewport {
+    inset: auto 0 0;
+    aspect-ratio: 1.14;
+  }
+
+  .recovery-stage .failover-viewport::after {
+    background: linear-gradient(180deg, #111610, #11161015 29%, transparent 54%, #0a0e0bc7);
+  }
+
+  .recovery-layout {
+    padding-block: 3rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-experience .scene-motion-toggle {
+    display: none;
+  }
+
+  .stack-layers button {
+    transition: none;
+  }
+}

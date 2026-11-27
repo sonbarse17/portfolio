@@ -3,6 +3,7 @@ import { FeaturedWork, featuredProjectSlugs } from '@/components/featured-work'
 import { ProjectRow } from '@/components/project-parts'
 import { RouteIntro } from '@/components/route-intro'
 import { personal, professional } from '@/content/projects'
+import './case-study.css'
 
 export const metadata: Metadata = {
   title: 'Work',
@@ -18,6 +19,14 @@ export default function WorkPage() {
           Selected cloud and DevOps work across AWS, Azure, Kubernetes, CI/CD, and infrastructure
           automation.
         </p>
+        <nav className="work-index-links" aria-label="Project categories">
+          <a href="#professional" className="text-link">
+            Professional case studies
+          </a>
+          <a href="#personal" className="text-link">
+            Personal projects
+          </a>
+        </nav>
       </RouteIntro>
 
       <section aria-labelledby="professional" className="catalog-section">

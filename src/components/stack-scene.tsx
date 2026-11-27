@@ -2,21 +2,41 @@
 
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
-import { useSceneActivity } from '@/components/scene-motion'
+import { useSceneActivity, useSceneSettings } from '@/components/scene-motion'
 import type { createInfrastructureRenderer } from '@/lib/visual/infrastructure'
 
 type Renderer = NonNullable<ReturnType<typeof createInfrastructureRenderer>>
 
+const layers = [
+  { name: 'Ingress', detail: 'Authenticate the request before it reaches the workload.' },
+  { name: 'Runtime', detail: 'Deliver traffic to a healthy, ready instance.' },
+  { name: 'Recovery', detail: 'Isolate a failure and restore a healthy path.' },
+]
+
+const artwork = '/assets/phase-three/fabric'
+
 export function StackScene() {
   const { ref, active, reduced } = useSceneActivity<HTMLDivElement>()
+  const { paused } = useSceneSettings()
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const posterRef = useRef<HTMLImageElement>(null)
   const engine = useRef<Renderer | null>(null)
   const failed = useRef(false)
   const time = useRef(0)
   const downgraded = useRef(false)
+  const targetLayer = useRef(0)
+  const layerPosition = useRef(0)
   const [eligible, setEligible] = useState(false)
   const [posterReady, setPosterReady] = useState(false)
   const [mode, setMode] = useState<'poster' | 'standard' | 'high'>('poster')
+  const [selected, setSelected] = useState(0)
+  const showStill = mode === 'poster' || paused || reduced
+  const still =
+    showStill && selected > 0 ? `${artwork}-${layers[selected].name.toLowerCase()}` : artwork
+
+  useEffect(() => {
+    if (posterRef.current?.complete && posterRef.current.naturalWidth) setPosterReady(true)
+  }, [])
 
   useEffect(() => {
     const media = window.matchMedia('(min-width: 1000px) and (pointer: fine)')
@@ -58,17 +78,21 @@ export function StackScene() {
     let targetY = 0
     let travel = 0
     let stopped = false
-    let high = !downgraded.current && window.matchMedia('(min-width: 1440px)').matches
+    const canUpgrade = !downgraded.current && window.matchMedia('(min-width: 1440px)').matches
+    let high = false
+    let triedHigh = false
+    let renderCost = 0
     let ready = false
-    let artTop = 0
-    let artHeight = 1
+    let sceneTop = 0
+    let sceneHeight = 1
     const hero = art.closest('.scene-hero')
     const scale = () => {
       const width = art.clientWidth
       const height = art.clientHeight
-      artTop = art.getBoundingClientRect().top + window.scrollY
-      artHeight = Math.max(1, height)
-      const ratio = Math.min(1, (high ? 760 : 475) / Math.max(width, height))
+      const bounds = (hero ?? art).getBoundingClientRect()
+      sceneTop = bounds.top + window.scrollY
+      sceneHeight = Math.max(1, bounds.height * 0.72)
+      const ratio = Math.min(1, (high ? 710 : 410) / Math.max(width, height))
       engine.current?.resize(
         Math.max(1, Math.round(width * ratio)),
         Math.max(1, Math.round(height * ratio))
@@ -95,9 +119,13 @@ export function StackScene() {
         previous = now
         x += (targetX - x) * 0.095
         y += (targetY - y) * 0.095
-        const nextTravel = Math.min(1, Math.max(0, (window.scrollY - artTop) / artHeight))
-        travel += (nextTravel - travel) * 0.14
-        renderer.draw(time.current, x, y, travel, high ? 1 : 0)
+        const nextTravel = Math.min(1, Math.max(0, (window.scrollY - sceneTop) / sceneHeight))
+        travel += (nextTravel - travel) * 0.1
+        const ease = 1 - Math.exp(-Math.min(delta || 16, 64) / 245)
+        layerPosition.current += (targetLayer.current - layerPosition.current) * ease
+        const before = performance.now()
+        renderer.draw(time.current, x, y, travel, high ? 1 : 0, layerPosition.current)
+        renderCost = renderCost * 0.8 + (performance.now() - before) * 0.2
 
         if (!ready) {
           setMode(high ? 'high' : 'standard')
@@ -108,7 +136,7 @@ export function StackScene() {
         sampled += 1
         if (sampled > 9 && delta > (high ? 28 : 57)) slow += 1
         if (sampled > 20) {
-          if (slow >= 8) {
+          if (slow >= 8 || renderCost > 10) {
             if (!high) {
               renderer.dispose()
               engine.current = null
@@ -120,6 +148,11 @@ export function StackScene() {
             downgraded.current = true
             scale()
             setMode('standard')
+          } else if (!high && canUpgrade && !triedHigh && slow <= 1 && renderCost < 3.5) {
+            triedHigh = true
+            high = true
+            scale()
+            setMode('high')
           }
           sampled = 9
           slow = 0
@@ -167,33 +200,45 @@ export function StackScene() {
         ref={ref}
         data-renderer={mode}
         data-drawing={mode !== 'poster' && active}
+        data-still={showStill}
       >
         <picture>
-          <source
-            media="(max-width: 650px)"
-            srcSet="/assets/phase-three/infrastructure-mobile.webp"
-          />
+          {still === artwork && (
+            <source media="(max-width: 760px)" srcSet={`${artwork}-mobile.webp`} />
+          )}
           <Image
-            src="/assets/phase-three/infrastructure.webp"
+            ref={posterRef}
+            src={`${still}.webp`}
             alt=""
             fill
             fetchPriority="high"
             loading="eager"
             onLoad={() => setPosterReady(true)}
-            sizes="(max-width: 650px) 100vw, 62vw"
+            sizes="(max-width: 760px) 100vw, 62vw"
           />
         </picture>
         <canvas ref={canvasRef} aria-hidden="true" />
-        <svg
-          className="stack-annotations"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path d="M7 24V8h18m47 0h21v16m0 54v14H73m-48 0H7V76" />
-        </svg>
       </div>
-      <figcaption>Procedural infrastructure model</figcaption>
+      <figcaption>
+        <div className="stack-layers" role="group" aria-label="Infrastructure layers">
+          {layers.map((layer, index) => (
+            <button
+              key={layer.name}
+              type="button"
+              aria-pressed={selected === index}
+              onClick={() => {
+                targetLayer.current = index
+                setSelected(index)
+              }}
+            >
+              {layer.name}
+            </button>
+          ))}
+        </div>
+        <p className="stack-layer-detail" aria-live="polite">
+          {layers[selected].detail}
+        </p>
+      </figcaption>
     </figure>
   )
 }

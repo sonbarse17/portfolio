@@ -15,28 +15,31 @@ const { createInfrastructureRenderer } = await import(
   'data:text/javascript;base64,' + Buffer.from(javascript).toString('base64')
 )
 const browser = await chromium.launch({
+  ...(process.env.PORTFOLIO_CHROMIUM ? { executablePath: process.env.PORTFOLIO_CHROMIUM } : {}),
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
 })
 try {
   await mkdir(folder, { recursive: true })
   const page = await browser.newPage()
-  for (const [name, width, height] of [
-    ['infrastructure.webp', 1152, 1008],
-    ['infrastructure-mobile.webp', 560, 514],
+  for (const [name, width, height, layer] of [
+    ['fabric.webp', 1216, 920, 0],
+    ['fabric-mobile.webp', 640, 480, 0],
+    ['fabric-runtime.webp', 768, 582, 1],
+    ['fabric-recovery.webp', 768, 582, 2],
   ]) {
     const data = await page.evaluate(
-      ({ source, width, height }) => {
+      ({ source, width, height, layer }) => {
         const canvas = document.createElement('canvas')
         const create = new Function('return (' + source + ')')()
         const scene = create(canvas, true)
         if (!scene) throw new Error('A WebGL 2 context is required to render the poster.')
         scene.resize(width, height)
-        scene.draw(2.1, 0, 0, 0, 1)
-        const result = canvas.toDataURL('image/webp', 0.89).split(',')[1]
+        scene.draw(2.1, 0, 0, 0, 1, layer)
+        const result = canvas.toDataURL('image/webp', 0.85).split(',')[1]
         scene.dispose()
         return result
       },
-      { source: createInfrastructureRenderer.toString(), width, height }
+      { source: createInfrastructureRenderer.toString(), width, height, layer }
     )
     const bytes = Buffer.from(data, 'base64')
     await writeFile(new URL(name, folder), bytes)

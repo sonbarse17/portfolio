@@ -26,19 +26,28 @@ When adding a project, keep a section as `reference` unless the detail actually 
 Next.js 15 (App Router, `output: 'export'`), React 18, TypeScript (strict), Tailwind CSS 3, `next-themes`, EmailJS.
 The design uses local Geist fonts, graphite and light themes, and citron for interactive emphasis. Shared tokens live in `src/app/globals.css`, route surfaces in `src/app/catalog.css`, and the homepage compositions in `src/app/home.css`. Diagrams use HTML and SVG. Motion uses CSS and respects reduced-motion preferences.
 
-### Phase 3 rendering and interaction
+### Trace to production
 
-The homepage renders an original infrastructure model with WebGL 2 when an eligible device supplies a usable context. Both WebP posters come from the same GLSL scene. The standard tier uses a smaller drawing buffer, lower frame cadence, and shorter ray marches. Mobile, reduced-motion, unavailable WebGL, and lost contexts use the poster.
+The homepage introduces ingress, runtime, and recovery through an original procedural infrastructure model. The GLSL scene changes its camera, chassis spacing, and fiber routes as visitors select layers or scroll. WebGL 2 runs only on eligible devices. The standard tier uses a smaller drawing buffer, lower frame cadence, and shorter ray marches. Mobile, reduced-motion, unavailable WebGL, and lost contexts show individually rendered WebP views of the same layers.
 
-The heading and poster are rendered in the static HTML. The browser loads the shader after the poster appears and suspends drawing when the scene leaves view. The browser also loads the finder and release simulation on request. The simulation shares the release lab's model and rollout assumptions.
+The browser loads the shader after the opening image appears and suspends drawing off-screen. The chapter rail tracks reading progress, and the finder and release simulator load on request. The release simulator shares the lab's tested model. The Azure and AWS case studies let visitors inspect documented components and follow named traffic hops in either manual or animated playback. Motion pauses outside the viewport.
 
 Open the finder with Ctrl or Command + K. Search for `diagnostics` to view the renderer observed when the finder opened and the public build identifier.
 
-Regenerate the two `public/assets/phase-three/infrastructure*.webp` posters with `node scripts/render-infrastructure.mjs` using Playwright Chromium.
+Regenerate `public/assets/phase-three/fabric*.webp` with `node scripts/render-infrastructure.mjs` using Playwright Chromium. The recovery chapter uses a conceptual ImageGen still and an original 7.5-second Canvas film, with mobile crops, WebM and MP4 encodes, and stills. Run `node scripts/render-recovery-film.mjs` with Playwright Chromium and FFmpeg on `PATH` to rebuild the films from the desktop still. The video is muted, starts in view, and pauses when off-screen. In reduced motion, only the still is shown.
+
+<details>
+<summary>Recovery artwork prompt</summary>
+
+```text
+Create a 16:9 full-bleed landscape still for a premium cloud engineer's cinematic portfolio. It is the closing scene of an engineering story about fault isolation and failover. A colossal physical network fabric inside a very dark architectural infrastructure room, photographed like an industrial design campaign. Camera just above a black metal service floor with precision brushed graphite and a couple of narrow luminous fiber-optic channels embedded in the floor. One pale lime / muted yellow-green path comes diagonally from the lower left across the lower third and splits to two separate rows of rack apertures, one route lower intensity amber, with pale lime steady on the other. Upper right contains the shadowed vast infrastructure and atmospheric perspective. Industrial, plausibly manufactured, disciplined, cinematic highlights, striking chiaroscuro. Palette virtually black olive charcoal, warm silver, one precise acid chartreuse signal, extremely restrained amber. Art direction: deep space with big readable forms, high contrast textural surfaces, architectural perspective at dusk, long negative spaces. No people, labels, text, logos, icons, UI, graphical overlay, blue or purple. This is a stylized concept, no real server brands. Deliver the photographic still alone.
+```
+
+</details>
 
 ### Phase 2 media
 
-The homepage uses locally optimized ImageGen artwork and an original procedural failover loop rendered with Canvas in Chromium. The portfolio loads the film when it enters view. It pauses off-screen and has a poster for reduced-motion preferences.
+Phase 2 produced the conceptual case covers and the original homepage artwork and film. The two case covers still appear in the portfolio.
 
 | Scene                          | Files                                                                           |
 | ------------------------------ | ------------------------------------------------------------------------------- |

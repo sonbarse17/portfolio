@@ -14,8 +14,7 @@
 }
 .section-heading h2,
 .about-copy h2,
-.contact-layout h2,
-.lab-copy h2 {
+.contact-layout h2 {
   margin-top: 0.5rem;
 }
 .section-heading .btn-quiet {

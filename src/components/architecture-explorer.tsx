@@ -1,34 +1,163 @@
 'use client'
 
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { useSceneActivity } from '@/components/scene-motion'
-import { Schematic, edgeKey, type SchematicTone } from '@/components/schematic'
-import type { DiagramView, NodeStatus } from '@/content/projects/types'
+import { edgeKey } from '@/components/schematic'
+import type { DiagramNode, DiagramView, NodeStatus, Step } from '@/content/projects/types'
 import { cn } from '@/lib/utils'
+import '@/app/architecture-trace.css'
 
-const tone: Record<NodeStatus, SchematicTone> = {
-  implemented: 'ok',
-  dependency: 'idle',
-  followup: 'warn',
+const statusLabels: Record<NodeStatus, string> = {
+  implemented: 'Built in this project',
+  dependency: 'Application or external system',
+  followup: 'Follow-up, not completed',
 }
-const word: Record<NodeStatus, string> = {
-  implemented: 'built in this project',
-  dependency: 'application or external system',
-  followup: 'follow-up, not completed',
+
+const HOP_MS = 2400
+const clampShift = (value: number) => Math.max(-3.5, Math.min(3.5, value))
+type Hop = { from: DiagramNode; to: DiagramNode }
+
+function ArchitectureMap({
+  view,
+  step,
+  hops,
+  selected,
+  motion,
+  onSelect,
+}: {
+  view: DiagramView
+  step: number | null
+  hops: Hop[]
+  selected: DiagramNode | undefined
+  motion: boolean
+  onSelect: (id: string) => void
+}) {
+  const byId = new Map(view.nodes.map((node) => [node.id, node]))
+  const activeNodes = new Set(hops.flatMap(({ from, to }) => [from, to]))
+  const activeEdges = new Set(hops.map(({ from, to }) => edgeKey(from.id, to.id)))
+  const framedNodes = selected ? [selected] : [...activeNodes]
+  const frame = (axis: 'x' | 'y') => {
+    if (!framedNodes.length) return '0%'
+    const points = framedNodes.map((node) => node[axis])
+    return `${clampShift((50 - (Math.min(...points) + Math.max(...points)) / 2) * 0.16)}%`
+  }
+  const style = { '--trace-shift-x': frame('x'), '--trace-shift-y': frame('y') } as CSSProperties
+
+  return (
+    <div className="trace-map-frame">
+      <div className="trace-viewport" role="region" aria-label="Architecture diagram viewport">
+        <div
+          className={cn('trace-map', view.height ?? 'h-[26rem]')}
+          data-dense={view.nodes.length > 5}
+          data-framed={framedNodes.length > 0}
+          data-tracing={step !== null}
+          style={style}
+        >
+          {view.regions?.map(({ label, x, y, w, h }) => (
+            <div
+              aria-hidden="true"
+              className="trace-boundary"
+              key={label}
+              style={{ left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%` }}
+            >
+              <span>{label}</span>
+            </div>
+          ))}
+          <svg
+            aria-hidden="true"
+            className="trace-cables"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            {view.edges.map(({ from, to }) => {
+              const a = byId.get(from)
+              const b = byId.get(to)
+              if (!a || !b) return null
+              const id = edgeKey(from, to)
+              return (
+                <line
+                  key={id}
+                  data-active={activeEdges.has(id)}
+                  x1={a.x}
+                  y1={a.y}
+                  x2={b.x}
+                  y2={b.y}
+                  vectorEffect="non-scaling-stroke"
+                />
+              )
+            })}
+            {hops.map(({ from, to }) => {
+              const x = (from.x + to.x) / 2
+              const y = (from.y + to.y) / 2
+              const angle = Math.atan2(to.y - from.y, to.x - from.x) * (180 / Math.PI)
+              return (
+                <path
+                  className="trace-arrow"
+                  key={`${from.id}-${to.id}`}
+                  d="M-0.9 -0.9L0.55 0L-0.9 0.9"
+                  transform={`translate(${x} ${y}) rotate(${angle})`}
+                  vectorEffect="non-scaling-stroke"
+                />
+              )
+            })}
+            {motion &&
+              hops.map(({ from, to }, i) => (
+                <path
+                  key={`${step}-${from.id}-${to.id}`}
+                  className="trace-packet"
+                  d={`M${from.x} ${from.y}L${to.x} ${to.y}`}
+                  pathLength="100"
+                  vectorEffect="non-scaling-stroke"
+                  style={{ animationDelay: `${i * 240}ms` }}
+                />
+              ))}
+          </svg>
+          {view.edges.map(({ from, to, label }) => {
+            if (!label) return null
+            const a = byId.get(from)
+            const b = byId.get(to)
+            if (!a || !b) return null
+            return (
+              <span
+                aria-hidden="true"
+                className="trace-cable-label"
+                data-active={activeEdges.has(edgeKey(from, to))}
+                key={`${from}-${to}`}
+                style={{ left: `${(a.x + b.x) / 2}%`, top: `${(a.y + b.y) / 2}%` }}
+              >
+                {label}
+              </span>
+            )
+          })}
+          {view.nodes.map((node) => (
+            <button
+              aria-label={`${node.label}${node.sub ? `, ${node.sub}` : ''}: ${statusLabels[node.status]}`}
+              aria-pressed={selected?.id === node.id}
+              className="trace-node"
+              data-active={activeNodes.has(node)}
+              data-status={node.status}
+              key={node.id}
+              onClick={() => onSelect(node.id)}
+              style={{ left: `${node.x}%`, top: `${node.y}%` }}
+              type="button"
+            >
+              <span className="trace-node-mark" aria-hidden="true" />
+              <span>{node.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <ul className="trace-legend" aria-label="Component status legend">
+        {(Object.entries(statusLabels) as [NodeStatus, string][]).map(([status, label]) => (
+          <li key={status}>
+            <span className="trace-node-mark" aria-hidden="true" data-status={status} />
+            {label}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
-const legend: { status: NodeStatus; swatch: string; text: string }[] = [
-  {
-    status: 'implemented',
-    swatch: 'border-2 border-ink',
-    text: 'Built in this project',
-  },
-  { status: 'dependency', swatch: 'border border-ink/50', text: 'Application or external system' },
-  {
-    status: 'followup',
-    swatch: 'border border-dashed border-warn',
-    text: 'Follow-up, not completed',
-  },
-]
 
 export function ArchitectureExplorer({ title, views }: { title: string; views: DiagramView[] }) {
   const uid = useId()
@@ -36,25 +165,46 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
   const [step, setStep] = useState<number | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [playing, setPlaying] = useState(false)
+  const [reduced, setReduced] = useState(false)
   const { ref, active } = useSceneActivity<HTMLDivElement>()
   const tabs = useRef<(HTMLButtonElement | null)[]>([])
-
-  const view = views.find((v) => v.id === viewId)!
-  const steps = useMemo(() => view.steps ?? [], [view])
-  const node = view.nodes.find((n) => n.id === selected)
+  const view = views.find((candidate) => candidate.id === viewId)!
+  const steps = view.steps ?? []
+  const currentStep = step === null ? undefined : steps[step]
+  const currentNode = view.nodes.find((node) => node.id === selected)
+  const byId = new Map(view.nodes.map((node) => [node.id, node]))
+  const getHops = ({ edges }: Step): Hop[] =>
+    edges.flatMap(([from, to]) => {
+      const a = byId.get(from)
+      const b = byId.get(to)
+      return a && b ? [{ from: a, to: b }] : []
+    })
+  const hops = currentStep ? getHops(currentStep) : []
 
   useEffect(() => {
-    if (!active || !playing || step === null) return
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => {
+      setReduced(preference.matches)
+      if (preference.matches) setPlaying(false)
+    }
+    update()
+    preference.addEventListener('change', update)
+    return () => preference.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (!active || !playing || step === null || reduced) return
     const timer = setTimeout(() => {
       if (step + 1 < steps.length) setStep(step + 1)
       else setPlaying(false)
-    }, 1650)
+    }, HOP_MS)
     return () => clearTimeout(timer)
-  }, [active, playing, step, steps.length])
+  }, [active, playing, reduced, step, steps.length])
 
-  function advance() {
+  const jump = (index: number | null) => {
     setPlaying(false)
-    setStep((value) => ((value ?? -1) + 1) % steps.length)
+    setStep(index)
+    setSelected(null)
   }
 
   function play() {
@@ -62,33 +212,23 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
       setPlaying(false)
       return
     }
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      advance()
-      return
-    }
-    setStep(0)
     setSelected(null)
+    if (step === null || step === steps.length - 1) setStep(0)
     setPlaying(true)
   }
 
   const open = (id: string) => {
     setViewId(id)
-    setStep(null)
-    setSelected(null)
-    setPlaying(false)
+    jump(null)
   }
 
   const onTabKey = (event: KeyboardEvent, index: number) => {
     const last = views.length - 1
     const target =
       event.key === 'ArrowRight'
-        ? index === last
-          ? 0
-          : index + 1
+        ? (index + 1) % views.length
         : event.key === 'ArrowLeft'
-          ? index === 0
-            ? last
-            : index - 1
+          ? (index + last) % views.length
           : event.key === 'Home'
             ? 0
             : event.key === 'End'
@@ -100,176 +240,157 @@ export function ArchitectureExplorer({ title, views }: { title: string; views: D
     tabs.current[target]?.focus()
   }
 
-  const highlight = useMemo(() => {
-    if (step === null || !steps[step]) return undefined
-    const pairs = steps[step].edges
-    return {
-      nodes: new Set(pairs.flat()),
-      edges: new Set(pairs.map(([a, b]) => edgeKey(a, b))),
-    }
-  }, [step, steps])
-
-  // Several steps can share one edge, so its marker lists every step number that uses it.
-  const badges = useMemo(() => {
-    const grouped = new Map<string, number[]>()
-    steps.forEach((s, i) =>
-      s.edges.forEach(([a, b]) => {
-        const key = edgeKey(a, b)
-        grouped.set(key, [...(grouped.get(key) ?? []), i + 1])
-      })
-    )
-    return [...grouped].map(([edge, numbers]) => ({
-      edge,
-      label: [...new Set(numbers)].join(','),
-      active: step !== null && numbers.includes(step + 1),
-    }))
-  }, [steps, step])
-
   return (
-    <div className="mt-6" ref={ref}>
-      <div
-        role="tablist"
-        aria-label={`${title} diagram views`}
-        className="hairline flex flex-wrap gap-1 border-b px-1"
-      >
-        {views.map((v, i) => (
+    <div className="architecture-trace" ref={ref}>
+      <div role="tablist" aria-label={`${title} diagram views`} className="trace-tabs">
+        {views.map((candidate, index) => (
           <button
-            key={v.id}
-            ref={(el) => {
-              tabs.current[i] = el
+            key={candidate.id}
+            ref={(element) => {
+              tabs.current[index] = element
             }}
-            id={`${uid}-tab-${v.id}`}
+            id={`${uid}-tab-${candidate.id}`}
             role="tab"
             type="button"
-            aria-selected={v.id === viewId}
+            aria-selected={candidate.id === viewId}
             aria-controls={`${uid}-panel`}
-            tabIndex={v.id === viewId ? 0 : -1}
-            onClick={() => open(v.id)}
-            onKeyDown={(e) => onTabKey(e, i)}
-            className={cn(
-              'label min-h-11 shrink-0 border-b-2 px-3 transition-colors hover:text-accent',
-              v.id === viewId ? 'border-accent text-accent' : 'border-transparent text-muted'
-            )}
+            tabIndex={candidate.id === viewId ? 0 : -1}
+            onClick={() => open(candidate.id)}
+            onKeyDown={(event) => onTabKey(event, index)}
           >
-            {v.label}
+            {candidate.label}
           </button>
         ))}
       </div>
 
-      <div
-        id={`${uid}-panel`}
-        role="tabpanel"
-        aria-labelledby={`${uid}-tab-${viewId}`}
-        className="mt-4 grid gap-8 xl:grid-cols-12"
-      >
-        <div className="min-w-0 xl:col-span-8">
-          <p className="mb-3 leading-snug text-muted">{view.caption}</p>
-          <p className="architecture-hint mb-2 text-sm text-muted">
-            Scroll the diagram to see all components.
-          </p>
-          <div
-            className="architecture-workbench overflow-x-auto p-2 sm:p-4"
-            role="region"
-            aria-label="Architecture diagram viewport"
-            tabIndex={0}
-          >
-            <div key={view.id} className="architecture-canvas">
-              <Schematic
-                title={`${title}: ${view.label}`}
-                height={view.height}
-                hideSubOnMobile
-                animate={false}
-                selectMode="select"
-                nodes={view.nodes.map((n) => ({
-                  id: n.id,
-                  label: n.label,
-                  sub: n.sub,
-                  x: n.x,
-                  y: n.y,
-                  tone: tone[n.status],
-                  status: word[n.status],
-                }))}
-                edges={view.edges}
-                regions={view.regions}
-                highlight={highlight}
-                badges={badges}
-                selected={selected}
-                onSelect={(value) => {
-                  setSelected(value)
-                  setPlaying(false)
-                }}
-              />
-            </div>
-          </div>
-          <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
-            {legend.map((l) => (
-              <li key={l.status} className="label flex items-center gap-2 text-muted">
-                <span
-                  aria-hidden="true"
-                  className={cn('inline-block h-3 w-5 bg-paper', l.swatch)}
-                />
-                {l.text}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <aside className="xl:col-span-4">
-          {steps.length > 0 && (
-            <>
-              <h3 className="label text-muted">Follow the flow</h3>
-              <div className="trace-controls">
-                <button type="button" className="btn-quiet trace-play" onClick={play}>
-                  {playing ? 'Pause route' : 'Play route'}
-                </button>
-                <button type="button" className="btn-quiet" onClick={advance}>
-                  Next hop
-                </button>
-              </div>
-              <p role="status" className="sr-only">
-                {step !== null && `Route step ${step + 1} of ${steps.length}.`}
-              </p>
-              <ol className="mt-2 space-y-1">
-                {steps.map((s, i) => (
-                  <li key={s.text}>
-                    <button
-                      type="button"
-                      aria-pressed={step === i}
-                      onClick={() => {
-                        setPlaying(false)
-                        setStep(step === i ? null : i)
-                      }}
-                      className={cn(
-                        'grid min-h-11 w-full grid-cols-[1.75rem_1fr] gap-x-1 border px-2 py-2 text-left leading-snug transition-colors hover:border-accent',
-                        step === i ? 'border-ink bg-panel' : 'border-transparent'
-                      )}
-                    >
-                      <span className="label text-muted">{i + 1}</span>
-                      <span>{s.text}</span>
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            </>
-          )}
-
-          <div className={cn(steps.length > 0 && 'hairline mt-5 border-t pt-4')} aria-live="polite">
-            {node ? (
+      <div id={`${uid}-panel`} role="tabpanel" aria-labelledby={`${uid}-tab-${viewId}`}>
+        <p className="trace-caption">{view.caption}</p>
+        <div className="trace-layout">
+          <ArchitectureMap
+            key={viewId}
+            view={view}
+            step={step}
+            hops={hops}
+            selected={currentNode}
+            motion={active && !reduced}
+            onSelect={(id) => {
+              setSelected((current) => (current === id ? null : id))
+              setPlaying(false)
+            }}
+          />
+          <aside className="trace-inspector" aria-label="Architecture inspector">
+            {steps.length > 0 && (
               <>
-                <h3 className="display text-3xl">{node.label}</h3>
-                <p className="label mt-1 text-muted">
-                  {node.status === 'implemented' ? '■ ' : node.status === 'followup' ? '◐ ' : '□ '}
-                  {word[node.status]}
-                </p>
-                <p className="mt-2 leading-snug">{node.detail}</p>
+                <div className="trace-inspector-heading">
+                  <h3 className="display">Follow the route</h3>
+                  <button
+                    type="button"
+                    className="trace-reset"
+                    aria-disabled={step === null}
+                    onClick={() => {
+                      if (step !== null) jump(null)
+                    }}
+                  >
+                    Reset
+                  </button>
+                </div>
+                <ol className="trace-hops" aria-label="Route hops">
+                  {steps.map((routeStep, index) => {
+                    const routeHops = getHops(routeStep)
+                    const destination = routeHops[routeHops.length - 1]?.to.label
+                    return (
+                      <li key={routeStep.text}>
+                        <button
+                          type="button"
+                          aria-pressed={step === index}
+                          aria-label={`Hop ${index + 1}. ${routeStep.text}`}
+                          onClick={() => jump(index)}
+                        >
+                          <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                          <span>{destination}</span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ol>
+                <div className="trace-playback">
+                  <button
+                    type="button"
+                    className="btn-quiet"
+                    aria-disabled={step === null || step === 0}
+                    onClick={() => {
+                      if (step !== null && step > 0) jump(step - 1)
+                    }}
+                  >
+                    Previous hop
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-quiet trace-play"
+                    hidden={reduced}
+                    onClick={play}
+                  >
+                    {playing ? 'Pause route' : 'Play route'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-quiet"
+                    aria-disabled={step === steps.length - 1}
+                    onClick={() => {
+                      if (step !== steps.length - 1) jump((step ?? -1) + 1)
+                    }}
+                  >
+                    Next hop
+                  </button>
+                </div>
+                <div className="trace-readout" role="status" aria-atomic="true">
+                  {currentStep && step !== null ? (
+                    <>
+                      <p className="sr-only">
+                        Route step {step + 1} of {steps.length}.
+                      </p>
+                      <ul className="trace-directions" aria-label="Connections in this hop">
+                        {hops.map(({ from, to }) => (
+                          <li key={`${from.id}-${to.id}`}>
+                            {from.label} <span aria-hidden="true">→</span>
+                            <span className="sr-only"> to </span> {to.label}
+                          </li>
+                        ))}
+                      </ul>
+                      <p>{currentStep.text}</p>
+                    </>
+                  ) : (
+                    <p className="trace-instruction">
+                      Choose a hop to see how the systems connect.
+                    </p>
+                  )}
+                </div>
               </>
-            ) : (
-              <p className="leading-snug text-muted">
-                Select any component for what it is and whether it was built in this project.
-              </p>
             )}
-          </div>
-        </aside>
+            <div className="trace-component" aria-live="polite" aria-atomic="true">
+              <p className="trace-component-label">Component detail</p>
+              {currentNode ? (
+                <>
+                  <h3 className="display">{currentNode.label}</h3>
+                  <p className="trace-component-status">
+                    <span
+                      aria-hidden="true"
+                      className="trace-node-mark"
+                      data-status={currentNode.status}
+                    />
+                    {statusLabels[currentNode.status]}
+                    {currentNode.sub && ` · ${currentNode.sub}`}
+                  </p>
+                  <p>{currentNode.detail}</p>
+                </>
+              ) : (
+                <p className="trace-instruction">
+                  Select a component in the diagram to inspect it.
+                </p>
+              )}
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   )

@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { chapters } from '@/content/chapters'
 
 export function JourneyRail() {
   const [current, setCurrent] = useState(0)
+  const rail = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const sections = chapters.map(({ id }) => document.getElementById(id))
@@ -12,10 +13,19 @@ export function JourneyRail() {
     const update = () => {
       frame = 0
       const pivot = window.innerHeight * 0.38
+      const distance = sections.map((section) => section?.getBoundingClientRect().top ?? Infinity)
       let index = 0
-      sections.forEach((section, i) => {
-        if (section && section.getBoundingClientRect().top < pivot) index = i
+      distance.forEach((top, i) => {
+        if (top <= pivot) index = i
       })
+      const next = distance[index + 1]
+      const gap = next - distance[index]
+      const portion =
+        next === undefined
+          ? 1
+          : Math.max(0, Math.min(1, (pivot - distance[index]) / Math.max(1, gap)))
+      const progress = (index + portion) / (chapters.length - 1)
+      rail.current?.style.setProperty('--chapter-progress', String(Math.min(1, progress)))
       setCurrent(index)
     }
     const schedule = () => {
@@ -32,7 +42,7 @@ export function JourneyRail() {
   }, [])
 
   return (
-    <nav className="journey-rail" aria-label="Portfolio chapters">
+    <nav ref={rail} className="journey-rail" aria-label="Portfolio chapters">
       <div className="wrap journey-inner">
         <ol>
           {chapters.map((chapter, index) => (
@@ -43,12 +53,8 @@ export function JourneyRail() {
               </a>
             </li>
           ))}
-          <li
-            aria-hidden="true"
-            className="journey-progress"
-            style={{ transform: `scaleX(${(current + 1) / chapters.length})` }}
-          />
         </ol>
+        <div aria-hidden="true" className="journey-progress" />
       </div>
     </nav>
   )
