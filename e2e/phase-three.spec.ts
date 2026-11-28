@@ -122,15 +122,15 @@ test('a failed contact submission keeps the draft and provides a contact alterna
   await expect(contact.getByRole('button', { name: 'Send message' })).toBeEnabled()
 })
 
-test('both flagship case studies pass accessibility checks in the light theme', async ({
+test('both flagship case studies pass accessibility checks in the Paper palette', async ({
   page,
 }) => {
   test.slow()
-  await page.addInitScript(() => localStorage.setItem('theme', 'light'))
+  await page.addInitScript(() => localStorage.setItem('palette', 'paper'))
 
   for (const slug of ['azure-internal-access', 'aws-hosting-and-sso']) {
     await page.goto(`/work/${slug}`)
-    await expect(page.locator('html')).toHaveClass(/light/)
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'paper')
     const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
     expect(
       axe.violations.map(({ id, nodes }) => `${id}: ${nodes[0].target}`),

@@ -3,8 +3,10 @@ import localFont from 'next/font/local'
 import { ThemeProvider } from '@/components/theme-provider'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { DEFAULT_PALETTE, palettes } from '@/content/palettes'
 import { site } from '@/content/site'
 import { homeTitle } from '@/lib/metadata'
+import { paletteCss } from '@/lib/palette-css'
 import './globals.css'
 import './catalog.css'
 import './finder.css'
@@ -16,17 +18,12 @@ const display = localFont({
   variable: '--font-display',
 })
 const mono = localFont({
-  src: './fonts/geist-mono-latin.woff2',
-  weight: '100 900',
+  src: [
+    { path: './fonts/ibm-plex-mono-400-latin.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/ibm-plex-mono-600-latin.woff2', weight: '600', style: 'normal' },
+  ],
   display: 'swap',
   variable: '--font-mono',
-  preload: false,
-})
-const editorial = localFont({
-  src: './fonts/newsreader-latin.woff2',
-  weight: '400 600',
-  display: 'swap',
-  variable: '--font-editorial',
 })
 
 export const metadata: Metadata = {
@@ -53,22 +50,20 @@ const csp = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${display.variable} ${mono.variable} ${editorial.variable}`}
-    >
+    <html lang="en" suppressHydrationWarning className={`${display.variable} ${mono.variable}`}>
       <head>
         {process.env.NODE_ENV === 'production' && (
           <meta httpEquiv="Content-Security-Policy" content={csp} />
         )}
+        <style dangerouslySetInnerHTML={{ __html: paletteCss() }} />
       </head>
       <body>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
+          attribute="data-theme"
+          themes={palettes.map((palette) => palette.slug)}
+          defaultTheme={DEFAULT_PALETTE}
+          enableSystem={false}
+          storageKey="palette"
         >
           <SiteHeader />
           <div id="content" tabIndex={-1}>

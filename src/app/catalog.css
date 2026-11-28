@@ -136,16 +136,6 @@
     margin: 14mm;
   }
 
-  :root,
-  .dark {
-    color-scheme: light;
-    --paper: 255 255 255;
-    --ink: 15 20 17;
-    --muted: 67 74 69;
-    --rule: 35 55 42;
-    --accent: #274b29;
-  }
-
   .resume {
     width: 100%;
     max-width: none;

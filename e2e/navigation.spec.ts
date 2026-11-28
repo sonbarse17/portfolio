@@ -306,18 +306,6 @@ test('external links open safely', async ({ page }) => {
   }
 })
 
-test('theme toggle switches and persists', async ({ page }) => {
-  await page.emulateMedia({ colorScheme: 'light' })
-  await page.goto('/')
-  await expect(page.locator('html')).toHaveClass(/light/)
-  await page.getByRole('button', { name: 'Switch to dark theme' }).click()
-  await expect(page.locator('html')).toHaveClass(/dark/)
-  await page.reload()
-  await expect(page.locator('html')).toHaveClass(/dark/)
-  const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
-  expect(axe.violations.map((violation) => violation.id)).toEqual([])
-})
-
 test.describe('architecture explorer', () => {
   test('Azure: tabs, keyboard, node detail, steps and follow-up status', async ({ page }) => {
     await page.goto('/work/azure-internal-access')

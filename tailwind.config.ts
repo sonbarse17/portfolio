@@ -3,7 +3,6 @@ import type { Config } from 'tailwindcss'
 const token = (name: string) => `rgb(var(--${name}) / <alpha-value>)`
 
 const config: Config = {
-  darkMode: ['class'],
   // content/ is scanned because diagram heights are class names stored in the project data.
   content: ['./src/components/**/*.{ts,tsx}', './src/app/**/*.{ts,tsx}', './src/content/**/*.ts'],
   theme: {

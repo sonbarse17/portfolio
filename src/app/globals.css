@@ -3,41 +3,17 @@
 @tailwind utilities;
 
 @layer base {
+  /* Colours come from src/content/palettes.ts, rendered inline by the root layout. */
   :root {
-    color-scheme: light;
-    --paper: 244 240 231;
-    --panel: 235 227 215;
-    --ink: 38 37 30;
-    --muted: 88 80 70;
-    --rule: 87 71 58;
-    --signal: 143 47 38;
-    --ok: 30 104 68;
-    --warn: 126 77 19;
-    --accent: #873e2b;
-    --action: #843a29;
-    --action-ink: #fff;
-    --action-hover: #6a2d1f;
     --gutter: clamp(1rem, 4.4vw, 4rem);
     --section-space: clamp(4.25rem, 8.5vw, 8.25rem);
-    --radius: 0.2rem;
+    --radius: 0;
     --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     --fast: 180ms;
-  }
-
-  .dark {
-    color-scheme: dark;
-    --paper: 28 25 23;
-    --panel: 40 35 31;
-    --ink: 245 237 223;
-    --muted: 204 189 173;
-    --rule: 203 185 168;
-    --signal: 255 151 132;
-    --ok: 144 217 163;
-    --warn: 242 195 111;
-    --accent: #f4a989;
-    --action: #f4a989;
-    --action-ink: #2a1b15;
-    --action-hover: #ffc5ac;
+    --theme-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --theme-duration: 420ms;
+    --cell-w: 7.2px;
+    --cell-h: 13px;
   }
 
   html {
@@ -48,6 +24,9 @@
     @apply bg-paper font-display text-ink antialiased;
     font-size: 1rem;
     line-height: 1.6;
+    transition:
+      background-color var(--theme-duration) var(--theme-ease),
+      color var(--theme-duration) var(--theme-ease);
   }
   ::selection {
     background: var(--action);
@@ -77,32 +56,44 @@
     padding-inline: var(--gutter);
   }
   .display {
-    @apply font-display font-semibold;
-    letter-spacing: -0.055em;
-    line-height: 1.04;
+    @apply font-mono font-semibold;
+    letter-spacing: -0.035em;
+    line-height: 1.06;
   }
   .h-section {
     @apply display;
-    font-size: clamp(2.55rem, 5.3vw, 5.4rem);
+    font-size: clamp(2rem, 4.4vw, 3.9rem);
   }
   .h-page {
-    font-family: var(--font-editorial), Georgia, serif;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-weight: 600;
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+  }
+  .h-page::before {
+    content: '# ';
+    content: '# ' / '';
+    color: rgb(var(--muted));
     font-weight: 400;
-    font-size: clamp(3.65rem, 10vw, 9rem);
-    letter-spacing: -0.055em;
-    line-height: 0.94;
   }
   .label {
     @apply font-mono font-medium;
     font-size: 0.8125rem;
     line-height: 1.5;
-    letter-spacing: 0.035em;
+    letter-spacing: 0;
   }
   .eyebrow {
     @apply label;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.095em;
+    color: rgb(var(--muted));
+  }
+  .eyebrow::before {
+    content: '// ';
+    content: '// ' / '';
+  }
+  .btn,
+  .btn-quiet {
+    font-family: var(--font-mono), ui-monospace, monospace;
   }
   .lede {
     font-size: clamp(1.125rem, 1.7vw, 1.5rem);
@@ -175,6 +166,42 @@
     stroke-dasharray: 3 5;
     animation: flow 1.4s linear infinite;
   }
+  .status-line {
+    display: flex;
+    align-items: center;
+    gap: 1.5ch;
+    min-height: calc(var(--cell-h) + 0.6rem);
+    overflow: hidden;
+    background: rgb(var(--panel));
+    color: rgb(var(--ink));
+    font: 400 0.75rem / 1.6 var(--font-mono), ui-monospace, monospace;
+    white-space: nowrap;
+  }
+  .mode-block {
+    align-self: stretch;
+    display: inline-flex;
+    align-items: center;
+    padding-inline: 1ch;
+    background: var(--accent);
+    color: var(--action-ink);
+    font-weight: 600;
+  }
+  .status-path {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .status-hint {
+    margin-inline-start: auto;
+    padding-inline-end: 1ch;
+    color: rgb(var(--muted));
+  }
+  .path-bar {
+    padding-block-start: 1rem;
+    color: rgb(var(--muted));
+    font: 400 0.8125rem / 1.5 var(--font-mono), ui-monospace, monospace;
+    overflow-wrap: anywhere;
+  }
 }
 
 @keyframes flow {
@@ -195,8 +222,36 @@
 }
 
 @media print {
+  /* Specificity beats the inline palette blocks (0,2,0), whatever their source order. */
+  :root:root:root,
+  :root[data-theme][data-theme] {
+    color-scheme: light;
+    --paper: 255 255 255;
+    --panel: 255 255 255;
+    --ink: 0 0 0;
+    --muted: 70 70 70;
+    --rule: 0 0 0;
+    --signal: 0 0 0;
+    --ok: 0 0 0;
+    --warn: 0 0 0;
+    --accent: #000;
+    --action: #000;
+    --action-ink: #fff;
+    --action-hover: #000;
+    --kw: #000;
+    --str: #000;
+    --num: #000;
+    --fn: #000;
+    --ty: #000;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
   .site-header,
   .site-footer,
+  .path-bar,
   .no-print {
     display: none !important;
   }
