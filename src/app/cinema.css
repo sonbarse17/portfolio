@@ -317,7 +317,7 @@
   border-left: 1px solid rgb(var(--rule));
 }
 .pipeline-controls button:hover {
-  background: rgb(var(--panel));
+  background: color-mix(in srgb, rgb(var(--ink)) 8%, transparent);
 }
 .pipeline-controls button[aria-pressed='true'] {
   color: var(--kw);
@@ -354,7 +354,7 @@
   visibility: hidden;
 }
 .pipeline-summary p {
-  color: rgb(var(--ink));
+  color: rgb(var(--muted));
   font-size: 0.9375rem;
 }
 .pipeline-chapters {

@@ -144,7 +144,7 @@
 }
 .release-description {
   margin: 0.45rem 0 0.95rem;
-  color: rgb(var(--ink));
+  color: rgb(var(--muted));
   line-height: 1.42;
 }
 .release-fields {
@@ -179,7 +179,7 @@
 }
 .release-steps small {
   min-width: fit-content;
-  color: rgb(var(--ink));
+  color: rgb(var(--muted));
   font-size: 0.8rem;
 }
 .release-steps [data-state='running'] {
@@ -196,7 +196,7 @@
 .release-outcome {
   min-height: 3rem;
   line-height: 1.45;
-  color: rgb(var(--ink));
+  color: rgb(var(--muted));
   font-size: 0.9rem;
 }
 .release-outcome p + p {
