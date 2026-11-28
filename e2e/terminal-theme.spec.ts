@@ -5,7 +5,7 @@ async function openCommandLine(page: Page) {
   const input = page.getByRole('combobox', { name: 'Search the portfolio' })
   // Keystrokes before hydration are dropped harmlessly; retry until the listener is live.
   await expect(async () => {
-    await page.keyboard.press(':')
+    if (!(await input.isVisible())) await page.keyboard.press(':')
     await expect(input).toBeVisible({ timeout: 500 })
   }).toPass({ timeout: 10_000 })
   await expect(input).toHaveValue(':')
@@ -92,4 +92,13 @@ test.describe('command line', () => {
     await expect(name).toHaveValue('a:')
     await expect(page.getByRole('dialog')).toHaveCount(0)
   })
+})
+
+test('inner pages show a path bar and the footer shows a status line', async ({ page }) => {
+  await page.goto('/work/crm-on-eks')
+  await expect(page.locator('.path-bar')).toHaveText('~/work/crm-on-eks')
+  await expect(page.locator('.site-footer .status-line')).toContainText('NORMAL')
+  await expect(page.locator('.site-footer .status-line')).toContainText('~/work/crm-on-eks')
+  await page.goto('/')
+  await expect(page.locator('.path-bar')).toHaveCount(0)
 })

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { ThemeProvider } from '@/components/theme-provider'
 import { SiteHeader } from '@/components/site-header'
+import { PathBar } from '@/components/path-bar'
 import { SiteFooter } from '@/components/site-footer'
 import { DEFAULT_PALETTE, palettes } from '@/content/palettes'
 import { site } from '@/content/site'
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           storageKey="palette"
         >
           <SiteHeader />
+          <PathBar />
           <div id="content" tabIndex={-1}>
             {children}
           </div>

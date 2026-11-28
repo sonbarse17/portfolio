@@ -1,10 +1,12 @@
 import Link from 'next/link'
+import { StatusLine } from '@/components/status-line'
 import { SiteWordmark } from '@/components/site-wordmark'
 import { site } from '@/content/site'
 
 export function SiteFooter() {
   return (
     <footer className="site-footer">
+      <StatusLine className="footer-status" />
       <div className="wrap footer-inner">
         <div className="footer-signature">
           <SiteWordmark />
