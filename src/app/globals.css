@@ -112,6 +112,9 @@
   .text-link:hover {
     color: var(--accent);
   }
+  .text-link {
+    font-family: var(--font-mono), ui-monospace, monospace;
+  }
 
   .btn,
   .btn-quiet {

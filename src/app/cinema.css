@@ -41,12 +41,14 @@
   align-items: center;
   gap: 0.7rem;
   margin-bottom: 1.1rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
 }
 .hero-role::before {
-  content: '';
-  width: 1.6rem;
-  height: 1px;
-  background: currentColor;
+  content: '// ';
+  content: '// ' / '';
+  width: auto;
+  height: auto;
+  background: none;
 }
 .hero-name {
   font-size: clamp(4.4rem, 10.6vw, 10.5rem);

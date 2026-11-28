@@ -24,13 +24,6 @@
   margin-bottom: clamp(1.1rem, 2.35vh, 2rem);
 }
 
-.scene-hero .hero-role::before {
-  width: 1.3rem;
-  height: 1px;
-  border: 0;
-  background: currentColor;
-}
-
 .scene-hero .hero-name {
   font-size: clamp(4rem, 9.35vw, 10.2rem);
   font-weight: 570;

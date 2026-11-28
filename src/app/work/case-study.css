@@ -53,6 +53,7 @@
   min-height: 2.75rem;
   font-size: 0.9rem;
   font-weight: 600;
+  font-family: var(--font-mono), ui-monospace, monospace;
 }
 
 .work-group {
@@ -183,8 +184,8 @@
 
 .case-masthead .case-provenance,
 .case-section-heading .case-provenance {
-  color: var(--accent);
-  font-family: var(--font-display), sans-serif;
+  color: rgb(var(--muted));
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.86rem;
   font-weight: 600;
   letter-spacing: 0;

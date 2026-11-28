@@ -19,13 +19,6 @@
 .hero-role {
   margin-bottom: 1.42rem;
 }
-.hero-role::before {
-  width: 1rem;
-  height: 0.4rem;
-  border-left: 1px solid currentColor;
-  border-bottom: 1px solid currentColor;
-  background: transparent;
-}
 .hero-copy {
   position: relative;
   z-index: 1;
