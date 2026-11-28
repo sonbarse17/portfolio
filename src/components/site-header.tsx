@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SiteWordmark } from '@/components/site-wordmark'
 import { FinderTrigger } from '@/components/finder-trigger'
+import { PalettePicker } from '@/components/palette-picker'
 import { nav } from '@/content/site'
 import '@/app/site-chrome.css'
 
@@ -38,6 +39,7 @@ export function SiteHeader() {
         </nav>
         <div className="header-actions">
           <FinderTrigger />
+          <PalettePicker />
         </div>
       </div>
     </header>

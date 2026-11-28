@@ -17,19 +17,13 @@
 .site-wordmark {
   display: inline-flex;
   align-items: center;
+  gap: 1ch;
   justify-self: start;
   min-height: 2.75rem;
-  font-family: var(--font-editorial, Georgia), serif;
-  font-size: clamp(1.64rem, 2.25vw, 2rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.045em;
+  font: 600 0.9375rem / 1 var(--font-mono), ui-monospace, monospace;
+  text-transform: lowercase;
   white-space: nowrap;
   transition: color var(--fast) var(--ease);
-}
-
-.site-wordmark span {
-  color: var(--accent);
 }
 
 .main-nav ul,
@@ -48,7 +42,9 @@
   align-items: center;
   min-height: 2.75rem;
   color: rgb(var(--muted));
-  font-size: 0.875rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  text-transform: lowercase;
   font-weight: 500;
   line-height: 1.3;
   text-underline-offset: 0.35em;
@@ -146,10 +142,6 @@
     padding-top: 0.45rem;
   }
 
-  .site-wordmark {
-    font-size: clamp(1.5rem, 6.75vw, 1.8rem);
-  }
-
   .main-nav {
     grid-row: 2;
     grid-column: 1 / -1;
@@ -171,4 +163,75 @@
   .footer-inner {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.palette-picker {
+  position: relative;
+}
+
+.palette-trigger {
+  width: auto;
+  padding-inline: 0.6rem;
+  font: 500 0.8125rem / 1 var(--font-mono), ui-monospace, monospace;
+}
+
+.palette-trigger[aria-expanded='true'] {
+  background: var(--action);
+  color: var(--action-ink);
+}
+
+.palette-list {
+  position: absolute;
+  z-index: 50;
+  inset-block-start: calc(100% + 0.4rem);
+  inset-inline-end: 0;
+  display: grid;
+  width: min(22rem, calc(100vw - 2rem));
+  padding: 0.35rem;
+  border: 1px solid rgb(var(--rule) / 0.5);
+  background: rgb(var(--paper));
+}
+
+/* Preflight's [hidden] rule loses to the display above, so restate it. */
+.palette-list[hidden] {
+  display: none;
+}
+
+.palette-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1rem;
+  padding: 0.55rem 0.65rem;
+  border-inline-start: 2px solid transparent;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  text-align: start;
+}
+
+.palette-option:hover,
+.palette-option[aria-checked='true'] {
+  border-inline-start-color: var(--accent);
+  background: rgb(var(--panel));
+}
+
+.palette-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.palette-description {
+  grid-column: 1;
+  color: rgb(var(--muted));
+  font-size: 0.75rem;
+}
+
+.palette-swatches {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  align-self: center;
+}
+
+.palette-swatches i {
+  width: 0.7rem;
+  height: 1.4rem;
 }
