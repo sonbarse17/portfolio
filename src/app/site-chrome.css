@@ -26,6 +26,10 @@
   transition: color var(--fast) var(--ease);
 }
 
+.site-wordmark span {
+  color: var(--accent);
+}
+
 .main-nav ul,
 .header-actions {
   display: flex;
