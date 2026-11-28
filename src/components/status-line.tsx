@@ -1,7 +1,9 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import { displayPath } from '@/lib/display-path'
 import { cn } from '@/lib/utils'
+import { useMounted } from '@/lib/use-mounted'
 
 export function StatusLine({
   path,
@@ -13,7 +15,9 @@ export function StatusLine({
   className?: string
 }) {
   const pathname = usePathname()
-  const shown = path ?? `~${pathname === '/' ? '' : pathname}`
+  const mounted = useMounted()
+  // Without an explicit path the text depends on the client route, so it waits for hydration.
+  const shown = path ?? (mounted ? displayPath(pathname) : '\u00a0')
 
   return (
     <p className={cn('status-line', className)} aria-hidden="true">

@@ -101,4 +101,13 @@ test('inner pages show a path bar and the footer shows a status line', async ({ 
   await expect(page.locator('.site-footer .status-line')).toContainText('~/work/crm-on-eks')
   await page.goto('/')
   await expect(page.locator('.path-bar')).toHaveCount(0)
+
+  const errors: string[] = []
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text())
+  })
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('/no-such-route')
+  await expect(page.locator('.path-bar')).toHaveText('~/no-such-route')
+  expect(errors.filter((text) => /Hydration|#418|#423/.test(text))).toEqual([])
 })
