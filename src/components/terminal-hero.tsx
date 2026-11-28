@@ -102,7 +102,7 @@ export function TerminalHero({ work }: { work: readonly HeroProject[] }) {
             alt="Portrait of Sushant Sonbarse"
             width={710}
             height={1024}
-            sizes="(max-width: 620px) 40vw, 220px"
+            sizes="(max-width: 620px) 88px, 220px"
             loading="eager"
             fetchPriority="high"
           />

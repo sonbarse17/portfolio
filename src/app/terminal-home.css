@@ -210,6 +210,15 @@
   height: 0.9rem;
 }
 
+@media (max-width: 620px) {
+  .fetch-panel {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+  }
+  .fetch-facts dl div {
+    grid-template-columns: 6ch minmax(0, 1fr);
+  }
+}
+
 .hero-status {
   grid-column: 1 / -1;
   align-self: end;

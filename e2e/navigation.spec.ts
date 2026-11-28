@@ -36,6 +36,16 @@ test.describe('every route', () => {
     }) => {
       const problems = watchConsole(page)
       await page.goto(route, { waitUntil: 'networkidle' })
+      // Wait for the homepage hero lines to reveal; a no-op on other routes.
+      await expect
+        .poll(() =>
+          page.evaluate(() =>
+            [...document.querySelectorAll('.term-out')].every(
+              (el) => getComputedStyle(el).visibility === 'visible'
+            )
+          )
+        )
+        .toBe(true)
 
       await expect(page.locator('h1')).toHaveCount(1)
       expect(await page.title()).toContain('Sushant Sonbarse')

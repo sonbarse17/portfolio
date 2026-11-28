@@ -123,10 +123,13 @@ test.describe('homepage terminal', () => {
       )
     expect(hidden).toBe(0)
     await expect(page.locator('.term-out')).toHaveCount(4)
+    await expect(page.locator('.term-typed').first()).toHaveCSS('animation-name', 'none')
   })
 
   test('types in and reveals every line with motion', async ({ page }) => {
     await page.goto('/')
+    await expect(page.locator('.term-typed').first()).toHaveCSS('animation-name', 'term-type')
+    await expect(page.locator('.term-out').first()).toHaveCSS('animation-name', 'term-reveal')
     await expect
       .poll(
         () =>
@@ -155,6 +158,21 @@ test.describe('homepage terminal', () => {
     await expect(stops.nth(1)).toBeFocused()
     await page.keyboard.press('k')
     await expect(stops.nth(0)).toBeFocused()
+
+    // Focus that leaves the marked stop by other means clears the mark.
+    await page.keyboard.press('Tab')
+    await expect(page.locator('[data-nav-current]')).toHaveCount(0)
+
+    // j/k stay out of the palette picker's radio group.
+    await page.getByRole('button', { name: 'Theme: change palette' }).click()
+    const radio = page
+      .getByRole('radiogroup', { name: 'Palette' })
+      .getByRole('radio', { checked: true })
+    await expect(radio).toBeFocused()
+    await page.keyboard.press('j')
+    await expect(radio).toBeFocused()
+    await expect(page.locator('[data-nav-current]')).toHaveCount(0)
+    await page.keyboard.press('Escape')
 
     const name = page.getByLabel('Name', { exact: true })
     await name.fill('')

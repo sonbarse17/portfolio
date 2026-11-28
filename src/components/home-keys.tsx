@@ -11,6 +11,7 @@ export function HomeKeys() {
       if (event.key !== 'j' && event.key !== 'k') return
       if (hasModifier(event) || isTypingTarget(event.target)) return
       if (document.querySelector('dialog[open]')) return
+      if (event.target instanceof Element && event.target.closest('[role="radiogroup"]')) return
 
       const stops = Array.from(document.querySelectorAll<HTMLElement>('[data-nav-stop]')).filter(
         (stop) => getComputedStyle(stop).visibility === 'visible'
@@ -30,8 +31,21 @@ export function HomeKeys() {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       target.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' })
     }
+    // Focus that moves anywhere other than the marked stop (Tab, click) clears the mark.
+    const onFocusIn = (event: FocusEvent) => {
+      const target = event.target
+      if (target instanceof HTMLElement && target.hasAttribute('data-nav-current')) return
+      document
+        .querySelectorAll('[data-nav-current]')
+        .forEach((stop) => stop.removeAttribute('data-nav-current'))
+      current = -1
+    }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    document.addEventListener('focusin', onFocusIn)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.removeEventListener('focusin', onFocusIn)
+    }
   }, [])
 
   return null
