@@ -109,5 +109,57 @@ test('inner pages show a path bar and the footer shows a status line', async ({ 
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/no-such-route')
   await expect(page.locator('.path-bar')).toHaveText('~/no-such-route')
-  expect(errors.filter((text) => /Hydration|#418|#423/.test(text))).toEqual([])
+  expect(errors.filter((text) => /Hydration|#418|#423|#425/.test(text))).toEqual([])
+})
+
+test.describe('homepage terminal', () => {
+  test('renders every hero line at once with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto('/', { waitUntil: 'domcontentloaded' })
+    const hidden = await page
+      .locator('.term-out')
+      .evaluateAll(
+        (nodes) => nodes.filter((n) => getComputedStyle(n).visibility !== 'visible').length
+      )
+    expect(hidden).toBe(0)
+    await expect(page.locator('.term-out')).toHaveCount(4)
+  })
+
+  test('types in and reveals every line with motion', async ({ page }) => {
+    await page.goto('/')
+    await expect
+      .poll(
+        () =>
+          page
+            .locator('.term-out')
+            .evaluateAll(
+              (nodes) => nodes.filter((n) => getComputedStyle(n).visibility !== 'visible').length
+            ),
+        { timeout: 5000 }
+      )
+      .toBe(0)
+  })
+
+  test('j and k move focus through the page; fields still type', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto('/')
+    const stops = page.locator('[data-nav-stop]')
+    // Keystrokes before hydration are dropped harmlessly; retry until the listener is live.
+    await expect(async () => {
+      if (!(await stops.nth(0).evaluate((stop) => stop === document.activeElement)))
+        await page.keyboard.press('j')
+      await expect(stops.nth(0)).toBeFocused({ timeout: 500 })
+    }).toPass({ timeout: 10_000 })
+    await expect(stops.nth(0)).toHaveAttribute('data-nav-current', '')
+    await page.keyboard.press('j')
+    await expect(stops.nth(1)).toBeFocused()
+    await page.keyboard.press('k')
+    await expect(stops.nth(0)).toBeFocused()
+
+    const name = page.getByLabel('Name', { exact: true })
+    await name.fill('')
+    await name.press('j')
+    await expect(name).toHaveValue('j')
+    await expect(name).toBeFocused()
+  })
 })

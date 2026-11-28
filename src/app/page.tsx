@@ -1,10 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ContactForm } from '@/components/contact-form'
+import { HomeKeys } from '@/components/home-keys'
 import { ProjectArtwork } from '@/components/project-artwork'
+import { TerminalHero, type HeroProject } from '@/components/terminal-hero'
 import { roles, site } from '@/content/site'
 import { pageMetadata } from '@/lib/metadata'
-import './editorial.css'
+import './terminal-home.css'
 
 export const metadata = pageMetadata('/')
 
@@ -23,7 +25,7 @@ const profileJsonLd = {
   },
 }
 
-const selectedWork = [
+const selectedWork: readonly HeroProject[] = [
   {
     slug: 'azure-internal-access',
     label: 'Azure · Private networking',
@@ -49,6 +51,14 @@ function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return <span aria-hidden="true">{diagonal ? '↗' : '→'}</span>
 }
 
+function BufferPath({ children }: { children: string }) {
+  return (
+    <p className="buffer-path" aria-hidden="true">
+      {children}
+    </p>
+  )
+}
+
 export default function Home() {
   return (
     <main className="editorial-home">
@@ -56,44 +66,11 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profileJsonLd).replace(/</g, '\\u003c') }}
       />
-
-      <section className="wrap editorial-masthead" aria-labelledby="home-title">
-        <div className="masthead-folio">
-          <p className="editorial-label">{site.role}</p>
-          <p>Available for remote freelance work</p>
-        </div>
-        <h1 id="home-title" className="editorial-name">
-          <span>Sushant</span> <span>Sonbarse</span>
-        </h1>
-        <div className="masthead-composition">
-          <p className="masthead-statement">I build systems for the day things break.</p>
-          <div className="masthead-details">
-            <p>Cloud infrastructure, CI/CD, and Kubernetes.</p>
-            <div className="masthead-actions">
-              <Link href="#work" className="editorial-link">
-                See the work <Arrow />
-              </Link>
-              <Link href="/resume" className="editorial-link">
-                View résumé <Arrow diagonal />
-              </Link>
-            </div>
-          </div>
-          <picture className="masthead-portrait">
-            <source media="(max-width: 620px)" srcSet="/assets/phase-five/sushant-mobile.webp" />
-            <Image
-              src="/assets/phase-five/sushant.webp"
-              alt="Portrait of Sushant Sonbarse"
-              width={710}
-              height={1024}
-              sizes="(max-width: 620px) 90vw, (max-width: 1200px) 44vw, 610px"
-              loading="eager"
-              fetchPriority="high"
-            />
-          </picture>
-        </div>
-      </section>
+      <HomeKeys />
+      <TerminalHero work={selectedWork} />
 
       <section className="wrap editorial-section editorial-work" aria-labelledby="work">
+        <BufferPath>~/sushant/work/</BufferPath>
         <div className="editorial-heading">
           <div>
             <p className="editorial-label">Case studies</p>
@@ -101,7 +78,7 @@ export default function Home() {
               Selected work
             </h2>
           </div>
-          <Link href="/work" className="editorial-link">
+          <Link href="/work" className="editorial-link" data-nav-stop="">
             All projects <Arrow />
           </Link>
         </div>
@@ -133,6 +110,7 @@ export default function Home() {
 
       <section id="about" className="editorial-about" aria-labelledby="about-title">
         <div className="wrap editorial-about-inner">
+          <BufferPath>~/sushant/about.md</BufferPath>
           <p className="editorial-label">About me</p>
           <h2 id="about-title" className="editorial-title">
             From computer science to production.
@@ -148,7 +126,7 @@ export default function Home() {
               asking what can fail, what the team will be able to see, and how they’ll recover.
             </p>
             <div id="capabilities" className="editorial-about-links">
-              <Link href="/atlas" className="editorial-link">
+              <Link href="/atlas" className="editorial-link" data-nav-stop="">
                 Read the field guide <Arrow />
               </Link>
               <Link href="/lab/studio#capabilities" className="editorial-link">
@@ -160,11 +138,12 @@ export default function Home() {
       </section>
 
       <section className="wrap editorial-section editorial-experience" aria-labelledby="record">
+        <BufferPath>~/sushant/git log --career</BufferPath>
         <div className="editorial-heading">
           <h2 id="record" className="editorial-title">
             Experience
           </h2>
-          <Link href="/resume" className="editorial-link">
+          <Link href="/resume" className="editorial-link" data-nav-stop="">
             Full résumé <Arrow diagonal />
           </Link>
         </div>
@@ -205,6 +184,7 @@ export default function Home() {
       <section className="editorial-lab" aria-labelledby="lab-title">
         <div className="wrap editorial-lab-inner">
           <div className="editorial-lab-copy">
+            <BufferPath>~/sushant/lab/</BufferPath>
             <p className="editorial-label">Interactive experiments</p>
             <h2 id="lab-title" className="editorial-title">
               The lab
@@ -213,7 +193,7 @@ export default function Home() {
               Follow a release to production, take an availability zone offline, or see how an
               identity policy makes a decision.
             </p>
-            <Link href="/lab" className="editorial-link">
+            <Link href="/lab" className="editorial-link" data-nav-stop="">
               Explore the lab <Arrow />
             </Link>
             <ul className="editorial-lab-links">
@@ -243,6 +223,7 @@ export default function Home() {
         aria-labelledby="contact"
       >
         <div>
+          <BufferPath>~/sushant/contact.sh</BufferPath>
           <p className="editorial-label">Contact</p>
           <h2 id="contact" className="editorial-title">
             Let’s talk infrastructure.
@@ -251,7 +232,7 @@ export default function Home() {
             Tell me what you’re building or what’s slowing your team down.
           </p>
           <div className="editorial-contact-links">
-            <Link href="/freelance" className="editorial-link">
+            <Link href="/freelance" className="editorial-link" data-nav-stop="">
               Freelance services <Arrow />
             </Link>
             <a
