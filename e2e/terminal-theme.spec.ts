@@ -31,4 +31,15 @@ test.describe('palette picker', () => {
     await expect(group).toBeHidden()
     await expect(trigger).toBeFocused()
   })
+
+  test('has no axe violations while open and closes on Tab', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Change palette' }).click()
+    const group = page.getByRole('radiogroup', { name: 'Palette' })
+    await expect(group).toBeVisible()
+    const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
+    expect(axe.violations.map((violation) => violation.id)).toEqual([])
+    await page.keyboard.press('Tab')
+    await expect(group).toBeHidden()
+  })
 })

@@ -24,15 +24,18 @@ export function PalettePicker() {
     palettes.findIndex((palette) => palette.slug === active)
   )
 
-  // Focus follows the checked option while open (roving tabindex).
   useEffect(() => {
     if (!open) return
-    options.current[activeIndex]?.focus()
     const outside = (event: PointerEvent) => {
       if (!root.current?.contains(event.target as Node)) setOpen(false)
     }
     document.addEventListener('pointerdown', outside)
     return () => document.removeEventListener('pointerdown', outside)
+  }, [open])
+
+  // Focus follows the checked option while open (roving tabindex).
+  useEffect(() => {
+    if (open) options.current[activeIndex]?.focus()
   }, [open, activeIndex])
 
   function close() {
@@ -41,24 +44,29 @@ export function PalettePicker() {
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.altKey || event.ctrlKey || event.metaKey) return
+    if (!open) return
     const step = steps[event.key]
     if (step) {
+      if (!(event.target as HTMLElement).matches('[role="radio"]')) return
       event.preventDefault()
       const next = (activeIndex + step + palettes.length) % palettes.length
       setTheme(palettes[next].slug)
     } else if (event.key === 'Escape') {
       event.preventDefault()
       close()
+    } else if (event.key === 'Tab') {
+      setOpen(false)
     }
   }
 
   return (
-    <div className="palette-picker" ref={root}>
+    <div className="palette-picker" ref={root} onKeyDown={onKeyDown}>
       <button
         ref={trigger}
         type="button"
         className="header-tool palette-trigger"
-        aria-label="Change palette"
+        aria-label="Theme: change palette"
         aria-expanded={open}
         aria-controls={`${id}-palettes`}
         onClick={() => setOpen((value) => !value)}
@@ -71,7 +79,6 @@ export function PalettePicker() {
         role="radiogroup"
         aria-label="Palette"
         hidden={!open}
-        onKeyDown={onKeyDown}
       >
         {palettes.map((palette, index) => (
           <button
