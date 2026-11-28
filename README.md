@@ -27,7 +27,7 @@ When adding a project, keep a section as `reference` unless the detail actually 
 ## Stack
 
 Next.js 15 (App Router, `output: 'export'`), React 18, TypeScript (strict), Tailwind CSS 3, `next-themes`, EmailJS.
-Newsreader carries editorial headlines and the wordmark. Geist carries navigation, details, and technical UI. The paper and rust palette is the default, with a warm dark theme available from the header. Shared tokens live in `src/app/globals.css`, route surfaces in `src/app/catalog.css`, and the homepage compositions in `src/app/editorial.css`. Diagrams use HTML and SVG. Motion respects reduced-motion preferences.
+Geist carries body copy, and IBM Plex Mono carries chrome and headings. Eight palettes are switched with `:theme` (default Blackmoney). Shared tokens live in `src/app/globals.css`, route surfaces in `src/app/catalog.css`, and the homepage compositions in `src/app/terminal-home.css`. Diagrams use HTML and SVG. Motion respects reduced-motion preferences.
 
 ### Trace to production
 

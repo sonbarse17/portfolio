@@ -41,7 +41,7 @@ The only homepage motion is a brief portrait reveal and a small hover-scale on p
 | `public/assets/phase-five/share.jpg` | Site-authored 1200 × 630 social preview composed from the existing portrait, paper palette and local Newsreader. |
 | Existing Azure, AWS and EKS covers | Retained concept illustrations, identified as such on Work, individual illustrated case pages and the homepage. Earlier asset provenance is in the [Phase 4 audit](phase-four.md) and [README](../README.md). |
 | Phase 4 recovery film | Original 7.5-second Canvas treatment of a concept still, reused at the recovery exercise. Mobile and desktop WebM and MP4 remain, with stills for reduced motion, data saving and playback failure. |
-| Newsreader | Local Latin variable font, weights 400–600, SIL Open Font License 1.1. [Newsreader upstream](https://github.com/productiontype/Newsreader), [local license](../public/fonts/Newsreader-OFL.txt). |
+| Newsreader | Local Latin variable font, weights 400–600, SIL Open Font License 1.1. [Newsreader upstream](https://github.com/productiontype/Newsreader), local license `public/fonts/Newsreader-OFL.txt` (removed in Phase 6; see docs/phase-six.md). |
 
 ImageGen prompt for the Lab image:
 
