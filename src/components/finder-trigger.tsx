@@ -1,15 +1,13 @@
 'use client'
 
-import dynamic from 'next/dynamic'
+import { flushSync } from 'react-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
-
-const PortfolioFinder = dynamic(
-  () => import('@/components/portfolio-finder').then((module) => module.PortfolioFinder),
-  { ssr: false }
-)
+import { PortfolioFinder } from '@/components/portfolio-finder'
+import { hasModifier, isTypingTarget } from '@/lib/keys'
 
 export function FinderTrigger() {
   const [open, setOpen] = useState(false)
+  const [initial, setInitial] = useState('')
   const trigger = useRef<HTMLButtonElement>(null)
   const close = useCallback(() => {
     setOpen(false)
@@ -20,7 +18,23 @@ export function FinderTrigger() {
     const shortcut = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) {
         event.preventDefault()
+        setInitial('')
         setOpen(true)
+        return
+      }
+      if (
+        event.key === ':' &&
+        !event.isComposing &&
+        !hasModifier(event) &&
+        !isTypingTarget(event.target) &&
+        !document.querySelector('dialog[open]')
+      ) {
+        event.preventDefault()
+        // Mount the finder inside this keydown so characters typed straight after `:` reach it.
+        flushSync(() => {
+          setInitial(':')
+          setOpen(true)
+        })
       }
     }
     window.addEventListener('keydown', shortcut)
@@ -38,7 +52,10 @@ export function FinderTrigger() {
         aria-keyshortcuts="Control+K Meta+K"
         aria-haspopup="dialog"
         aria-expanded={open}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setInitial('')
+          setOpen(true)
+        }}
       >
         <svg
           width="22"
@@ -53,7 +70,7 @@ export function FinderTrigger() {
           <path d="m15 15 4.6 4.6" strokeLinecap="round" />
         </svg>
       </button>
-      {open && <PortfolioFinder onClose={close} />}
+      {open && <PortfolioFinder onClose={close} initialQuery={initial} />}
     </>
   )
 }

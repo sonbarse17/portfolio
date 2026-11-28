@@ -43,3 +43,44 @@ test.describe('palette picker', () => {
     await expect(group).toBeHidden()
   })
 })
+
+test.describe('command line', () => {
+  test(':theme switches the palette and closes', async ({ page }) => {
+    await page.goto('/work')
+    await page.keyboard.press(':')
+    const input = page.getByRole('combobox', { name: 'Search the portfolio' })
+    await expect(input).toHaveValue(':')
+    await page.keyboard.type('theme sora')
+    await page.keyboard.press('Enter')
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'sora')
+    await expect(page.getByRole('dialog')).toHaveCount(0)
+  })
+
+  test('unknown palettes and commands explain themselves', async ({ page }) => {
+    await page.goto('/work')
+    await page.keyboard.press(':')
+    await page.keyboard.type('theme nope')
+    await page.keyboard.press('Enter')
+    await expect(page.getByRole('status')).toContainText("No palette 'nope'")
+    await page.getByRole('combobox', { name: 'Search the portfolio' }).fill(':deploy')
+    await page.keyboard.press('Enter')
+    await expect(page.getByRole('status')).toContainText('Unknown command')
+  })
+
+  test(':resume navigates', async ({ page }) => {
+    await page.goto('/work')
+    await page.keyboard.press(':')
+    await page.keyboard.type('resume')
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/resume$/)
+  })
+
+  test(': types normally inside form fields', async ({ page }) => {
+    await page.goto('/')
+    const name = page.getByLabel('Name', { exact: true })
+    await name.fill('a')
+    await name.press(':')
+    await expect(name).toHaveValue('a:')
+    await expect(page.getByRole('dialog')).toHaveCount(0)
+  })
+})
