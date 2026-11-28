@@ -67,6 +67,8 @@ test.describe('responsive widths', () => {
     '/lab/blast-radius',
     '/lab/studio',
     '/work/web-applications',
+    '/work/prometheus-grafana',
+    '/work/crm-on-eks',
   ]
   for (const width of widths) {
     test(`no horizontal overflow at ${width}px`, async ({ page }) => {
