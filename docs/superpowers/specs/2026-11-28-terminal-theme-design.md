@@ -233,3 +233,15 @@ New Playwright tests:
 | `j`/`k` conflicting with typing or assistive tech | The modifier, editable and dialog guards. Screen readers in browse mode capture these keys first. |
 | Shader colours clashing with Paper | Accepted. The rack sits in a framed panel. |
 | Plex Mono weight 600 is not in the template | It comes from IBM's official Plex release under OFL. |
+
+## Refinements made during planning (2026-11-28)
+
+1. **No Tailwind dark variant.** Nothing uses `dark:` utilities, so `darkMode` is deleted from `tailwind.config.ts` instead of being replaced.
+2. **Prefixes use CSS alternative text.** The `// ` before labels, the `# ` and `## ` before titles, and the `$ ` before contact labels are written as `content: '// ' / ''`. The empty alternative text keeps them out of accessible names, so no markup changes are needed across pages. Buttons and links still get no pseudo-content.
+3. **The j/k highlight uses `data-nav-current`.** `aria-current` would announce "current page", which is wrong here.
+4. **Unknown `:` commands show a notice.** `:foo` says "Unknown command…" instead of searching for ":foo", which could never match.
+5. **The portrait appears once.** It lives in the fetch panel. The About buffer is bio-only, because two images with the same name break `getByRole('img', { name: 'Portrait of Sushant Sonbarse' })`.
+6. **One shared path bar.** A single `PathBar` in the root layout shows `~/<route>` under the header on every page except `/`, instead of per-page markup.
+7. **Typing is CSS-only.** Commands type with `clip-path` and `steps()`, and outputs appear with a discrete `visibility` animation. No JavaScript is involved, content works without JS, and the reduced-motion rule turns both off. Hidden-until-revealed outputs use `visibility`, never `opacity`, so axe never samples half-faded text.
+
+The contrast guarantee also covers `--panel`: text colours are adjusted to reach 4.5:1 against both `--paper` and `--panel`, because muted text often sits on panels.
