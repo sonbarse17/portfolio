@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { routes } from './routes'
 
 async function openCommandLine(page: Page) {
   const input = page.getByRole('combobox', { name: 'Search the portfolio' })
@@ -180,4 +181,40 @@ test.describe('homepage terminal', () => {
     await expect(name).toHaveValue('j')
     await expect(name).toBeFocused()
   })
+})
+
+test.describe('every route in the Paper palette', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('palette', 'paper'))
+  })
+
+  for (const route of routes) {
+    test(`${route} has no a11y violations in Paper`, async ({ page }) => {
+      await page.goto(route, { waitUntil: 'networkidle' })
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'paper')
+      // Wait for the homepage hero lines to reveal; a no-op on other routes.
+      await expect
+        .poll(() =>
+          page.evaluate(() =>
+            [...document.querySelectorAll('.term-out')].every(
+              (el) => getComputedStyle(el).visibility === 'visible'
+            )
+          )
+        )
+        .toBe(true)
+      const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
+      expect(axe.violations.map((v) => `${v.id}: ${v.nodes[0].target}`)).toEqual([])
+    })
+  }
+})
+
+test('the résumé prints black on white in a dark palette', async ({ page }) => {
+  await page.goto('/resume')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'blackmoney')
+  await page.emulateMedia({ media: 'print' })
+  const colours = await page.evaluate(() => {
+    const style = getComputedStyle(document.body)
+    return [style.backgroundColor, style.color]
+  })
+  expect(colours).toEqual(['rgb(255, 255, 255)', 'rgb(0, 0, 0)'])
 })

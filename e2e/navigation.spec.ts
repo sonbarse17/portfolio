@@ -1,21 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-import { labs } from '../src/content/labs'
-import { projects } from '../src/content/projects'
-import { services } from '../src/content/services'
-
-const routes = [
-  '/',
-  '/work',
-  '/lab',
-  '/lab/studio',
-  '/atlas',
-  '/freelance',
-  '/resume',
-  ...projects.map((p) => `/work/${p.slug}`),
-  ...labs.map((l) => `/lab/${l.slug}`),
-  ...services.map((s) => `/services/${s.id}`),
-]
+import { routes } from './routes'
 
 function watchConsole(page: Page) {
   const problems: string[] = []
