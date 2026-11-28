@@ -221,7 +221,7 @@
 
 .case-cover[data-project='crm-on-eks'] .case-artwork {
   aspect-ratio: 1.94;
-  background: #29251c;
+  background: rgb(var(--panel));
 }
 
 .case-context {

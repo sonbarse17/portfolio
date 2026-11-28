@@ -173,8 +173,8 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #25332e;
-  border: 1px solid #60716b;
+  background: rgb(var(--panel));
+  border: 1px solid rgb(var(--rule));
 }
 .case-artwork img {
   object-fit: cover;

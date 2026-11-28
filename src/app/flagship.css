@@ -1,5 +1,10 @@
 .scene-hero {
-  background: radial-gradient(ellipse at 75% 36%, #252a21 0, #121713 47%, #0b100e 78%);
+  background: radial-gradient(
+    ellipse at 75% 36%,
+    rgb(var(--panel)) 0,
+    rgb(var(--paper)) 47%,
+    rgb(var(--paper)) 78%
+  );
 }
 
 .scene-hero-inner {
@@ -78,7 +83,7 @@
 
 .stack-caption {
   margin-bottom: 0.52rem;
-  color: #e2e9dc;
+  color: rgb(var(--ink));
 }
 
 .stack-readout {
@@ -100,9 +105,9 @@
 .stack-layers {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-bottom: 1px solid #a6b6a050;
+  border-bottom: 1px solid color-mix(in srgb, rgb(var(--muted)) 31%, transparent);
   gap: 1px;
-  background: #a6b6a035;
+  background: color-mix(in srgb, rgb(var(--muted)) 21%, transparent);
 }
 
 .stack-layers button {
@@ -110,8 +115,8 @@
   min-height: 2.75rem;
   padding-inline: 0.45rem;
   text-align: left;
-  background: #111710;
-  color: #cbd6c9;
+  background: rgb(var(--paper));
+  color: rgb(var(--ink));
   font-size: 0.8125rem;
   transition:
     color 180ms ease,
@@ -121,7 +126,7 @@
 .stack-layers button:hover,
 .stack-layers button[aria-pressed='true'] {
   color: var(--accent);
-  background: #212920;
+  background: rgb(var(--panel));
 }
 
 .stack-layers button[aria-pressed='true']::after {
@@ -142,11 +147,11 @@
 }
 
 .scene-hero-footer {
-  border-top-color: #a6b6a050;
+  border-top-color: color-mix(in srgb, rgb(var(--muted)) 31%, transparent);
 }
 
 .recovery-section {
-  background: #111610;
+  background: rgb(var(--paper));
   color: rgb(var(--ink));
 }
 
@@ -165,7 +170,7 @@
   display: grid;
   align-content: end;
   border: 0;
-  background: #111610;
+  background: rgb(var(--paper));
 }
 
 .recovery-stage .failover-viewport {
@@ -179,8 +184,14 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, #0a0e0be8 0%, #0a0e0bce 24%, #0a0e0b31 59%, transparent 82%),
-    linear-gradient(0deg, #0a0e0bfa, transparent 28%);
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, rgb(var(--paper)) 91%, transparent) 0%,
+      color-mix(in srgb, rgb(var(--paper)) 81%, transparent) 24%,
+      color-mix(in srgb, rgb(var(--paper)) 19%, transparent) 59%,
+      transparent 82%
+    ),
+    linear-gradient(0deg, color-mix(in srgb, rgb(var(--paper)) 98%, transparent), transparent 28%);
 }
 
 .recovery-stage .failover-film figcaption {
@@ -221,7 +232,7 @@
 }
 
 .recovery-copy .btn-quiet {
-  background: #111610bc;
+  background: color-mix(in srgb, rgb(var(--paper)) 74%, transparent);
 }
 
 .recovery-embed {
@@ -239,7 +250,7 @@
 
 @media (max-width: 760px) {
   .scene-hero {
-    background: radial-gradient(ellipse at 51% 63%, #232b21 0, #0d120f 65%);
+    background: radial-gradient(ellipse at 51% 63%, rgb(var(--panel)) 0, rgb(var(--paper)) 65%);
   }
 
   .scene-hero-inner {
@@ -303,7 +314,13 @@
   }
 
   .recovery-stage .failover-viewport::after {
-    background: linear-gradient(180deg, #111610, #11161015 29%, transparent 54%, #0a0e0bc7);
+    background: linear-gradient(
+      180deg,
+      rgb(var(--paper)),
+      color-mix(in srgb, rgb(var(--paper)) 8%, transparent) 29%,
+      transparent 54%,
+      color-mix(in srgb, rgb(var(--paper)) 78%, transparent)
+    );
   }
 
   .recovery-layout {
