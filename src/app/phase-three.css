@@ -139,7 +139,6 @@
   border: 1px solid #526e5b;
   background: #15251b;
   color: #edf5e9;
-  color-scheme: dark;
 }
 .release-run > h3 {
   font-size: clamp(1.85rem, 3.4vw, 3rem);

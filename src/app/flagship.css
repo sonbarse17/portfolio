@@ -1,8 +1,4 @@
 .scene-hero {
-  --accent: #dbff9a;
-  --action: #d5fa91;
-  --ink: 246 247 239;
-  --muted: 205 211 197;
   background: radial-gradient(ellipse at 75% 36%, #252a21 0, #121713 47%, #0b100e 78%);
 }
 
@@ -101,10 +97,6 @@
   text-underline-offset: 0.24em;
 }
 
-.stack-scene[data-layer='2'] {
-  --accent: #ffbd85;
-}
-
 .stack-layers {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -154,13 +146,6 @@
 }
 
 .recovery-section {
-  --accent: #d5fa91;
-  --action: #d5fa91;
-  --action-hover: #e6ffb3;
-  --action-ink: #161d12;
-  --ink: 244 246 232;
-  --muted: 217 224 207;
-  --rule: 202 217 192;
   background: #111610;
   color: rgb(var(--ink));
 }
@@ -240,8 +225,6 @@
 }
 
 .recovery-embed {
-  --panel: 25 31 25;
-  --paper: 17 22 17;
   padding-block: 1.2rem 3rem;
 }
 

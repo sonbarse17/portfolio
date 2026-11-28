@@ -1,13 +1,5 @@
 .scene-hero {
   --scene-height: clamp(42rem, calc(100svh - 4.3rem), 68rem);
-  --accent: #d1f999;
-  --action: #cef990;
-  --action-hover: #e4ffb9;
-  --action-ink: #151d12;
-  --ink: 244 247 235;
-  --muted: 207 218 199;
-  --rule: 214 231 200;
-  --ok: 174 240 127;
   position: relative;
   isolation: isolate;
   overflow: clip;
@@ -145,12 +137,6 @@
 }
 
 .pipeline-section {
-  --panel: 23 34 28;
-  --paper: 15 23 18;
-  --ink: 239 246 232;
-  --muted: 181 200 185;
-  --rule: 157 190 166;
-  --accent: #cafa9c;
   background: radial-gradient(ellipse at 28% 42%, #222f25, #101712 73%);
   color: rgb(var(--ink));
   padding-block: var(--section-space);
@@ -412,7 +398,6 @@
   border: 1px solid rgb(var(--rule) / 0.3);
 }
 .capability-controls {
-  --accent: #d0f99c;
   position: relative;
   min-height: 30rem;
   background: radial-gradient(ellipse at 51% 60%, #324735, #132019 75%);
