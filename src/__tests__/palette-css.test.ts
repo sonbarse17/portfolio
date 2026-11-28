@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { palettes } from '@/content/palettes'
+import { DEFAULT_PALETTE, palettes } from '@/content/palettes'
 import {
   MIN_CONTRAST,
   contrast,
@@ -38,12 +38,48 @@ describe('colour helpers', () => {
     const lifted = ensureContrast([40, 40, 40], [black], white)
     expect(contrast(lifted, black)).toBeGreaterThanOrEqual(MIN_CONTRAST)
   })
+
+  it('throws when no colour on the way to the target reaches the minimum', () => {
+    expect(() => ensureContrast([100, 100, 100], [[120, 120, 120]], [110, 110, 110])).toThrow(
+      'No colour reaches'
+    )
+  })
 })
 
 describe('paletteVars', () => {
+  it('blackmoney: maps every palette colour to the expected variable', () => {
+    const blackmoney = palettes.find((p) => p.slug === 'blackmoney')!
+    expect(paletteVars(blackmoney)).toEqual({
+      '--paper': '11 11 10',
+      '--panel': '17 17 15',
+      '--ink': '235 230 219',
+      '--muted': '131 127 115',
+      '--rule': '78 77 73',
+      '--signal': '240 136 91',
+      '--ok': '127 209 160',
+      '--warn': '230 195 122',
+      '--accent': '#e7c58a',
+      '--action': '#e7c58a',
+      '--action-ink': '#0b0b0a',
+      '--action-hover': '#e8ca96',
+      '--kw': '#7fd1a0',
+      '--str': '#e6c37a',
+      '--num': '#f0885b',
+      '--fn': '#8fd0ee',
+      '--ty': '#c9a0e8',
+    })
+  })
+
   for (const palette of palettes) {
     it(`${palette.slug}: text colours reach ${MIN_CONTRAST}:1 on paper and panel`, () => {
       const vars = paletteVars(palette)
+      const { bg, fg, cursorline } = palette.colors
+      const asTriplet = (hex: string) => hexToRgb(hex).join(' ')
+      expect(vars['--paper']).toBe(asTriplet(bg))
+      expect(vars['--panel']).toBe(asTriplet(cursorline))
+      expect(vars['--ink']).toBe(asTriplet(fg))
+      expect(vars['--accent']).toBe(vars['--action'])
+      expect(vars['--rule']).toBe(mix(hexToRgb(bg), hexToRgb(fg), 0.3).join(' '))
       const surfaces = [fromTriplet(vars['--paper']), fromTriplet(vars['--panel'])]
       const text = {
         ink: fromTriplet(vars['--ink']),
@@ -78,11 +114,17 @@ describe('paletteCss', () => {
   const css = paletteCss()
 
   it('starts with a no-attribute fallback set to the default palette', () => {
-    expect(css.startsWith(':root{color-scheme:dark;--paper:11 11 10;')).toBe(true)
+    const fallback = palettes.find((p) => p.slug === DEFAULT_PALETTE)!
+    expect(
+      css.startsWith(
+        `:root{color-scheme:${fallback.tone};--paper:${paletteVars(fallback)['--paper']};`
+      )
+    ).toBe(true)
   })
 
   it('emits one attribute block per palette with its tone', () => {
-    expect(css).toContain(':root[data-theme="paper"]{color-scheme:light;')
-    for (const palette of palettes) expect(css).toContain(`[data-theme="${palette.slug}"]`)
+    for (const palette of palettes) {
+      expect(css).toContain(`:root[data-theme="${palette.slug}"]{color-scheme:${palette.tone};`)
+    }
   })
 })

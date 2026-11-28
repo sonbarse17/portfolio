@@ -46,7 +46,7 @@ export function ensureContrast(
     const candidate = mix(colour, toward, step / 50)
     if (surfaces.every((surface) => contrast(candidate, surface) >= min)) return candidate
   }
-  return toward
+  throw new Error(`No colour reaches ${min}:1 toward ${rgbToHex(toward)}`)
 }
 
 const triplet = (rgb: Rgb) => rgb.join(' ')
@@ -70,7 +70,7 @@ export function paletteVars(palette: Palette): Record<string, string> {
     '--warn': triplet(text(c.string)),
     '--accent': rgbToHex(accent),
     '--action': rgbToHex(accent),
-    '--action-ink': c.bg,
+    '--action-ink': rgbToHex(bg),
     '--action-hover': rgbToHex(mix(accent, fg, 0.15)),
     '--kw': rgbToHex(text(c.keyword)),
     '--str': rgbToHex(text(c.string)),
