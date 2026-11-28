@@ -65,6 +65,14 @@ export function TerminalHero({ work }: { work: readonly HeroProject[] }) {
         </Step>
         <Step command={commands[1]} style={statement}>
           <p className="term-statement">I build systems for the day things break.</p>
+          <p className="term-actions">
+            <Link href="#work" className="term-action" data-nav-stop="">
+              See the work <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/resume" className="term-action" data-nav-stop="">
+              View résumé <span aria-hidden="true">↗</span>
+            </Link>
+          </p>
         </Step>
         <Step command={commands[2]} style={list}>
           <ul className="term-ls">
@@ -77,14 +85,6 @@ export function TerminalHero({ work }: { work: readonly HeroProject[] }) {
               </li>
             ))}
           </ul>
-          <p className="term-actions">
-            <Link href="#work" className="term-action" data-nav-stop="">
-              See the work <span aria-hidden="true">→</span>
-            </Link>
-            <Link href="/resume" className="term-action" data-nav-stop="">
-              View résumé <span aria-hidden="true">↗</span>
-            </Link>
-          </p>
         </Step>
         <div className="term-step" style={idle}>
           <p className="term-out term-cmd" aria-hidden="true">
