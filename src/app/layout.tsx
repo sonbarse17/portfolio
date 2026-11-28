@@ -22,6 +22,12 @@ const mono = localFont({
   variable: '--font-mono',
   preload: false,
 })
+const editorial = localFont({
+  src: './fonts/newsreader-latin.woff2',
+  weight: '400 600',
+  display: 'swap',
+  variable: '--font-editorial',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -47,14 +53,23 @@ const csp = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${display.variable} ${mono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${display.variable} ${mono.variable} ${editorial.variable}`}
+    >
       <head>
         {process.env.NODE_ENV === 'production' && (
           <meta httpEquiv="Content-Security-Policy" content={csp} />
         )}
       </head>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
           <SiteHeader />
           <div id="content" tabIndex={-1}>
             {children}

@@ -6,14 +6,7 @@ import { ArchitectureExplorer } from '@/components/architecture-explorer'
 import { CaseRail } from '@/components/case-rail'
 import { hasProjectArtwork, ProjectArtwork } from '@/components/project-artwork'
 import { ProvenanceTag } from '@/components/provenance'
-import {
-  Accordion,
-  BeforeAfter,
-  Chips,
-  ClassificationTag,
-  StackGroups,
-  Timeline,
-} from '@/components/project-parts'
+import { Accordion, BeforeAfter, StackGroups, Timeline } from '@/components/project-parts'
 import { labs } from '@/content/labs'
 import { projects, SECTION_ORDER, type Project, type SectionId } from '@/content/projects'
 import '../case-study.css'
@@ -45,55 +38,63 @@ function presentSections(project: Project) {
 
 function ProjectFacts({ project }: { project: Project }) {
   return (
-    <dl className="detail-facts mt-8 grid sm:grid-cols-2 lg:grid-cols-4">
+    <dl className="case-facts" data-count={project.glance.length}>
       {project.glance.map((fact) => (
-        <div
-          key={fact.label}
-          className="hairline border-b py-4 lg:border-b-0 lg:border-r lg:last:border-r-0"
-        >
-          <dt className="label text-muted">{fact.label}</dt>
-          <dd className="mt-1 font-display text-xl font-bold leading-tight [font-stretch:80%]">
-            {fact.value}
-          </dd>
+        <div key={fact.label}>
+          <dt>{fact.label}</dt>
+          <dd>{fact.value}</dd>
         </div>
       ))}
     </dl>
   )
 }
 
-function FlagshipMasthead({ project }: { project: Project }) {
+function ProjectMasthead({ project }: { project: Project }) {
+  const illustrated = hasProjectArtwork(project.slug)
+  const hasResults = project.sections.some(({ id }) => id === 'outcome')
+  const qualifiers = project.labels.filter((label) => label !== project.context)
+
   return (
-    <header>
-      <div className="case-feature">
-        <div className="case-feature-copy">
-          <ClassificationTag project={project} />
-          <h1 className="display">{project.title}</h1>
-          <p className="case-feature-summary">{project.summary}</p>
-          <div className="case-feature-actions">
-            {project.views && (
-              <a href="#architecture" className="case-feature-primary">
-                Explore the architecture
-              </a>
-            )}
-            <a
-              href="#outcome"
-              className={project.views ? 'case-feature-result' : 'case-feature-primary'}
-            >
-              Results
-            </a>
-          </div>
+    <header className="case-masthead">
+      <div className="case-masthead-copy">
+        <div>
+          <ProvenanceTag
+            kind={project.classification === 'professional' ? 'record' : 'personal'}
+            className="case-provenance"
+          />
+          <h1>{project.title}</h1>
         </div>
-        <div className="case-feature-visual">
+        <div className="case-masthead-intro">
+          <p>{project.summary}</p>
+          {(project.views || hasResults) && (
+            <nav className="case-actions" aria-label="Project highlights">
+              {project.views && (
+                <a href="#architecture" className="text-link">
+                  Explore the architecture
+                </a>
+              )}
+              {hasResults && (
+                <a href="#outcome" className="text-link">
+                  Results
+                </a>
+              )}
+            </nav>
+          )}
+        </div>
+      </div>
+      {illustrated && (
+        <figure className="case-cover" data-project={project.slug}>
           <ProjectArtwork slug={project.slug} cover />
-        </div>
-      </div>
-      <div className="case-context">
-        <p className="label text-muted">
-          <span>{project.category}</span>
-          <span>{project.context}</span>
-        </p>
-        <Chips items={project.labels} />
-      </div>
+          <figcaption>Concept illustration</figcaption>
+        </figure>
+      )}
+      <ul className="case-context">
+        <li>{project.category}</li>
+        <li>{project.context}</li>
+        {qualifiers.map((label) => (
+          <li key={label}>{label}</li>
+        ))}
+      </ul>
       <ProjectFacts project={project} />
     </header>
   )
@@ -102,55 +103,26 @@ function FlagshipMasthead({ project }: { project: Project }) {
 function ProjectSection({
   project,
   entry: { id, title },
-  presentation,
 }: {
   project: Project
   entry: PresentedSection
-  presentation: 'standard' | 'editorial' | 'architecture'
 }) {
   const section = project.sections.find((s) => s.id === id)
-  const lead = presentation === 'architecture'
+  const defaultProvenance = project.classification === 'professional' ? 'record' : 'personal'
   return (
-    <section
-      id={id}
-      aria-labelledby={`${id}-title`}
-      className={
-        lead
-          ? 'case-architecture'
-          : presentation === 'editorial'
-            ? 'case-chapter'
-            : 'hairline border-b py-8 first:pt-0 last:border-b-0'
-      }
-    >
-      <div className="case-section-heading flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h2
-          id={`${id}-title`}
-          className={
-            presentation === 'standard'
-              ? 'font-display text-3xl font-bold leading-tight [font-stretch:80%]'
-              : 'display'
-          }
-        >
-          {title}
-        </h2>
-        <ProvenanceTag
-          kind={
-            section?.provenance ??
-            (project.classification === 'professional' ? 'record' : 'personal')
-          }
-        />
+    <section id={id} aria-labelledby={`${id}-title`} className="case-chapter">
+      <div className="case-section-heading">
+        <h2 id={`${id}-title`}>{title}</h2>
+        {section && section.provenance !== defaultProvenance && (
+          <ProvenanceTag kind={section.provenance} className="case-provenance" />
+        )}
       </div>
 
-      {section?.body && <p className="case-section-body mt-3 max-w-[65ch]">{section.body}</p>}
+      {section?.body && <p className="case-section-body">{section.body}</p>}
       {section?.points && (
-        <ul className="mt-3 max-w-[65ch] space-y-2">
+        <ul className="case-section-points">
           {section.points.map((point) => (
-            <li key={point} className="grid grid-cols-[1.25rem_1fr] leading-snug">
-              <span aria-hidden="true" className="text-muted">
-                –
-              </span>
-              {point}
-            </li>
+            <li key={point}>{point}</li>
           ))}
         </ul>
       )}
@@ -189,95 +161,41 @@ export default async function ProjectPage({ params }: Props) {
   const next = projects[(index + 1) % projects.length]
   const lab = labs.find((l) => l.slug === project.lab)
   const sections = presentSections(project)
-  const overview = project.tier === 'overview'
-  const illustrated = hasProjectArtwork(project.slug)
-  const architecture =
-    illustrated && project.views && sections.find(({ id }) => id === 'architecture')
-  const chapters = architecture ? sections.filter(({ id }) => id !== architecture.id) : sections
-  const contents = architecture ? [architecture, ...chapters] : chapters
 
   return (
-    <main className={illustrated ? 'wrap case-page' : 'wrap pt-8'}>
-      <Link href="/work" className={illustrated ? 'case-back label link' : 'label link'}>
+    <main className="wrap case-page">
+      <Link href="/work" className="case-back text-link">
         All work
       </Link>
+      <ProjectMasthead project={project} />
 
-      {illustrated ? (
-        <FlagshipMasthead project={project} />
-      ) : (
-        <header className="detail-masthead">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <ClassificationTag project={project} />
-            <Chips items={project.labels} />
-          </div>
-          <h1 className="h-section mt-3 max-w-5xl">{project.title}</h1>
-          <p className="lede mt-5 max-w-3xl">{project.summary}</p>
-          <ProjectFacts project={project} />
-          <p className="label mt-3 flex flex-wrap gap-x-6 gap-y-1 text-muted">
-            <span>{project.category}</span>
-            <span>{project.context}</span>
-            {project.views && (
-              <a href="#architecture" className="link text-ink">
-                Explore the architecture
-              </a>
-            )}
-          </p>
-        </header>
-      )}
-
-      {overview && (
-        <p className="hairline mt-8 max-w-3xl border-l-2 border-ink bg-panel p-4 leading-snug">
-          <span className="label mr-2">Overview only</span>
+      {project.tier === 'overview' && (
+        <p className="case-overview">
+          {project.context !== 'Overview only' && <strong>Overview only. </strong>}
           This project is documented with verified scope and outcomes.
         </p>
       )}
 
-      {architecture && (
-        <ProjectSection project={project} entry={architecture} presentation="architecture" />
-      )}
-
-      <div
-        className={
-          illustrated ? 'case-reading' : 'hairline mt-12 grid gap-10 border-t pt-8 lg:grid-cols-12'
-        }
-      >
-        <aside className={illustrated ? undefined : 'lg:col-span-3'}>
-          <CaseRail sections={contents} showOnMobile={illustrated} />
+      <div className="case-reading">
+        <aside>
+          <CaseRail sections={sections} showOnMobile />
         </aside>
 
-        <div className={illustrated ? 'min-w-0' : 'min-w-0 lg:col-span-9'}>
-          {chapters.map((entry) => (
-            <ProjectSection
-              key={entry.id}
-              project={project}
-              entry={entry}
-              presentation={illustrated ? 'editorial' : 'standard'}
-            />
+        <div className="min-w-0">
+          {sections.map((entry) => (
+            <ProjectSection key={entry.id} project={project} entry={entry} />
           ))}
         </div>
       </div>
 
-      <nav aria-label="Continue" className="mt-12 grid gap-px sm:grid-cols-2">
-        {lab ? (
-          <Link href={`/lab/${lab.slug}`} className="group border border-ink p-5">
-            <span className="label text-muted">Related lab</span>
-            <span className="display mt-2 block text-3xl transition-colors group-hover:text-accent">
-              {lab.title}
-            </span>
-          </Link>
-        ) : (
-          <Link href="/lab" className="group border border-ink p-5">
-            <span className="label text-muted">Try something</span>
-            <span className="display mt-2 block text-3xl transition-colors group-hover:text-accent">
-              The lab
-            </span>
-          </Link>
-        )}
-        <Link href={`/work/${next.slug}`} className="group border border-ink p-5 sm:border-l-0">
-          <span className="label text-muted">Next project</span>
-          <span className="display mt-2 block text-3xl transition-colors group-hover:text-accent">
-            {next.title}
-          </span>
+      <nav aria-label="Continue" className="case-continue">
+        <Link href={lab ? `/lab/${lab.slug}` : '/lab'}>
+          <span>{lab ? 'Related lab' : 'Try something'}</span>
+          <strong>{lab ? lab.title : 'The lab'}</strong>
+        </Link>
+        <Link href={`/work/${next.slug}`}>
+          <span>Next project</span>
+          <strong>{next.title}</strong>
         </Link>
       </nav>
     </main>

@@ -18,6 +18,20 @@ export default function LabPage() {
         </p>
       </RouteIntro>
 
+      <ul className="catalog-list" aria-label="Engineering studio">
+        <li>
+          <Link href="/lab/studio" className="catalog-row">
+            <div>
+              <p className="eyebrow">Trace · Deploy · Recover</p>
+              <h2 className="display mt-1 text-3xl sm:text-4xl">Engineering studio</h2>
+            </div>
+            <p className="text-muted">
+              Follow a request through the stack, run a release and trace a recovery.
+            </p>
+          </Link>
+        </li>
+      </ul>
+
       <ul className="catalog-list catalog-section" aria-label="Simulations">
         {labs.map((lab) => (
           <li key={lab.slug}>

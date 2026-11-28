@@ -4,22 +4,23 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
-import { BrandMark } from '@/components/brand-mark'
+import { SiteWordmark } from '@/components/site-wordmark'
 import { FinderTrigger } from '@/components/finder-trigger'
-import { nav, site } from '@/content/site'
+import { nav } from '@/content/site'
+import '@/app/site-chrome.css'
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
 
-  const next = resolvedTheme === 'dark' ? 'light' : 'dark'
+  const next = mounted && resolvedTheme === 'dark' ? 'light' : 'dark'
 
   return (
     <button
       type="button"
       onClick={() => setTheme(next)}
-      className="theme-toggle"
+      className="header-tool"
       aria-label={mounted ? `Switch to ${next} theme` : 'Switch theme'}
       title={mounted ? `Switch to ${next} theme` : undefined}
     >
@@ -30,7 +31,7 @@ function ThemeToggle() {
         stroke="currentColor"
         strokeWidth="1.5"
       >
-        {mounted && next === 'dark' ? (
+        {next === 'dark' ? (
           <path d="M20.4 15.25A9 9 0 0 1 8.75 3.6a9 9 0 1 0 11.65 11.65Z" />
         ) : (
           <>
@@ -52,39 +53,31 @@ export function SiteHeader() {
         Skip to content
       </a>
       <div className="wrap header-inner">
-        <Link href="/" className="site-brand" prefetch={false}>
-          <BrandMark />
-          <span>{site.name}</span>
-        </Link>
+        <SiteWordmark />
         <nav aria-label="Main" className="main-nav">
           <ul>
             {nav.map(({ href, label }) => {
-              const current =
-                pathname === href ||
-                pathname.startsWith(`${href}/`) ||
-                (href === '/freelance' && pathname.startsWith('/services/'))
+              const current = pathname === href || pathname.startsWith(`${href}/`)
               return (
                 <li key={href}>
-                  <Link href={href} aria-current={current ? 'page' : undefined} prefetch={false}>
+                  <Link
+                    href={href}
+                    aria-current={current ? 'page' : undefined}
+                    className={href === '/#contact' ? 'nav-contact' : undefined}
+                    prefetch={false}
+                  >
                     {label}
                   </Link>
                 </li>
               )
             })}
-            <li className="compact-contact">
-              <Link href="/#contact">Contact</Link>
-            </li>
           </ul>
         </nav>
         <div className="header-actions">
           <FinderTrigger />
           <ThemeToggle />
-          <Link href="/#contact" className="header-contact">
-            Contact
-          </Link>
         </div>
       </div>
-      <div className="reading-progress" aria-hidden="true" />
     </header>
   )
 }

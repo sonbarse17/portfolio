@@ -85,60 +85,6 @@
   grid-column: 1 / -1;
 }
 
-.journey-rail {
-  position: sticky;
-  top: 4.25rem;
-  z-index: 25;
-  background: rgb(var(--paper));
-  border-bottom: 1px solid rgb(var(--rule) / 0.19);
-}
-.journey-inner {
-  overflow-x: auto;
-  scrollbar-width: thin;
-}
-.journey-rail ol {
-  position: relative;
-  width: max-content;
-  min-width: min(100%, 39rem);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(0.9rem, 3.3vw, 2.65rem);
-  list-style: none;
-}
-.journey-rail a {
-  min-height: 2.8rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  color: rgb(var(--muted));
-  font-size: 0.8125rem;
-  white-space: nowrap;
-}
-.journey-node {
-  width: 0.39rem;
-  height: 0.39rem;
-  border: 1px solid currentColor;
-  transform: rotate(45deg);
-}
-.journey-rail a:is(:hover, :focus-visible, [aria-current='location']) {
-  color: var(--accent);
-}
-.journey-rail a[aria-current='location'] {
-  font-weight: 630;
-}
-.journey-rail a[aria-current='location'] .journey-node {
-  background-color: var(--accent);
-}
-.journey-progress {
-  position: absolute;
-  width: 100%;
-  height: 1px;
-  inset: auto 0 0;
-  background: var(--accent);
-  transform-origin: left;
-  transition: transform 520ms var(--ease);
-}
 @media (min-width: 2000px) {
   .scene-hero-inner {
     max-width: 102rem;
@@ -146,13 +92,6 @@
   .hero-name {
     font-size: 9.45rem;
   }
-}
-html:has(.journey-rail) {
-  scroll-padding-top: 8rem;
-}
-
-.home-work {
-  background: linear-gradient(180deg, rgb(var(--panel) / 0.5), rgb(var(--paper)) 20rem);
 }
 .pipeline-heading .h-section {
   max-width: 14ch;
@@ -271,23 +210,10 @@ html:has(.journey-rail) {
 .home-capabilities .section-heading h2 {
   max-width: 14ch;
 }
-.home-about {
-  border-top: 1px solid #687e67;
-  background: #dfe4d5;
-}
-.home-experience[data-motion='paused'] .stack-art canvas,
-.home-experience[data-motion='paused'] .journey-progress {
+.home-experience[data-motion='paused'] .stack-art canvas {
   transition: none;
 }
 
-@media (max-width: 800px) {
-  .journey-rail {
-    top: 0;
-  }
-  html:has(.journey-rail) {
-    scroll-padding-top: 4.25rem;
-  }
-}
 @media (max-width: 760px) {
   .scene-hero-inner {
     min-height: auto;

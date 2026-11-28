@@ -4,7 +4,7 @@ import { site } from '@/content/site'
 export const homeTitle = `${site.name} | ${site.role}`
 
 const socialImage = {
-  url: '/assets/phase-four/share.jpg',
+  url: '/assets/phase-five/share.jpg',
   width: 1200,
   height: 630,
   alt: `${site.name}, ${site.role}`,

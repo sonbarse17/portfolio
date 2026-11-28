@@ -58,27 +58,25 @@ test('the hero keeps the primary actions in view at the requested screen sizes',
   }
 })
 
-test('chapter navigation brings the destination below the sticky navigation', async ({ page }) => {
+test('anchor navigation brings the destination below the sticky header', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
 
-  const rail = page.getByRole('navigation', { name: 'Portfolio chapters' })
-  const experience = rail.getByRole('link', { name: 'Experience' })
-  await experience.focus()
+  const header = page.locator('.site-header')
+  const about = header.getByRole('link', { name: 'About' })
+  await about.focus()
   await page.keyboard.press('Enter')
-  await expect(page).toHaveURL(/#record$/)
-  await expect(experience).toHaveAttribute('aria-current', 'location')
+  await expect(page).toHaveURL(/#about$/)
 
-  const railBottom = await rail.evaluate((element) => element.getBoundingClientRect().bottom)
-  const titleTop = await page
-    .getByRole('heading', { name: 'Experience.', exact: true })
-    .evaluate((element) => element.getBoundingClientRect().top)
-  expect(titleTop).toBeGreaterThanOrEqual(railBottom - 1)
+  const headerBottom = await header.evaluate((element) => element.getBoundingClientRect().bottom)
+  await expect
+    .poll(() => page.locator('#about').evaluate((element) => element.getBoundingClientRect().top))
+    .toBeGreaterThanOrEqual(headerBottom - 1)
 })
 
 test('the infrastructure layers remain explorable with reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
+  await page.goto('/lab/studio')
 
   const layers = page.getByRole('group', { name: 'Infrastructure layers' })
   const ingress = layers.getByRole('button', { name: 'Ingress' })

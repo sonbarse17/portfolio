@@ -16,12 +16,18 @@ export const destinations: Entry[] = [
   { title: 'About Sushant', href: '/#about', group: 'Profile', keywords: 'bio background career' },
   { title: 'Selected projects', href: '/work', group: 'Work', keywords: 'portfolio cases' },
   { title: 'Infrastructure labs', href: '/lab', group: 'Lab', keywords: 'interactive simulation' },
+  {
+    title: 'Engineering studio',
+    href: '/lab/studio',
+    group: 'Lab',
+    keywords: 'trace deploy recover',
+  },
   { title: 'Engineering field guide', href: '/atlas', group: 'Atlas', keywords: 'technical notes' },
   { title: 'Freelance services', href: '/freelance', group: 'Services' },
-  ...chapters.map(({ id, label, terms }) => ({
+  ...chapters.map(({ id, label, terms, page }) => ({
     title: label === 'Release' ? 'Interactive deployment' : label,
-    href: `/#${id}`,
-    group: 'Home',
+    href: `${page}#${id}`,
+    group: page === '/' ? 'Home' : 'Lab',
     keywords: terms,
   })),
   ...projects.map((project) => ({

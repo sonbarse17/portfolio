@@ -47,13 +47,6 @@
   margin-top: clamp(1rem, 2.8vh, 1.95rem);
 }
 
-.hero-specialties {
-  margin-top: 0.8rem;
-  color: rgb(var(--muted));
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8125rem;
-}
-
 .scene-hero .stack-scene {
   align-self: stretch;
   display: grid;
@@ -158,23 +151,6 @@
 
 .scene-hero-footer {
   border-top-color: #a6b6a050;
-}
-
-.journey-rail .journey-progress {
-  transform: scaleX(var(--chapter-progress, 0));
-  transition: none;
-  pointer-events: none;
-}
-
-.home-work .section-heading {
-  align-items: end;
-}
-
-.home-work .h-section {
-  max-width: 13ch;
-  font-size: clamp(3rem, 7.1vw, 7.5rem);
-  font-weight: 550;
-  line-height: 0.93;
 }
 
 .recovery-section {

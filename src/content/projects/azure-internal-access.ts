@@ -40,7 +40,7 @@ export const azureInternalAccess: Project = {
   slug: 'azure-internal-access',
   title: 'Internal-only access for an enterprise Azure application',
   summary:
-    'Designed and deployed an internal-access architecture for an enterprise Azure application, using an internal Application Gateway and Microsoft Entra ID single sign-on.',
+    'Designed and deployed private access with Microsoft Entra ID for an enterprise Azure application. Validated integration connectivity across Dev, UAT, and Production.',
   classification: 'professional',
   category: 'Azure infrastructure, internal network architecture, enterprise identity',
   context: 'Designed and deployed by me',

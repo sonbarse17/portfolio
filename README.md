@@ -2,14 +2,15 @@
 
 A static Next.js portfolio built around infrastructure case studies, interactive simulations, and an engineering field guide.
 
-See the [Phase 4 quality audit](docs/phase-four.md) for the implementation history, asset sources, browser evidence and release constraints.
+See the [Phase 5 creative direction and audit](docs/phase-five.md) for the editorial design, asset sources and browser evidence. Earlier visual and technical decisions are recorded in the [Phase 4 quality audit](docs/phase-four.md).
 
 ## What is on it
 
 | Route                            | Purpose                                                                                                                 |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `/`                              | Interactive deployment path, selected work, technology ecosystem, failure simulator, experience, and contact            |
+| `/`                              | Portrait, selected work, about, professional experience, Lab introduction, and contact                                   |
 | `/lab`, `/lab/[slug]`            | Six simulations: blast radius, release path, scheduler, plan reader, error budget, access trace                         |
+| `/lab/studio`                   | Request trace, interactive deployment, tools in context, and recovery film and exercise                                  |
 | `/work`, `/work/[slug]`          | Nine projects. Professional case studies have interactive architecture diagrams. Personal projects are labelled as such |
 | `/atlas`                         | A position on each engineering domain                                                                                   |
 | `/freelance`, `/services/[slug]` | Services                                                                                                                |
@@ -26,13 +27,13 @@ When adding a project, keep a section as `reference` unless the detail actually 
 ## Stack
 
 Next.js 15 (App Router, `output: 'export'`), React 18, TypeScript (strict), Tailwind CSS 3, `next-themes`, EmailJS.
-The design uses local Geist fonts, graphite and light themes, and citron for interactive emphasis. Shared tokens live in `src/app/globals.css`, route surfaces in `src/app/catalog.css`, and the homepage compositions in `src/app/home.css`. Diagrams use HTML and SVG. Motion uses CSS and respects reduced-motion preferences.
+Newsreader carries editorial headlines and the wordmark. Geist carries navigation, details, and technical UI. The paper and rust palette is the default, with a warm dark theme available from the header. Shared tokens live in `src/app/globals.css`, route surfaces in `src/app/catalog.css`, and the homepage compositions in `src/app/editorial.css`. Diagrams use HTML and SVG. Motion respects reduced-motion preferences.
 
 ### Trace to production
 
-The homepage introduces ingress, runtime, and recovery through an original procedural infrastructure model. The GLSL scene changes its camera, chassis spacing, and fiber routes as visitors select layers or scroll. WebGL 2 runs only on eligible devices. The standard tier uses a smaller drawing buffer, lower frame cadence, and shorter ray marches. Mobile, reduced-motion, unavailable WebGL, and lost contexts show individually rendered WebP views of the same layers.
+The engineering studio at `/lab/studio` introduces ingress, runtime, and recovery through an original procedural infrastructure model. The GLSL scene changes its camera, chassis spacing, and fiber routes as visitors select layers or scroll. WebGL 2 runs only on eligible devices. The standard tier uses a smaller drawing buffer, lower frame cadence, and shorter ray marches. Mobile, reduced-motion, unavailable WebGL, and lost contexts show individually rendered WebP views of the same layers.
 
-The browser loads the shader after the opening image appears and suspends drawing off-screen. The chapter rail tracks reading progress, and the finder and release simulator load on request. The release simulator shares the lab's tested model. The Azure and AWS case studies let visitors inspect documented components and follow named traffic hops in either manual or animated playback. Motion pauses outside the viewport.
+The browser loads the shader after the opening image appears and suspends drawing off-screen. The finder and release simulator load on request. The release simulator shares the lab's tested model. The Azure and AWS case studies let visitors inspect documented components and follow named traffic hops in either manual or animated playback. Motion pauses outside the viewport.
 
 Open the finder with Ctrl or Command + K. Search for `diagnostics` to view the renderer observed when the finder opened and the public build identifier.
 
@@ -136,7 +137,7 @@ The site is a static export, so it has no server code, middleware or API routes.
 A Content-Security-Policy is shipped as a `<meta>` tag in production builds.
 A static export cannot set response headers, so set HSTS, `X-Content-Type-Options` and `frame-ancestors` at the host or CDN.
 
-Each build shows its commit and date in the footer, the only live facts on the site.
+Each build exposes its commit and date in the footer markup and the finder diagnostics.
 
 ## Known limits
 

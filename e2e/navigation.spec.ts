@@ -8,6 +8,7 @@ const routes = [
   '/',
   '/work',
   '/lab',
+  '/lab/studio',
   '/atlas',
   '/freelance',
   '/resume',
@@ -54,13 +55,17 @@ test.describe('responsive widths', () => {
     '/work/azure-internal-access',
     '/work/aws-hosting-and-sso',
     '/lab/blast-radius',
+    '/lab/studio',
     '/work/web-applications',
   ]
   for (const width of widths) {
     test(`no horizontal overflow at ${width}px`, async ({ page }) => {
+      test.slow()
+      await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.setViewportSize({ width, height: 900 })
       for (const route of key) {
-        await page.goto(route, { waitUntil: 'networkidle' })
+        await page.goto(route, { waitUntil: 'domcontentloaded' })
+        await page.evaluate(() => document.fonts.ready)
         expect(await overflow(page), `${route} at ${width}px`).toBeLessThanOrEqual(0)
         if (route === '/') {
           const wordsFit = await page.locator('h1 span').evaluateAll((words) => {
@@ -99,6 +104,8 @@ test('main navigation and unknown routes', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('h1')).toContainText('Sushant')
   await page.getByRole('link', { name: 'See the work' }).click()
+  await expect(page).toHaveURL(/#work$/)
+  await page.getByRole('link', { name: 'All projects' }).click()
   await expect(page).toHaveURL(/\/work$/)
   await page
     .getByRole('link', { name: /Internal-only access for an enterprise Azure application/ })
@@ -111,12 +118,19 @@ test('main navigation and unknown routes', async ({ page }) => {
   await expect(page.locator('h1')).toContainText('No such route')
 })
 
-test('home shows availability and the deployment diagram responds to the keyboard', async ({
-  page,
-}) => {
+test('the editorial homepage shows career evidence and access to the résumé', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByText(/path from a commit to production/)).toBeVisible()
-  await expect(page.getByText('Available', { exact: false }).first()).toBeVisible()
+  await expect(page.getByText('Available for remote freelance work')).toBeVisible()
+  await expect(page.getByRole('img', { name: 'Portrait of Sushant Sonbarse' })).toBeVisible()
+  await expect(page.getByText(/CI\/CD pipeline efficiency improved by 40%/)).toBeVisible()
+  await expect(page.locator('.stack-art, .pipeline, .failover-film')).toHaveCount(0)
+  await page.getByRole('link', { name: 'View résumé' }).click()
+  await expect(page).toHaveURL(/\/resume$/)
+  await expect(page.getByRole('button', { name: 'Print or save PDF' })).toBeVisible()
+})
+
+test('the studio deployment diagram responds to the keyboard', async ({ page }) => {
+  await page.goto('/lab/studio')
   await expect(page.getByRole('link', { name: /Fail a stage yourself/ })).toBeVisible()
   const build = page.getByRole('button', { name: 'Build', exact: true })
   await build.focus()
@@ -125,8 +139,8 @@ test('home shows availability and the deployment diagram responds to the keyboar
   await expect(page.getByText('Build an artifact', { exact: true })).toBeVisible()
 })
 
-test('home domain selection, simulator, career details and résumé work', async ({ page }) => {
-  await page.goto('/')
+test('studio domain selection and recovery simulator work', async ({ page }) => {
+  await page.goto('/lab/studio')
 
   const observability = page.getByRole('button', { name: 'Observability', exact: true })
   await observability.click()
@@ -140,17 +154,11 @@ test('home domain selection, simulator, career details and résumé work', async
   await expect(page.getByRole('log')).toContainText('DNS failed')
   await page.getByRole('button', { name: 'Close simulator' }).click()
   await expect(page.getByRole('log')).toHaveCount(0)
-
-  await page.locator('summary').filter({ hasText: 'DevOps Engineer Intern' }).click()
-  await expect(page.getByText('Improved CI/CD pipeline efficiency by 40%')).toBeVisible()
-  await page.getByRole('link', { name: 'View résumé' }).click()
-  await expect(page).toHaveURL(/\/resume$/)
-  await expect(page.getByRole('button', { name: 'Print or save PDF' })).toBeVisible()
 })
 
 test('desktop scrolling advances the pinned deployment sequence', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 960 })
-  await page.goto('/')
+  await page.goto('/lab/studio')
   const chapters = page.locator('.pipeline-chapter')
   const stages = page.getByRole('group', { name: 'Deployment stages' })
 
@@ -170,7 +178,7 @@ test('desktop scrolling advances the pinned deployment sequence', async ({ page 
 test('the failover film loads in view and pauses when requested or off-screen', async ({
   page,
 }) => {
-  await page.goto('/')
+  await page.goto('/lab/studio')
   const film = page.locator('.failover-film')
   const video = film.locator('video')
   const paused = () => video.evaluate((media: HTMLVideoElement) => media.paused)
@@ -193,7 +201,7 @@ test('reduced motion preserves the deployment controls and uses the film poster'
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
+  await page.goto('/lab/studio')
   const build = page.getByRole('button', { name: 'Build', exact: true })
   await build.click()
   await expect(build).toHaveAttribute('aria-pressed', 'true')
@@ -221,9 +229,25 @@ test('the finder closes with Escape and opens the résumé by keyboard', async (
   await expect(page).toHaveURL(/\/resume$/)
 })
 
-test('the homepage simulation models a scan block and two rollout outcomes', async ({ page }) => {
+test('legacy homepage fragments and finder results reach the engineering studio', async ({
+  page,
+}) => {
+  await page.goto('/#pipeline')
+  await page.getByRole('link', { name: 'Release pipeline', exact: true }).click()
+  await expect(page).toHaveURL(/\/lab\/studio#pipeline$/)
+  await expect(page.locator('#pipeline')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Find in portfolio' }).click()
+  const search = page.getByRole('combobox', { name: 'Search the portfolio' })
+  await search.fill('failover')
+  await page.getByRole('option', { name: /Reliability/ }).click()
+  await expect(page).toHaveURL(/\/lab\/studio#break-it$/)
+  await expect(page.getByRole('heading', { name: 'What breaks first?' })).toBeVisible()
+})
+
+test('the studio simulation models a scan block and two rollout outcomes', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
+  await page.goto('/lab/studio')
   await page.getByRole('button', { name: 'Simulate a deployment' }).click()
   const run = page.getByRole('region', { name: 'Deployment simulation' })
   const scenario = run.getByLabel('Scenario')
@@ -256,10 +280,10 @@ test('the desktop scene falls back to the same artwork when WebGL is disabled', 
       },
     })
   })
-  await page.goto('/')
+  await page.goto('/lab/studio')
   await expect(page.locator('.stack-art picture img')).toBeVisible()
   await expect(page.locator('.stack-art')).toHaveAttribute('data-renderer', 'poster')
-  await expect(page.getByRole('link', { name: 'See the work' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Follow a deployment' })).toBeVisible()
 })
 
 test('case studies step through documented traffic with reduced motion', async ({ page }) => {
@@ -285,10 +309,11 @@ test('external links open safely', async ({ page }) => {
 test('theme toggle switches and persists', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/')
-  await page.getByRole('button', { name: 'Switch to light theme' }).click()
   await expect(page.locator('html')).toHaveClass(/light/)
+  await page.getByRole('button', { name: 'Switch to dark theme' }).click()
+  await expect(page.locator('html')).toHaveClass(/dark/)
   await page.reload()
-  await expect(page.locator('html')).toHaveClass(/light/)
+  await expect(page.locator('html')).toHaveClass(/dark/)
   const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
   expect(axe.violations.map((violation) => violation.id)).toEqual([])
 })
@@ -348,8 +373,10 @@ test.describe('architecture explorer', () => {
   test('the overview-only project publishes an overview and no diagram', async ({ page }) => {
     await page.goto('/work/cloud-architecture-project')
     await expect(page.getByText('Overview only').first()).toBeVisible()
-    await expect(page.getByRole('tablist')).toHaveCount(0)
-    await expect(page.getByRole('group')).toHaveCount(0)
+    const architecture = page.getByRole('region', { name: 'Architecture', exact: true })
+    await expect(architecture).toBeVisible()
+    await expect(architecture.getByRole('tablist')).toHaveCount(0)
+    await expect(architecture.getByRole('group')).toHaveCount(0)
   })
 
   test('the implementation timeline marks environment steps and the follow-up', async ({

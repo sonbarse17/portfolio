@@ -68,11 +68,3 @@
 .finder-diagnostics .btn-quiet {
   margin-top: 0.65rem;
 }
-@media (max-width: 480px) {
-  .site-header .header-contact {
-    display: none;
-  }
-  .site-header .compact-contact {
-    display: block;
-  }
-}

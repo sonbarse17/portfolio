@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import type { ReactNode } from 'react'
 
 const artwork = new Map([
   ['azure-internal-access', '/assets/phase-two/private-ingress.webp'],
@@ -7,15 +6,7 @@ const artwork = new Map([
   ['crm-on-eks', '/assets/phase-four/workload-field.webp'],
 ])
 
-export function ProjectArtwork({
-  slug,
-  children,
-  cover = false,
-}: {
-  slug: string
-  children?: ReactNode
-  cover?: boolean
-}) {
+export function ProjectArtwork({ slug, cover = false }: { slug: string; cover?: boolean }) {
   const image = artwork.get(slug)
   if (!image) return null
 
@@ -37,8 +28,6 @@ export function ProjectArtwork({
           sizes="(max-width: 800px) 90vw, (max-width: 1450px) 53vw, 740px"
         />
       </picture>
-      <span className="case-artwork-credit">Concept illustration</span>
-      {children}
     </div>
   )
 }

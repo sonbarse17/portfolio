@@ -5,7 +5,7 @@ export const crmOnEks: Project = {
   slug: 'crm-on-eks',
   title: 'CRM on AWS EKS at HisanLabs',
   summary:
-    'Deployed a CRM comprising more than 35 microservices to AWS EKS during a DevOps internship, with AWS infrastructure automated through Terraform.',
+    'Deployed a CRM with 35+ microservices to AWS EKS during a DevOps internship at HisanLabs. Deployment time fell from two hours to 30 minutes.',
   classification: 'professional',
   category: 'Kubernetes deployment, infrastructure as code, CI/CD',
   context: 'HisanLabs Pvt Ltd, DevOps Engineer Intern, Sep 2024 to May 2025',

@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { ProvenanceTag, type ProvenanceKind } from '@/components/provenance'
 import type { Comparison, Project, TimelineItem } from '@/content/projects/types'
 import { cn } from '@/lib/utils'
@@ -135,19 +134,5 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
         </li>
       ))}
     </ol>
-  )
-}
-
-export function ProjectRow({ project }: { project: Project }) {
-  return (
-    <li>
-      <Link href={`/work/${project.slug}`} className="catalog-row">
-        <div>
-          <ClassificationTag project={project} />
-          <h3 className="display mt-1 text-2xl sm:text-3xl">{project.title}</h3>
-        </div>
-        <p className="text-muted">{project.summary}</p>
-      </Link>
-    </li>
   )
 }

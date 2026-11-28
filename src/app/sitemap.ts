@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/',
     '/work',
     '/lab',
+    '/lab/studio',
     '/atlas',
     '/freelance',
     '/resume',

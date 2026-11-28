@@ -8,7 +8,7 @@ test('the recovery chapter keeps its still and controls if the film is unavailab
     attempted += 1
     return route.abort()
   })
-  await page.goto('/')
+  await page.goto('/lab/studio')
   const film = page.locator('.failover-film')
   await film.scrollIntoViewIfNeeded()
   await expect.poll(() => attempted).toBeGreaterThan(0)
@@ -28,7 +28,7 @@ test('data saving keeps the recovery poster until the visitor asks for the film'
       value: Object.assign(new EventTarget(), { saveData: true, effectiveType: '4g' }),
     })
   })
-  await page.goto('/')
+  await page.goto('/lab/studio')
   const film = page.locator('.failover-film')
   await film.scrollIntoViewIfNeeded()
   const load = film.getByRole('button', { name: 'Load recovery film' })
@@ -46,7 +46,7 @@ test('data saving keeps the recovery poster until the visitor asks for the film'
 
 test('the request layers take visitors to matching project and lab evidence', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
+  await page.goto('/lab/studio')
   await expect(page.getByRole('link', { name: 'Trace Azure ingress' })).toHaveAttribute(
     'href',
     '/work/azure-internal-access#architecture'
@@ -80,10 +80,10 @@ test('profile and project pages publish their own discovery metadata', async ({
   )
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     'content',
-    /\/assets\/phase-four\/share\.jpg$/
+    /\/assets\/phase-five\/share\.jpg$/
   )
   await expect(page.getByRole('tablist')).toHaveCount(0)
-  const artwork = await request.get('/assets/phase-four/share.jpg')
+  const artwork = await request.get('/assets/phase-five/share.jpg')
   expect(artwork.ok()).toBe(true)
   expect(artwork.headers()['content-type']).toContain('image/jpeg')
 })

@@ -64,16 +64,6 @@
   text-wrap: initial;
   overflow-wrap: normal;
 }
-.hero-name span {
-  display: block;
-  width: max-content;
-  max-width: 100%;
-  white-space: nowrap;
-  padding-bottom: 0.075em;
-}
-.hero-name span + span {
-  margin-top: 0.04em;
-}
 .hero-intro {
   max-width: 32ch;
   margin-top: 1.45rem;
@@ -102,25 +92,6 @@
   gap: 0.35rem 1.2rem;
   border-top: 1px solid rgb(var(--rule) / 0.34);
   padding-top: 0.65rem;
-}
-.availability {
-  display: inline-flex;
-  gap: 0.55rem;
-  align-items: center;
-  font-size: 0.875rem;
-  color: rgb(var(--muted));
-}
-.availability span {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  flex: none;
-  background: rgb(var(--ok));
-}
-.scene-hero-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 1.25rem;
 }
 .scene-pipeline-link,
 .scene-motion-toggle {
@@ -655,9 +626,6 @@
     align-items: start;
     gap: 0.45rem;
   }
-  .scene-hero-controls {
-    gap: 0 0.8rem;
-  }
   .scene-motion-toggle,
   .scene-pipeline-link {
     font-size: 0.82rem;
@@ -704,7 +672,6 @@
 }
 .home-experience[data-motion='paused'] .capability-evidence,
 .home-experience[data-motion='paused'] .case-artwork img,
-.home-experience[data-motion='paused'] .case-artwork .architecture-preview,
 .home-experience[data-motion='paused'] .pipeline-projection,
 .home-experience[data-motion='paused'] .pipeline-node-cap,
 .home-experience[data-motion='paused'] .pipeline-route-lit,

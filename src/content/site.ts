@@ -10,10 +10,10 @@ export const site = {
 
 export const nav = [
   { href: '/work', label: 'Work' },
+  { href: '/#about', label: 'About' },
   { href: '/lab', label: 'Lab' },
-  { href: '/atlas', label: 'Atlas' },
-  { href: '/freelance', label: 'Services' },
   { href: '/resume', label: 'Résumé' },
+  { href: '/#contact', label: 'Contact' },
 ]
 
 export const roles = [

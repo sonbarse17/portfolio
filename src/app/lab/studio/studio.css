@@ -1,0 +1,22 @@
+.engineering-studio .scene-hero {
+  --accent: #fcbf9d;
+  --action: #f4ad89;
+  --action-ink: #281912;
+  --action-hover: #ffcbad;
+  --rule: 210 188 166;
+  color: rgb(var(--ink));
+  background: radial-gradient(ellipse at 73% 38%, #2f2c23, #191b16 54%, #151511 78%);
+}
+
+.engineering-studio .hero-name {
+  max-width: 9ch;
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: clamp(3.5rem, 7.7vw, 8.5rem);
+  line-height: 0.91;
+  letter-spacing: -0.06em;
+  font-weight: 400;
+}
+
+.engineering-studio .scene-hero-footer {
+  align-items: center;
+}

@@ -1,8 +1,7 @@
+import Link from 'next/link'
+import { hasProjectArtwork, ProjectArtwork } from '@/components/project-artwork'
+import { personal, professional, type Project } from '@/content/projects'
 import { pageMetadata } from '@/lib/metadata'
-import { FeaturedWork, featuredProjectSlugs } from '@/components/featured-work'
-import { ProjectRow } from '@/components/project-parts'
-import { RouteIntro } from '@/components/route-intro'
-import { personal, professional } from '@/content/projects'
 import './case-study.css'
 
 export const metadata = pageMetadata(
@@ -11,47 +10,69 @@ export const metadata = pageMetadata(
   'Professional case studies in Azure internal access and AWS hosting with SSO, plus personal projects in Kubernetes, Docker, monitoring and CI/CD.'
 )
 
-export default function WorkPage() {
+function ProjectList({ projects }: { projects: Project[] }) {
   return (
-    <main className="wrap">
-      <RouteIntro label="Engineering portfolio" title="Work">
-        <p className="lede">
-          Selected cloud and DevOps work across AWS, Azure, Kubernetes, CI/CD, and infrastructure
-          automation.
-        </p>
-        <nav className="work-index-links" aria-label="Project categories">
-          <a href="#professional" className="text-link">
-            Professional case studies
-          </a>
-          <a href="#personal" className="text-link">
-            Personal projects
-          </a>
-        </nav>
-      </RouteIntro>
+    <ul className="work-list">
+      {projects.map((project) => (
+        <li key={project.slug}>
+          <Link href={`/work/${project.slug}`} className="work-list-link">
+            <h3>{project.title}</h3>
+            <p>{project.summary}</p>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
-      <section aria-labelledby="professional" className="catalog-section">
-        <h2 id="professional" className="display text-3xl sm:text-4xl">
-          Professional case studies
-        </h2>
-        <FeaturedWork fullTitles />
-        <ul className="catalog-list mt-8">
-          {professional
-            .filter((project) => !featuredProjectSlugs.has(project.slug))
-            .map((project) => (
-              <ProjectRow key={project.slug} project={project} />
-            ))}
-        </ul>
+export default function WorkPage() {
+  const illustrated = professional.filter(({ slug }) => hasProjectArtwork(slug))
+  const other = professional.filter(({ slug }) => !hasProjectArtwork(slug))
+
+  return (
+    <main className="wrap work-index">
+      <header className="work-intro">
+        <h1>Work</h1>
+        <div>
+          <p className="work-standfirst">
+            How I build, secure, and run cloud infrastructure, from enterprise access to container
+            deployments.
+          </p>
+          <nav className="work-index-links" aria-label="Project categories">
+            <a href="#professional" className="text-link">
+              Professional case studies
+            </a>
+            <a href="#personal" className="text-link">
+              Personal projects
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <section className="work-group" aria-labelledby="professional">
+        <h2 id="professional">Professional case studies</h2>
+        <div className="work-profiles">
+          {illustrated.map((project, index) => (
+            <article key={project.slug} className="work-profile">
+              <Link href={`/work/${project.slug}`} className="work-profile-link" prefetch={false}>
+                <figure>
+                  <ProjectArtwork slug={project.slug} cover={index === 0} />
+                  <figcaption>Concept illustration</figcaption>
+                </figure>
+                <div className="work-profile-description">
+                  <h3>{project.title}</h3>
+                  <p>{project.summary}</p>
+                </div>
+              </Link>
+            </article>
+          ))}
+        </div>
+        <ProjectList projects={other} />
       </section>
 
-      <section aria-labelledby="personal" className="catalog-section">
-        <h2 id="personal" className="display text-3xl sm:text-4xl">
-          Personal projects
-        </h2>
-        <ul className="catalog-list">
-          {personal.map((project) => (
-            <ProjectRow key={project.slug} project={project} />
-          ))}
-        </ul>
+      <section className="work-group" aria-labelledby="personal">
+        <h2 id="personal">Personal projects</h2>
+        <ProjectList projects={personal} />
       </section>
     </main>
   )

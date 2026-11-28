@@ -32,7 +32,7 @@ export function FinderTrigger() {
       <button
         type="button"
         ref={trigger}
-        className="theme-toggle finder-trigger"
+        className="header-tool"
         title="Find in portfolio (Ctrl or Command + K)"
         aria-label="Find in portfolio"
         aria-keyshortcuts="Control+K Meta+K"
