@@ -428,3 +428,10 @@
     border-top: 1px solid var(--reading-rule);
   }
 }
+
+@media (max-width: 480px) {
+  .case-facts,
+  .case-facts[data-count='3'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
