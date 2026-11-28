@@ -79,11 +79,16 @@ function PipelineProjection({ stage }: { stage: number }) {
     <svg className="pipeline-projection" viewBox="0 60 720 370" fill="none" aria-hidden="true">
       <defs>
         <pattern id={`${id}-floor`} width="22" height="22" patternUnits="userSpaceOnUse">
-          <path d="M22 0H0v22" stroke="#a8bf9d" strokeOpacity="0.28" strokeWidth="0.8" />
+          <path
+            d="M22 0H0v22"
+            style={{ stroke: 'rgb(var(--rule))' }}
+            strokeOpacity="0.28"
+            strokeWidth="0.8"
+          />
         </pattern>
         <radialGradient id={`${id}-light`}>
-          <stop stopColor="#9cec78" stopOpacity=".15" />
-          <stop offset="1" stopColor="#9cec78" stopOpacity="0" />
+          <stop style={{ stopColor: 'var(--kw)' }} stopOpacity=".15" />
+          <stop offset="1" style={{ stopColor: 'var(--kw)' }} stopOpacity="0" />
         </radialGradient>
       </defs>
       <ellipse

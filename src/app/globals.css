@@ -255,4 +255,8 @@
   .no-print {
     display: none !important;
   }
+  .h-page::before,
+  .eyebrow::before {
+    content: none;
+  }
 }
