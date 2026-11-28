@@ -1,5 +1,16 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+
+async function openCommandLine(page: Page) {
+  const input = page.getByRole('combobox', { name: 'Search the portfolio' })
+  // Keystrokes before hydration are dropped harmlessly; retry until the listener is live.
+  await expect(async () => {
+    await page.keyboard.press(':')
+    await expect(input).toBeVisible({ timeout: 500 })
+  }).toPass({ timeout: 10_000 })
+  await expect(input).toHaveValue(':')
+  return input
+}
 
 test.describe('palette picker', () => {
   test('switches palettes and persists across reload', async ({ page }) => {
@@ -47,9 +58,7 @@ test.describe('palette picker', () => {
 test.describe('command line', () => {
   test(':theme switches the palette and closes', async ({ page }) => {
     await page.goto('/work')
-    await page.keyboard.press(':')
-    const input = page.getByRole('combobox', { name: 'Search the portfolio' })
-    await expect(input).toHaveValue(':')
+    await openCommandLine(page)
     await page.keyboard.type('theme sora')
     await page.keyboard.press('Enter')
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'sora')
@@ -58,18 +67,18 @@ test.describe('command line', () => {
 
   test('unknown palettes and commands explain themselves', async ({ page }) => {
     await page.goto('/work')
-    await page.keyboard.press(':')
+    const input = await openCommandLine(page)
     await page.keyboard.type('theme nope')
     await page.keyboard.press('Enter')
     await expect(page.getByRole('status')).toContainText("No palette 'nope'")
-    await page.getByRole('combobox', { name: 'Search the portfolio' }).fill(':deploy')
+    await input.fill(':deploy')
     await page.keyboard.press('Enter')
     await expect(page.getByRole('status')).toContainText('Unknown command')
   })
 
   test(':resume navigates', async ({ page }) => {
     await page.goto('/work')
-    await page.keyboard.press(':')
+    await openCommandLine(page)
     await page.keyboard.type('resume')
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(/\/resume$/)
